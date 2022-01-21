@@ -1,3 +1,5 @@
+TEMPLATES_AUTO_RELOAD = True
+
 from flask import Flask, render_template
 from flask_socketio import SocketIO
 import socket
@@ -15,10 +17,9 @@ def socketio():
         html = f.read()
     return html
 
-@socket.on("hi")
-def hi(msg):
+@socket.on("json")
+def json(msg):
     print(msg)
 
 if __name__ == "__main__":
-    socket.run(app)
-
+    socket.run(app, debug=True)
