@@ -1,0 +1,14 @@
+<html>
+<head></head>
+<body>
+<button id="idk">test</button>
+<script src="{{ url_for("static", filename="socket.io.js") }}" type="text/javascript"></script>
+<script>
+let socket = io();
+document.getElementById("idk").onclick = function() {
+    socket.emit("hi", "what");
+}
+
+</script>
+</body>
+</html>
