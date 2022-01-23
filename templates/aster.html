@@ -80,22 +80,24 @@ let socket = io();
 document.getElementById("msgbox").onkeypress = function(key) {
     if (key.keyCode === 13) {
         let elem = document.getElementById("msgbox");
-        socket.emit("json", {message: elem.value});
-
-        const html = `
-        <div class="message">
-            <span class="pfp">
-                <img src="{{ url_for("static", filename="jellyfish.png") }}" class="pfp_image"></img>
-            </span>
-            <span class="uname">KingJellyfish: </span>
-            <p class="msgbody">${elem.value}</p>
-            <p class="msgdate">12/05/22 14:32</p>
-        </div>
-        `
-        document.getElementById("messagearea").innerHTML += html;
+        socket.send({req: "send_message", message: elem.value});
         elem.value = "";
     }
 }
+
+socket.on("message", function(data) {
+    const html = `
+    <div class="message">
+        <span class="pfp">
+            <img src="{{ url_for("static", filename="jellyfish.png") }}" class="pfp_image"></img>
+        </span>
+        <span class="uname">KingJellyfish: </span>
+        <p class="msgbody">${data}</p>
+        <p class="msgdate">12/05/22 14:32</p>
+    </div>
+    `
+    document.getElementById("messagearea").innerHTML += html;
+})
 
 </script>
 </body>
