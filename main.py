@@ -1,43 +1,89 @@
-import socket
-import asterpy
+import socket, sys, time
+sys.path.append("..")
+import aster.asterpy.src.asterpy as asterpy
 import threading
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, make_response
 from flask_socketio import SocketIO
 
 app = Flask(__name__)
-sockio = SocketIO(app)
+sockio = SocketIO(app, async_mode='threading')
 
 users = {}
 
-class Client:
-    """Represents a web client"""
+class User:
+    """Represents a web user"""
     def __init__(self, sid):
         self.sid = sid
         self.servers = []
         self.server_threads = []
-        self.connect("cospox.com", 2345, "jamsbot", "", uuid=1284344576730345505)
+        self.selected_server = 0
+        self.connect("localhost", 2345, "JingKellyfish", "", uuid=6895244034031013013)
 
     def connect(self, ip, port, uname, password, uuid=None):
         """connect to a specific server"""
         client = asterpy.Client(ip, port, uname, password, uuid)
         self.servers.append(client)
         client.on_message = lambda message: self.on_message(client, message)
-        t = threading.Thread(target=self.servers[-1].run)
+        client.on_ready = lambda: self.on_ready(client)
+        t = sockio.start_background_task(self.servers[-1].run)
         self.server_threads.append(t)
-        t.start()
 
-    def on_message(self, client, message):
+    def on_ready(self, server):
+        print("on_ready called")
+        history = server.get_history(server.current_channel)
+        print(f"history is {history}")
+        for message in history:
+            self.__send_message_to_server(message)
+
+    def disconnect(self):
+        for server in self.servers:
+            server.disconnect()
+
+        for t in self.server_threads:
+            t.join()
+
+    def __send_message_to_web(self, message):
+        msg = message.to_json()
+        msg["author_uuid"] = str(msg["author_uuid"])
+        msg["author"] = self.servers[self.selected_server].get_name(message.author.uuid)
+        sockio.emit("message", msg, to=self.sid)
+
+    def on_message(self, server, message):
         """called when any server sends a message"""
-        sockio.emit("message", message.content, to=self.sid)
+        print(f"on_message called with data {message.to_json()} to sid {self.sid}")
+        self.__send_message_to_server(message)
 
     def on_web_message(self, message):
         """called when the web client sends us data"""
         if message["req"] == "send_message":
             self.servers[0].send(message["message"])
+            sockio.emit("message", {"content": message["message"], "author_uuid": str(self.servers[self.selected_server].self_uuid), "date": 0, "author": self.servers[self.selected_server].username})
+
+    def get_pfp(self, uuid):
+        """get the profile picture associated with a particular UUID"""
+        #TODO this will not work with different pfps in different servers
+        for server in self.servers:
+            pfp = server.get_pfp(uuid)
+            if pfp is not None:
+                return pfp
 
 @app.route("/aster")
 def aster():
     return render_template("aster.html")
+
+@app.route("/aster/pfp/<uuid>.png")
+def pfp(uuid):
+    uuid = int(uuid)
+    #TODO WHAT THE FUCK DO I DO HERE?
+    data = None
+    for v in users.values():
+        pfp = v.get_pfp(uuid)
+        if pfp is not None:
+            data = pfp
+            break
+    response = make_response(data)
+    response.headers.set('Content-Type', 'image/png')
+    return response
 
 @sockio.event
 def message(msg):
@@ -47,7 +93,14 @@ def message(msg):
 @sockio.on("connect")
 def connect():
     print(f"Connecting {request.sid}")
-    users[request.sid] = Client(request.sid)
+    users[request.sid] = User(request.sid)
+    
+@sockio.on("disconnect")
+def disconnect():
+    print(f"Disconnecting {request.sid}")
+    users[request.sid].disconnect()
+    print("after disconnect")
+    del users[request.sid]
 
 if __name__ == "__main__":
-    sockio.run(app, debug=True)
+    sockio.run(app, debug=True, host="0.0.0.0")
