@@ -29,11 +29,12 @@ class User:
         self.server_threads.append(t)
 
     def on_ready(self, server):
-        print("on_ready called")
         history = server.get_history(server.current_channel)
-        print(f"history is {history}")
         for message in history:
-            self.__send_message_to_server(message)
+            self.__send_message_to_web(message)
+
+        channels = server.get_channels()
+        sockio.emit("channels", [channel.to_json() for channel in channels])
 
     def disconnect(self):
         for server in self.servers:
@@ -51,7 +52,7 @@ class User:
     def on_message(self, server, message):
         """called when any server sends a message"""
         print(f"on_message called with data {message.to_json()} to sid {self.sid}")
-        self.__send_message_to_server(message)
+        self.__send_message_to_web(message)
 
     def on_web_message(self, message):
         """called when the web client sends us data"""
@@ -81,6 +82,14 @@ def pfp(uuid):
         if pfp is not None:
             data = pfp
             break
+    response = make_response(data)
+    response.headers.set('Content-Type', 'image/png')
+    return response
+
+@app.route("/favicon.ico")
+def favicon():
+    with open("/var/www/html/favicon.ico", "rb") as f:
+        data = f.read()
     response = make_response(data)
     response.headers.set('Content-Type', 'image/png')
     return response
