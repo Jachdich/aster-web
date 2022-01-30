@@ -15,14 +15,14 @@
         <div id="messagearea"></div>
     </div>
 </div>
-
+<!--
 <div id="login">
     <label id="uname_label" for="uname">Username</label>
     <input id="uname_input" type="text" placeholder="Enter Username" name="uname" class="login_input" required>
     <label id="pw_label" for="psw">Password</label>
     <input id="pw_input" type="password" placeholder="Enter Password" name="psw" class="login_input" required>
     <button id="login_button">Login</button>
-</div>
+</div>-->
 
 <input rows="1" autofocus="true" id="msgbox"></input>
 <script>
@@ -36,32 +36,37 @@ document.getElementById("msgbox").onkeypress = function(key) {
     }
 }
 
-document.getElementById("idkwhatthisis").style.display = "none";
+//document.getElementById("idkwhatthisis").style.display = "none";
 
 socket.on("message", function(data) {
-    const small = false;
-    let smalltxt = "";
-    if (small) {
-        smalltxt = "small-";
-    }
-    let image_html = "";
-    if (!small) {
-        image_html = `
-        <span class="pfp">
-            <img src="/aster/pfp/${data["author_uuid"]}.png" class="pfp_image"></img>
-        </span>
+    let total_html = "";
+    for (const val of data["messages"]) {
+        const small = false;
+        let smalltxt = "";
+        if (small) {
+            smalltxt = "small-";
+        }
+        let image_html = "";
+        if (!small) {
+            image_html = `
+            <span class="pfp">
+                <img src="/aster/pfp/${val["author_uuid"]}.png" class="pfp_image"></img>
+            </span>
+            `;
+        }
+        const html = `
+        <div class="${smalltxt}message">
+            ${image_html}
+            <span class="${smalltxt}uname">${val["author"]}: </span>
+            <p class="${smalltxt}msgbody">${val["content"]}</p>
+            <p class="${smalltxt}msgdate">12/05/22 14:32</p>
+        </div>
         `;
+
+        total_html += html;
     }
-    const html = `
-    <div class="${smalltxt}message">
-        ${image_html}
-        <span class="${smalltxt}uname">${data["author"]}: </span>
-        <p class="${smalltxt}msgbody">${data["content"]}</p>
-        <p class="${smalltxt}msgdate">12/05/22 14:32</p>
-    </div>
-    `;
     let elem = document.getElementById("messagearea");
-    elem.innerHTML += html;
+    elem.innerHTML += total_html;
     elem.scrollTop = elem.scrollHeight;
 });
 

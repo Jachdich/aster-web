@@ -1,5 +1,5 @@
 import socket, sys, time
-sys.path.append("..")
+sys.path.append("../..")
 import aster.asterpy.src.asterpy as asterpy
 import threading
 from flask import Flask, render_template, request, make_response
@@ -17,7 +17,7 @@ class User:
         self.servers = []
         self.server_threads = []
         self.selected_server = 0
-        self.connect("localhost", 2345, "JingKellyfish", "", uuid=6895244034031013013)
+        self.connect("localhost", 2345, "KingJellyfish", "", uuid=7320805899718222722)
 
     def connect(self, ip, port, uname, password, uuid=None):
         """connect to a specific server"""
@@ -30,8 +30,7 @@ class User:
 
     def on_ready(self, server):
         history = server.get_history(server.current_channel)
-        for message in history:
-            self.__send_message_to_web(message)
+        self.__send_messages_to_web(history)
 
         channels = server.get_channels()
         sockio.emit("channels", [channel.to_json() for channel in channels])
@@ -43,23 +42,32 @@ class User:
         for t in self.server_threads:
             t.join()
 
-    def __send_message_to_web(self, message):
-        msg = message.to_json()
-        msg["author_uuid"] = str(msg["author_uuid"])
-        msg["author"] = self.servers[self.selected_server].get_name(message.author.uuid)
-        sockio.emit("message", msg, to=self.sid)
+    def __send_messages_to_web(self, messages):
+        msgs = []
+        for message in messages:
+            msg = message.to_json()
+            msg["author_uuid"] = str(msg["author_uuid"])
+            msg["author"] = self.servers[self.selected_server].get_name(message.author.uuid)
+            msgs.append(msg)
+
+        sockio.emit("message", {"messages": msgs}, to=self.sid)
 
     def on_message(self, server, message):
         """called when any server sends a message"""
         print(f"on_message called with data {message.to_json()} to sid {self.sid}")
-        self.__send_message_to_web(message)
+        self.__send_messages_to_web([message,])
 
     def on_web_message(self, message):
         """called when the web client sends us data"""
         if message["req"] == "send_message":
-            self.servers[0].send(message["message"])
+            self.servers[self.selected_server].send(message["message"])
             sockio.emit("message", {"content": message["message"], "author_uuid": str(self.servers[self.selected_server].self_uuid), "date": 0, "author": self.servers[self.selected_server].username})
-
+        elif message["req"] == "change_channel":
+            serv = self.servers[self.selected_server]
+            serv.join(serv.get_channel_by_name(message["channel"]));
+            history = serv.get_history(serv.current_channel)
+            self.__send_messages_to_web(history)
+            
     def get_pfp(self, uuid):
         """get the profile picture associated with a particular UUID"""
         #TODO this will not work with different pfps in different servers
@@ -82,14 +90,6 @@ def pfp(uuid):
         if pfp is not None:
             data = pfp
             break
-    response = make_response(data)
-    response.headers.set('Content-Type', 'image/png')
-    return response
-
-@app.route("/favicon.ico")
-def favicon():
-    with open("/var/www/html/favicon.ico", "rb") as f:
-        data = f.read()
     response = make_response(data)
     response.headers.set('Content-Type', 'image/png')
     return response
