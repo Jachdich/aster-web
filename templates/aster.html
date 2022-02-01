@@ -15,14 +15,18 @@
         <div id="messagearea"></div>
     </div>
 </div>
-<!--
+
 <div id="login">
+    <label id="sync_ip_label" for="sync_ip">Sync&nbsp;server&nbsp;IP&nbsp;<span id="sync_info"><a href="{{ url_for("static", filename="sync_help.html") }}">info</a></span></label>
+    <input id="sync_ip_input" type="text" placeholder="Enter IP" name="sync_ip" class="login_input" required>
+    <label id="sync_port_label" for="sync_port">Sync&nbsp;server&nbsp;port</label>
+    <input id="sync_port_input" type="text" placeholder="Enter port" name="sync_port" class="login_input" required>
     <label id="uname_label" for="uname">Username</label>
     <input id="uname_input" type="text" placeholder="Enter Username" name="uname" class="login_input" required>
     <label id="pw_label" for="psw">Password</label>
     <input id="pw_input" type="password" placeholder="Enter Password" name="psw" class="login_input" required>
     <button id="login_button">Login</button>
-</div>-->
+</div>
 
 <input rows="1" autofocus="true" id="msgbox"></input>
 <script>
@@ -36,7 +40,11 @@ document.getElementById("msgbox").onkeypress = function(key) {
     }
 }
 
-//document.getElementById("idkwhatthisis").style.display = "none";
+document.getElementById("login_button").onclick = function() {
+    socket.send({req: "login", sync_ip: "localhost", sync_port: 2345, uname: "KingJellyfish", password: ""});
+}
+
+document.getElementById("idkwhatthisis").style.display = "none";
 
 socket.on("message", function(data) {
     let total_html = "";

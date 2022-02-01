@@ -1,6 +1,11 @@
 import socket, sys, time
+
+#<DEBUG>
+sys.path.append("..")
 sys.path.append("../..")
 import aster.asterpy.src.asterpy as asterpy
+#</DEBUG>
+
 import threading
 from flask import Flask, render_template, request, make_response
 from flask_socketio import SocketIO
@@ -17,7 +22,7 @@ class User:
         self.servers = []
         self.server_threads = []
         self.selected_server = 0
-        self.connect("localhost", 2345, "KingJellyfish", "", uuid=7320805899718222722)
+        self.sync_server = None
 
     def connect(self, ip, port, uname, password, uuid=None):
         """connect to a specific server"""
@@ -27,6 +32,7 @@ class User:
         client.on_ready = lambda: self.on_ready(client)
         t = sockio.start_background_task(self.servers[-1].run)
         self.server_threads.append(t)
+        return client
 
     def on_ready(self, server):
         history = server.get_history(server.current_channel)
@@ -52,6 +58,9 @@ class User:
 
         sockio.emit("message", {"messages": msgs}, to=self.sid)
 
+    def __set_prefs(self, prefs):
+        pass
+
     def on_message(self, server, message):
         """called when any server sends a message"""
         print(f"on_message called with data {message.to_json()} to sid {self.sid}")
@@ -67,7 +76,12 @@ class User:
             serv.join(serv.get_channel_by_name(message["channel"]));
             history = serv.get_history(serv.current_channel)
             self.__send_messages_to_web(history)
-            
+
+        elif message["req"] == "login":
+            server = self.connect(message["sync_ip"], message["sync_port"], message["uname"], message["password"])
+            self.sync_server = server
+            self.__set_prefs(server.get_sync())
+
     def get_pfp(self, uuid):
         """get the profile picture associated with a particular UUID"""
         #TODO this will not work with different pfps in different servers
@@ -93,6 +107,16 @@ def pfp(uuid):
     response = make_response(data)
     response.headers.set('Content-Type', 'image/png')
     return response
+
+@app.route("/aster/emoji/<uuid>.png")
+def emoji(uuid):
+    uuid = int(uuid)
+    s = list(users.values())[0]
+    data = s.servers[0].fetch_emoji(4603308611677741685)
+    response = make_response(base64.b64decode(data["data"]))
+    response.headers.set('Content-Type', 'image/png')
+    return response
+
 
 @sockio.event
 def message(msg):
