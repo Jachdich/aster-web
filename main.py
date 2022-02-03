@@ -1,4 +1,4 @@
-import socket, sys, time
+import socket, sys, time, re
 
 #<DEBUG>
 sys.path.append("..")
@@ -6,7 +6,7 @@ sys.path.append("../..")
 import aster.asterpy.src.asterpy as asterpy
 #</DEBUG>
 
-import threading
+import threading, base64
 from flask import Flask, render_template, request, make_response
 from flask_socketio import SocketIO
 
@@ -14,6 +14,26 @@ app = Flask(__name__)
 sockio = SocketIO(app, async_mode='threading')
 
 users = {}
+
+EMOJI_PATTERN = r"(<:(?:(?:(?:(?:[a-zA-z\-]+)\:\/{1,3})?(?:[a-zA-Z0-9])(?:[a-zA-Z0-9\-\.]){1,61}(?:\.[a-zA-Z]{2,})+|\[(?:(?:(?:[a-fA-F0-9]){1,4})(?::(?:[a-fA-F0-9]){1,4}){7}|::1|::)\]|(?:(?:[0-9]{1,3})(?:\.[0-9]{1,3}){3}))|localhost)(?:\:[0-9]{1,5}):(?:[0-9]+):>)"
+#EMOJI_PATTERN = r"(<:(?:(?:[a-z0-9]+(?:-[a-z0-9]+)*\.)+[a-z]{2,}|localhost):[0-9]+:[0-9]+:>)"
+
+EMOJI_REGEX = re.compile(EMOJI_PATTERN)
+
+def parse_for_emoji(msg):
+    matches = EMOJI_REGEX.findall(msg)
+    print(msg, matches)
+    for emoji in matches:
+        bits = emoji.split(":")
+        print(emoji)
+        
+        ip = bits[1]
+        port = int(bits[2])
+        uuid = int(bits[3])
+        html = f"<img src='/aster/emoji/{ip}/{port}/{uuid}.png' class='emoji'></img>"
+        msg = msg.replace(emoji, html)
+
+    return msg
 
 class User:
     """Represents a web user"""
@@ -35,6 +55,8 @@ class User:
         return client
 
     def on_ready(self, server):
+        #if server == self.sync_server:
+        #    self.__set_prefs(server.get_sync())
         history = server.get_history(server.current_channel)
         self.__send_messages_to_web(history)
 
@@ -54,6 +76,7 @@ class User:
             msg = message.to_json()
             msg["author_uuid"] = str(msg["author_uuid"])
             msg["author"] = self.servers[self.selected_server].get_name(message.author.uuid)
+            msg["content"] = parse_for_emoji(msg["content"])
             msgs.append(msg)
 
         sockio.emit("message", {"messages": msgs}, to=self.sid)
@@ -70,7 +93,26 @@ class User:
         """called when the web client sends us data"""
         if message["req"] == "send_message":
             self.servers[self.selected_server].send(message["message"])
-            sockio.emit("message", {"content": message["message"], "author_uuid": str(self.servers[self.selected_server].self_uuid), "date": 0, "author": self.servers[self.selected_server].username})
+            # sockio.emit("message",
+                # {"messages": [
+                    # {"content": message["message"],
+                     # "author_uuid": str(self.servers[self.selected_server].self_uuid),
+                     # "date": 0,
+                     # "author": self.servers[self.selected_server].username}
+                # ]}
+            # );
+            self.__send_messages_to_web([
+                asterpy.Message(
+                    message["message"],
+                    asterpy.User(
+                        self.servers[self.selected_server].self_uuid,
+                        self.servers[self.selected_server].username
+                    ),
+                    None,
+                    0
+                ),]
+            )
+                    
         elif message["req"] == "change_channel":
             serv = self.servers[self.selected_server]
             serv.join(serv.get_channel_by_name(message["channel"]));
@@ -80,7 +122,6 @@ class User:
         elif message["req"] == "login":
             server = self.connect(message["sync_ip"], message["sync_port"], message["uname"], message["password"])
             self.sync_server = server
-            self.__set_prefs(server.get_sync())
 
     def get_pfp(self, uuid):
         """get the profile picture associated with a particular UUID"""
@@ -108,11 +149,9 @@ def pfp(uuid):
     response.headers.set('Content-Type', 'image/png')
     return response
 
-@app.route("/aster/emoji/<uuid>.png")
-def emoji(uuid):
-    uuid = int(uuid)
-    s = list(users.values())[0]
-    data = s.servers[0].fetch_emoji(4603308611677741685)
+@app.route("/aster/emoji/<ip>/<port>/<uuid>.png")
+def emoji(ip, port, uuid):
+    data = asterpy.fetch_emoji(f"<:{ip}:{port}:{uuid}:>")
     response = make_response(base64.b64decode(data["data"]))
     response.headers.set('Content-Type', 'image/png')
     return response

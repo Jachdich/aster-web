@@ -380,3 +380,7 @@ input:focus {
 #sync_info {
     font-size: 10px;
 }
+.emoji {
+    width: 32px;
+    margin-top: -8px;
+}

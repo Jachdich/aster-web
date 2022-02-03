@@ -30,6 +30,7 @@
 
 <input rows="1" autofocus="true" id="msgbox"></input>
 <script>
+
 let socket = io();
 
 document.getElementById("msgbox").onkeypress = function(key) {
@@ -41,7 +42,13 @@ document.getElementById("msgbox").onkeypress = function(key) {
 }
 
 document.getElementById("login_button").onclick = function() {
-    socket.send({req: "login", sync_ip: "localhost", sync_port: 2345, uname: "KingJellyfish", password: ""});
+    socket.send({req: "login",
+        sync_ip:   document.getElementById("sync_ip_input").value,
+        sync_port: parseInt(document.getElementById("sync_port_input").value),
+        uname:     document.getElementById("uname_input").value,
+        password:  document.getElementById("pw_input").value});
+    document.getElementById("idkwhatthisis").style.display = "flex";
+    document.getElementById("login").style.display = "none";
 }
 
 document.getElementById("idkwhatthisis").style.display = "none";
