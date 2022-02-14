@@ -1,4 +1,4 @@
-import socket, sys, time, re
+import socket, sys, time, re, html
 
 #<DEBUG>
 sys.path.append("..")
@@ -15,8 +15,7 @@ sockio = SocketIO(app, async_mode='threading')
 
 users = {}
 
-EMOJI_PATTERN = r"(<:(?:(?:(?:(?:[a-zA-z\-]+)\:\/{1,3})?(?:[a-zA-Z0-9])(?:[a-zA-Z0-9\-\.]){1,61}(?:\.[a-zA-Z]{2,})+|\[(?:(?:(?:[a-fA-F0-9]){1,4})(?::(?:[a-fA-F0-9]){1,4}){7}|::1|::)\]|(?:(?:[0-9]{1,3})(?:\.[0-9]{1,3}){3}))|localhost)(?:\:[0-9]{1,5}):(?:[0-9]+):>)"
-#EMOJI_PATTERN = r"(<:(?:(?:[a-z0-9]+(?:-[a-z0-9]+)*\.)+[a-z]{2,}|localhost):[0-9]+:[0-9]+:>)"
+EMOJI_PATTERN = r"(\$:(?:(?:(?:(?:[a-zA-z\-]+)\:\/{1,3})?(?:[a-zA-Z0-9])(?:[a-zA-Z0-9\-\.]){1,61}(?:\.[a-zA-Z]{2,})+|\[(?:(?:(?:[a-fA-F0-9]){1,4})(?::(?:[a-fA-F0-9]){1,4}){7}|::1|::)\]|(?:(?:[0-9]{1,3})(?:\.[0-9]{1,3}){3}))|localhost)(?:\:[0-9]{1,5}):(?:[0-9]+):\$)"
 
 EMOJI_REGEX = re.compile(EMOJI_PATTERN)
 
@@ -60,6 +59,9 @@ class User:
         history = server.get_history(server.current_channel)
         self.__send_messages_to_web(history)
 
+        emojis = server.list_emojis()
+        sockio.emit("emojis", emojis)
+
         channels = server.get_channels()
         sockio.emit("channels", [channel.to_json() for channel in channels])
 
@@ -76,7 +78,7 @@ class User:
             msg = message.to_json()
             msg["author_uuid"] = str(msg["author_uuid"])
             msg["author"] = self.servers[self.selected_server].get_name(message.author.uuid)
-            msg["content"] = parse_for_emoji(msg["content"])
+            msg["content"] = parse_for_emoji(html.escape(msg["content"]))
             msgs.append(msg)
 
         sockio.emit("message", {"messages": msgs}, to=self.sid)
@@ -151,11 +153,15 @@ def pfp(uuid):
 
 @app.route("/aster/emoji/<ip>/<port>/<uuid>.png")
 def emoji(ip, port, uuid):
-    data = asterpy.fetch_emoji(f"<:{ip}:{port}:{uuid}:>")
-    response = make_response(base64.b64decode(data["data"]))
+    emoji_val = asterpy.fetch_emoji(f"<:{ip}:{port}:{uuid}:>")
+    if emoji_val == None:
+        with open("static/404_emoji.png", "rb") as f:
+            response = make_response(f.read())
+    else:
+        response = make_response(base64.b64decode(emoji_val.data))
+
     response.headers.set('Content-Type', 'image/png')
     return response
-
 
 @sockio.event
 def message(msg):

@@ -138,202 +138,6 @@ input:focus {
     margin-bottom: 20px;
 }
 
-#idkwhatthisis {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 100%;
-}
-
-.channel_item {
-    list-style-type: none;
-    border: none;
-    background-color: inherit;
-    color: inherit;
-    width: 100%;
-    text-align: left;
-}
-
-.channel_item:hover {
-    background-color: #444444;
-}
-
-.login_input {
-    width: 300px;
-    display: inline-block;
-    color: inherit;
-    background-color: inherit;
-    margin-left: 8px;
-    margin-bottom: 10px;
-}
-
-#login {
-    display: grid;
-    width: min-content;
-    margin: 0 auto;
-}
-
-#login_button {
-    grid-row: 5;
-    grid-column: 2;
-    margin-left: 8px;
-}
-
-#sync_ip_label   { grid-row: 1; grid-column: 1; }
-#sync_ip_input   { grid-row: 1; grid-column: 2; }
-#sync_port_label { grid-row: 2; grid-column: 1; }
-#sync_port_input { grid-row: 2; grid-column: 2; }
-#uname_label     { grid-row: 3; grid-column: 1; }
-#uname_input     { grid-row: 3; grid-column: 2; }
-#pw_label        { grid-row: 4; grid-column: 1; }
-#pw_input        { grid-row: 4; grid-column: 2; }
-.message {
-    font-size: 13px;
-    display: inline-block;
-    border: 1px solid #222222;
-    border-radius: 4px;
-    width: 90%;
-    padding: 2px;
-}
-
-.message:hover {
-    background-color: #444444;
-}
-
-.small-message:hover {
-    background-color: #444444;
-}
-
-.small-message {
-    font-size: 13px;
-    display: inline-block;
-    border: none;
-    border-radius: 4px;
-    width: 90%;
-    padding: 2px;
-    padding-left: 38px;
-/*    margin-top: -14px;*/
-}
-
-.pfp_image {
-    width: 32px;
-    float: left;
-    margin-right: 4px;
-    background-color: inherit;
-}
-
-.uname {
-    float: left;
-    margin-right: 6px;
-    margin-top: 8px;
-    background-color: inherit;
-    color: #aaaaaa;
-}
-
-.msgbody {
-    float: left;
-    background-color: inherit;
-    margin-top: 8px;
-    margin-bottom: 0px;
-}
-
-.msgdate {
-    float: right;
-    font-size: 10;
-    color: #808080;
-}
-
-.small-uname {
-    float: left;
-    margin-right: 6px;
-    background-color: inherit;
-    color: #aaaaaa;
-}
-
-.small-msgbody {
-    float: left;
-    background-color: inherit;
-    margin-top: auto;
-    margin-bottom: 0px;
-}
-
-.small-msgdate {
-    float: right;
-    font-size: 10;
-    color: #222222;
-    margin-bottom: 0px;
-    margin-top: 0px;
-}
-
-
-body {
-    background-color: #222222;
-    color: #dddddd;
-    font-family: sans-serif;
-}
-
-#msgbox {
-    background-color: inherit;
-    color: inherit;
-    border: inherit;
-    border-radius: inherit;
-    width: 99%;
-    position: absolute;
-    bottom: 4;
-    left: 2;
-    font-family: inherit;
-}
-
-input, textarea, button {
-    border: 2px solid #444444;
-    border-radius: 6px;
-    color: inherit;
-    background-color: inherit;
-}
-
-#msgbox:focus {
-    outline: none;
-}
-
-input:focus {
-    outline: none;
-}
-
-#channels {
-    display: flex;
-    margin-right: 1%;
-    height: 100%;
-    width: 10%;
-    flex-direction: column;
-}
-
-#messagearea {
-    display: flex;
-    flex-direction:column;
-    width: 100%;
-    overflow-y: scroll;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    overflow: auto;
-}
-
-#messagearea-outer {
-    overflow: hidden;
-    flex-grow: 1;
-    position: relative;
-    margin-bottom: 20px;
-}
-
-#idkwhatthisis {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 100%;
-}
-
 .channel_item {
     list-style-type: none;
     border: none;
@@ -380,7 +184,35 @@ input:focus {
 #sync_info {
     font-size: 10px;
 }
+
 .emoji {
     width: 32px;
     margin-top: -8px;
+}
+
+#emojis {
+    position: absolute;
+    bottom: 15;
+    left: 2;
+}
+
+#idkwhatthisis {
+    width: 100%;
+    height: 100%;
+}
+
+#servercontent {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 50%;
+
+}
+
+#servers {
+    position: relative;
+    margin-top: 0;
+}
+
+.server {
 }

@@ -8,11 +8,23 @@
 <script src="{{ url_for("static", filename="socket.io.js") }}" type="text/javascript"></script>
 
 <div id="idkwhatthisis">
-    <div id="channels">
-        <ul id="channel_list"></ul>
+    <div id="servers">
+        <button class="server">
+            <img class="serverimg" src="{{ url_for("static", filename="jellyfish.png") }}">
+        </button>
+        <button class="server">
+            <img class="serverimg" src="{{ url_for("static", filename="jellyfish.png") }}">
+        </button>
     </div>
-    <div id="messagearea-outer">
-        <div id="messagearea"></div>
+    <br>
+    <div id="servercontent">
+        <div id="channels">
+            <ul id="channel_list"></ul>
+        </div>
+        <div id="messagearea-outer">
+            <div id="messagearea"></div>
+        </div>
+        <div id="emojis"><p>test</p><p>test2</p></div>
     </div>
 </div>
 
@@ -32,12 +44,21 @@
 <script>
 
 let socket = io();
+let total_emojis = [];
+let show_emojis = false;
 
 document.getElementById("msgbox").onkeypress = function(key) {
+    let elem = document.getElementById("msgbox");
     if (key.keyCode === 13) {
-        let elem = document.getElementById("msgbox");
         socket.send({req: "send_message", message: elem.value});
         elem.value = "";
+    }
+    if (elem.value.endsWith(":") && !show_emojis) {
+        show_emojis = true;
+        document.getElementById("emojis").style.display = "";
+    } else if (!elem.value.endsWith(":") && show_emojis) {
+        show_emojis = false;
+        document.getElementById("emojis").style.display = "none";
     }
 }
 
@@ -96,6 +117,12 @@ socket.on("channels", function(data) {
             <button class="channel_item" onclick="changeChannel('${name}')">${prefix}${name}</button>
         `;
         elem.innerHTML += html;
+    }
+});
+
+socket.on("emojis", function(data) {
+    for (const emoji of data) {
+        total_emojis.push(emoji);
     }
 });
 
