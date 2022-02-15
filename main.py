@@ -95,14 +95,6 @@ class User:
         """called when the web client sends us data"""
         if message["req"] == "send_message":
             self.servers[self.selected_server].send(message["message"])
-            # sockio.emit("message",
-                # {"messages": [
-                    # {"content": message["message"],
-                     # "author_uuid": str(self.servers[self.selected_server].self_uuid),
-                     # "date": 0,
-                     # "author": self.servers[self.selected_server].username}
-                # ]}
-            # );
             self.__send_messages_to_web([
                 asterpy.Message(
                     message["message"],
