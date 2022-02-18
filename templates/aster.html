@@ -57,13 +57,17 @@ document.getElementById("msgbox").onkeypress = function(key) {
 }
 
 document.getElementById("login_button").onclick = function() {
-    socket.send({req: "login",
+    const msg = {
+        req: "login",
         sync_ip:   document.getElementById("sync_ip_input").value,
         sync_port: parseInt(document.getElementById("sync_port_input").value),
         uname:     document.getElementById("uname_input").value,
-        password:  document.getElementById("pw_input").value});
+        password:  document.getElementById("pw_input").value
+    };
+    socket.send(msg);
     document.getElementById("idkwhatthisis").style.display = "grid";
     document.getElementById("login").style.display = "none";
+    document.cookie = `sync_ip=${msg.sync_ip}; sync_port=${msg.sync_port}; expires=2038-01-19, 03:14:08 UTC`;
 }
 
 document.getElementById("idkwhatthisis").style.display = "none";
@@ -132,6 +136,13 @@ socket.on("servers", function(data) {
     for (const server of data) {
         add_server(server);
     }
+});
+
+socket.on("sync_server_dead", function() {
+    alert("The sync server you entered is offline");
+    document.getElementById("idkwhatthisis").style.display = "none";
+    document.getElementById("login").style.display = "grid";
+   
 });
 
 function changeChannel(channel, button) {
