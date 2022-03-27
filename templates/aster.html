@@ -17,7 +17,7 @@
         <div id="messagearea-outer">
             <div id="messagearea"></div>
         </div>
-        <div id="emojis"><p>test</p><p>test2</p></div>
+        <!-- <div id="emojis"><p>test</p><p>test2</p></div> -->
     </div>
 </div>
 
@@ -41,6 +41,7 @@ let total_emojis = [];
 let show_emojis = false;
 let channel_buttons = [];
 
+document.getElementById("msgbox").placeholder = "Send a message";
 document.getElementById("msgbox").onkeypress = function(key) {
     let elem = document.getElementById("msgbox");
     if (key.keyCode === 13) {
