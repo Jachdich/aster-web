@@ -68,6 +68,7 @@ class User:
         history = server.get_history(server.current_channel)
         self.__send_messages_to_web(history)
 
+        sockio.emit("login_successful", 0);
         emojis = server.list_emojis()
         sockio.emit("emojis", emojis)
 
