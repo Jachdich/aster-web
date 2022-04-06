@@ -49,9 +49,18 @@ class User:
         self.servers.append(client)
         client.on_message = lambda message: self.on_message(client, message)
         client.on_ready = lambda: self.on_ready(client)
-        t = sockio.start_background_task(self.servers[-1].run)
+        t = sockio.start_background_task(lambda: self.run_client(client))
         self.server_threads.append(t)
         return client
+
+    def run_client(self, client):
+        try:
+            client.run()
+        except ConnectionError:
+            if self.sync_server is client:
+                sockio.emit("sync_server_dead")
+
+            self.servers.remove(client)
 
     def on_ready(self, server):
         #if server == self.sync_server:

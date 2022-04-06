@@ -3,8 +3,9 @@
     display: inline-block;
     border: 1px solid #222222;
     border-radius: 4px;
-    width: 90%;
+    width: 98%;
     padding: 2px;
+    padding-left: 4px;
 }
 
 .message:hover {
@@ -76,7 +77,6 @@
     margin-top: 0px;
 }
 
-
 body {
     background-color: #222222;
     color: #dddddd;
@@ -84,15 +84,16 @@ body {
 }
 
 #msgbox {
-    background-color: inherit;
+    background-color: #333333;
     color: inherit;
     border: inherit;
     border-radius: inherit;
-    width: 99%;
+    width: 98.5%;
     position: absolute;
     bottom: 4;
-    left: 2;
+    left: 8;
     font-family: inherit;
+    border: 1px solid #333333;
 }
 
 input, textarea, button {
@@ -113,9 +114,15 @@ input:focus {
 #channels {
     display: flex;
     margin-right: 1%;
-    height: 100%;
-    width: 10%;
+    width: 128px;
     flex-direction: column;
+    border: 1px solid #333333;
+    margin-bottom: 20px;
+}
+
+#channel_list {
+    padding-bottom: 20px;
+    padding-left: 0px;
 }
 
 #messagearea {
@@ -129,6 +136,7 @@ input:focus {
     right: 0;
     bottom: 0;
     overflow: auto;
+    border: 1px solid #333333;
 }
 
 #messagearea-outer {
@@ -144,7 +152,7 @@ input:focus {
     border: none;
     background-color: inherit;
     color: inherit;
-    width: 100%;
+    width: 96%;
     text-align: left;
 }
 
@@ -222,12 +230,21 @@ input:focus {
 }
 
 #servers {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #333333;
+}
+
+#topcontent {
+    display: flex;
+    flex-direction: row;
     position: relative;
     margin-top: 0;
     width: 100%;
     height: 38px;
     grid-row: 1;
     grid-column: 1;
+    margin-bottom: 6px;
 }
 
 .server {
@@ -240,4 +257,15 @@ input:focus {
 
 .server[value="0"] {
     padding-top: 4px;
+}
+
+#buttons {
+    border: 1px solid #333333;
+    position: relative;
+    margin-top: 0;
+    height: 38px;
+    grid-row: 1;
+    grid-column: 2;
+    margin-left: 6px;
+    width: 96px;
 }
