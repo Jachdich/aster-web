@@ -39,7 +39,7 @@
     <button id="login_button">Login</button>
 </div>
 
-<div id="prefs">
+<div id="prefs" class="popup">
     <span id="s_t_uname">Username</span>
     <input id="s_uname"></input>
 
@@ -51,6 +51,18 @@
 
     <button id="s_cancel">Cancel</button>
     <button id="s_ok">Ok</button>
+</div>
+
+<div id="new_server" class="popup">
+    <span id="n_t_ip">IP</span>
+    <input id="n_ip"></input>
+
+    <span id="n_t_port">Port</span>
+    <input id="n_port"></input>
+    <div id="n_buttons">
+        <button id="n_cancel">Cancel</button>
+        <button id="n_ok">Ok</button>
+    </div>
 </div>
 
 <div id="background_fade"></div>
@@ -77,12 +89,36 @@ function set_default_settings() {
     //TODO
 }
 
+function show_new_server() {
+    document.getElementById("new_server").style.display = "grid";
+    document.getElementById("background_fade").style.display = "block";
+}
+
+function hide_new_server() {
+    document.getElementById("new_server").style.display = "none";
+    document.getElementById("background_fade").style.display = "none";
+}
+
+function clear_new_server() {
+    document.getElementById("n_port").value = "2345";
+    document.getElementById("n_ip").value = ""; 
+}
+
 hide_settings();
+hide_new_server();
+set_default_settings();
+clear_new_server();
 
 document.getElementById("settings").onclick = show_settings;
+document.getElementById("add_server").onclick = show_new_server;
 document.getElementById("s_cancel").onclick = function() {
     hide_settings();
     set_default_settings();
+}
+
+document.getElementById("n_cancel").onclick = function() {
+    hide_new_server();
+    clear_new_server();
 }
 
 document.getElementById("msgbox").placeholder = "Send a message";
@@ -113,6 +149,13 @@ document.getElementById("login_button").onclick = function() {
     document.getElementById("idkwhatthisis").style.display = "grid";
     document.getElementById("login").style.display = "none";
     document.cookie = `sync_ip=${msg.sync_ip}; sync_port=${msg.sync_port}; expires=2038-01-19, 03:14:08 UTC`;
+}
+
+{
+    let elem = document.getElementById("sync_port_input");
+    if (elem.value === "") {
+        elem.value = "2345";
+    }
 }
 
 document.getElementById("idkwhatthisis").style.display = "none";

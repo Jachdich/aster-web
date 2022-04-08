@@ -42,13 +42,16 @@ class User:
         self.server_threads = []
         self.selected_server = 0
         self.sync_server = None
+        self.uname = None
+        self.passwd = None
 
-    def connect(self, ip, port, uname, password, uuid=None):
+    def connect(self, ip, port, uname, password, uuid=None, callback=None):
         """connect to a specific server"""
         client = asterpy.Client(ip, port, uname, password, uuid)
         self.servers.append(client)
         client.on_message = lambda message: self.on_message(client, message)
         client.on_ready = lambda: self.on_ready(client)
+        client.callback = callback
         t = sockio.start_background_task(lambda: self.run_client(client))
         self.server_threads.append(t)
         return client
@@ -74,6 +77,8 @@ class User:
 
         channels = server.get_channels()
         sockio.emit("channels", [channel.to_json() for channel in channels])
+        if server.callback:
+            server.callback()
 
     def disconnect(self):
         for server in self.servers:
@@ -125,7 +130,12 @@ class User:
 
         elif message["req"] == "login":
             server = self.connect(message["sync_ip"], message["sync_port"], message["uname"], message["password"])
+            self.uname = message["uname"]
+            self.passwd = message["password"]
             self.sync_server = server
+
+        elif message["req"] == "add_server":
+            self.connect(message["ip"], message["port"], self.uname, self.passwd, callback=lambda server: self.sync_server.add_sync_server(server))
 
     def get_pfp(self, uuid):
         """get the profile picture associated with a particular UUID"""

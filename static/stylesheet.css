@@ -291,7 +291,7 @@ input:focus {
     z-index: 1;
 }
 
-#prefs {
+.popup {
     z-index: 2;
     position: absolute;
     display: grid;
@@ -311,6 +311,15 @@ input:focus {
 #s_cancel   { grid-row: 4; grid-column: 1; }
 #s_ok       { grid-row: 4; grid-column: 2; }
 
-#prefs span, #prefs button, #prefs input {
+.popup span, .popup button, .popup input {
     margin: 6px;
 }
+
+#n_t_ip    { grid-row: 1; grid-column: 1; }
+#n_ip      { grid-row: 1; grid-column: 2; }
+#n_t_port  { grid-row: 2; grid-column: 1; }
+#n_port    { grid-row: 2; grid-column: 2; }
+#n_buttons { grid-row: 3; grid-column-start: 1; grid-column-end: 3; width: 100%; }
+/*small enough to fit next to eachother*/
+#n_ok { width: 44%; }
+#n_cancel { width: 44%; }
