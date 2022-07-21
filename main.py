@@ -135,7 +135,7 @@ class User:
             self.sync_server = server
 
         elif message["req"] == "add_server":
-            self.connect(message["ip"], message["port"], self.uname, self.passwd, callback=lambda server: self.sync_server.add_sync_server(server))
+            self.connect(message["ip"], message["port"], self.uname, self.passwd, callback=lambda server: self.add_server_status(server))
 
     def get_pfp(self, uuid):
         """get the profile picture associated with a particular UUID"""

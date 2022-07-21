@@ -66,6 +66,11 @@
     </div>
 </div>
 
+<div id="error_box" class="popup">
+    <span id="error_msg"></span>
+    <button id="e_ok">Ok</button>
+</div>
+
 <div id="background_fade"></div>
 
 <input rows="1" autofocus="true" id="msgbox"></input>
@@ -75,6 +80,7 @@ let socket = io();
 let total_emojis = [];
 let show_emojis = false;
 let channel_buttons = [];
+let queued_errors = [];
 
 function show_settings() {
     document.getElementById("prefs").style.display = "grid";
@@ -105,6 +111,21 @@ function clear_new_server() {
     document.getElementById("n_ip").value = ""; 
 }
 
+function show_error() {
+    const text = queued_errors.pop();
+    document.getElementById("error_msg").innerText = text;
+    document.getElementById("error_box").style.display = "grid";
+    document.getElementById("background_fade").style.display = "block";
+}
+
+function add_error(text) {
+    queued_errors.push(text);
+    const display = document.getElementById("error_box").style.display;
+    if (display === "none" || display === "") {
+        show_error();
+    }
+}
+
 hide_settings();
 hide_new_server();
 set_default_settings();
@@ -121,6 +142,32 @@ document.getElementById("n_cancel").onclick = function() {
     hide_new_server();
     clear_new_server();
 }
+
+document.getElementById("n_ok").onclick = function() {
+    const ip = document.getElementById("n_ip");
+    const port = document.getElementById("n_port");
+    const msg = {
+        req: "add_server",
+        ip: ip,
+        port: port
+    };
+    socket.send(msg);
+    hide_new_server();
+    clear_new_server();
+}
+
+document.getElementById("e_ok").onclick = function() {
+    if (queued_errors.length > 0) {
+        show_error();
+    } else {
+        document.getElementById("error_box").style.display = "none";
+        document.getElementById("background_fade").style.display = "none";
+    }
+}
+
+socket.on("add_server_status", function(data) {
+    add_server(data);
+});
 
 document.getElementById("msgbox").placeholder = "Send a message";
 document.getElementById("msgbox").onkeypress = function(key) {
@@ -258,7 +305,7 @@ function server_button_clicked(button) {
     button.value = "1";
 }
 
-function addServer(server) {
+function add_server(server) {
     let button = document.createElement("button");
     button.className = "server";
     button.setAttribute("value", 0);
