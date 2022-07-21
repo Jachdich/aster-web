@@ -51,7 +51,7 @@
 
 .msgdate {
     float: right;
-    font-size: 10;
+    font-size: 10px;
     color: #808080;
 }
 
@@ -71,7 +71,7 @@
 
 .small-msgdate {
     float: right;
-    font-size: 10;
+    font-size: 10px;
     color: #222222;
     margin-bottom: 0px;
     margin-top: 0px;
@@ -90,8 +90,8 @@ body {
     border-radius: inherit;
     width: 98.5%;
     position: absolute;
-    bottom: 4;
-    left: 8;
+    bottom: 4px;
+    left: 8px;
     font-family: inherit;
     border: 1px solid #333333;
 }
@@ -135,10 +135,10 @@ input:focus {
     width: 100%;
     overflow-y: scroll;
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
     overflow: auto;
     border: 1px solid #333333;
 }
@@ -148,6 +148,7 @@ input:focus {
     flex-grow: 1;
     position: relative;
     margin-bottom: 22px;
+    height: 700px;
 }
 
 .channel_item {
@@ -210,12 +211,13 @@ input:focus {
 .emoji {
     width: 32px;
     margin-top: -8px;
+    display: none;
 }
 
 #emojis {
     position: absolute;
-    bottom: 15;
-    left: 2;
+    bottom: 15px;
+    left: 2px;
 }
 
 #idkwhatthisis {

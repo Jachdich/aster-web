@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 
@@ -23,7 +24,7 @@
         <div id="messagearea-outer">
             <div id="messagearea"></div>
         </div>
-        <!-- <div id="emojis"><p>test</p><p>test2</p></div> -->
+        <div id="emojis"><p>test</p><p>test2</p></div>
     </div>
 </div>
 
@@ -127,11 +128,17 @@ document.getElementById("msgbox").onkeypress = function(key) {
     if (key.keyCode === 13) {
         socket.send({req: "send_message", message: elem.value});
         elem.value = "";
+        return;
     }
-    if (elem.value.endsWith(":") && !show_emojis) {
+}
+
+document.getElementById("msgbox").oninput = function(event) {
+    const elem = document.getElementById("msgbox");
+    const last_word = elem.value.split(" ").at(-1);
+    if (last_word.startsWith(":") && !show_emojis) {
         show_emojis = true;
-        document.getElementById("emojis").style.display = "";
-    } else if (!elem.value.endsWith(":") && show_emojis) {
+        document.getElementById("emojis").style.display = "block";
+    } else if (!last_word.startsWith(":") && show_emojis) {
         show_emojis = false;
         document.getElementById("emojis").style.display = "none";
     }
@@ -216,6 +223,7 @@ socket.on("channels", function(data) {
         channel_buttons.push(button);
         elem.appendChild(button);
     }
+    channel_buttons[0].value = "1";
 });
 
 socket.on("emojis", function(data) { for (const emoji of data) { total_emojis.push(emoji); } });
