@@ -2,8 +2,8 @@
 <html>
 <head>
 
-<link rel="stylesheet" href="{{ url_for("static", filename="stylesheet.css") }}"></link>
-
+<link rel="stylesheet" href="{{ url_for("static", filename="stylesheet.css") }}">
+<title>Aster</title>
 </head>
 <body>
 <script src="{{ url_for("static", filename="socket.io.js") }}" type="text/javascript"></script>
@@ -12,8 +12,8 @@
     <div id="topcontent">
         <div id="servers"></div>
         <div id="buttons">
-            <button id="add_server"><img src="{{ url_for("static", filename="add.png") }}"></img></button>
-            <button id="settings"><img src="{{ url_for("static", filename="settings.png") }}"></img></button>
+            <button id="add_server"><img src="{{ url_for("static", filename="add.png") }}"></button>
+            <button id="settings"><img src="{{ url_for("static", filename="settings.png") }}"></button>
         </div>
     </div>
     <br>
@@ -26,29 +26,30 @@
         </div>
         <div id="emojis"><p>test</p><p>test2</p></div>
     </div>
+    <input rows="1" autofocus="true" id="msgbox">
 </div>
 
 <div id="login">
-    <label id="sync_ip_label" for="sync_ip">Sync&nbsp;server&nbsp;IP&nbsp;<span id="sync_info"><a href="{{ url_for("static", filename="sync_help.html") }}">info</a></span></label>
-    <input id="sync_ip_input" type="text" placeholder="Enter IP" name="sync_ip" class="login_input" required>
-    <label id="sync_port_label" for="sync_port">Sync&nbsp;server&nbsp;port</label>
-    <input id="sync_port_input" type="text" placeholder="Enter port" name="sync_port" class="login_input" required>
-    <label id="uname_label" for="uname">Username</label>
-    <input id="uname_input" type="text" placeholder="Enter Username" name="uname" class="login_input" required>
-    <label id="pw_label" for="psw">Password</label>
-    <input id="pw_input" type="password" placeholder="Enter Password" name="psw" class="login_input" required>
+    <label id="sync_ip_label" for="sync_ip_input">Sync&nbsp;server&nbsp;IP&nbsp;<span id="sync_info"><a href="{{ url_for("static", filename="sync_help.html") }}">info</a></span></label>
+    <input id="sync_ip_input" type="text" placeholder="Enter IP" class="login_input" required>
+    <label id="sync_port_label" for="sync_port_input">Sync&nbsp;server&nbsp;port</label>
+    <input id="sync_port_input" type="text" placeholder="Enter port" class="login_input" required>
+    <label id="uname_label" for="uname_input">Username</label>
+    <input id="uname_input" type="text" placeholder="Enter Username" class="login_input" required>
+    <label id="pw_label" for="pw_input">Password</label>
+    <input id="pw_input" type="password" placeholder="Enter Password" class="login_input" required>
     <button id="login_button">Login</button>
 </div>
 
 <div id="prefs" class="popup">
     <span id="s_t_uname">Username</span>
-    <input id="s_uname"></input>
+    <input id="s_uname">
 
     <span id="s_t_pfp">Profile Picture</span>
-    <button id="s_pfp">test<img></img></button>
+    <button id="s_pfp">test</button>
 
     <span id="s_t_passwd">Password</span>
-    <input type="password" id="s_passwd"></input>
+    <input type="password" id="s_passwd">
 
     <button id="s_cancel">Cancel</button>
     <button id="s_ok">Ok</button>
@@ -56,10 +57,10 @@
 
 <div id="new_server" class="popup">
     <span id="n_t_ip">IP</span>
-    <input id="n_ip"></input>
+    <input id="n_ip">
 
     <span id="n_t_port">Port</span>
-    <input id="n_port"></input>
+    <input id="n_port">
     <div id="n_buttons">
         <button id="n_cancel">Cancel</button>
         <button id="n_ok">Ok</button>
@@ -73,7 +74,6 @@
 
 <div id="background_fade"></div>
 
-<input rows="1" autofocus="true" id="msgbox"></input>
 <script>
 
 let socket = io();
@@ -226,7 +226,7 @@ socket.on("message", function(data) {
         if (!small) {
             image_html = `
             <span class="pfp">
-                <img src="/aster/pfp/${val["author_uuid"]}.png" class="pfp_image"></img>
+                <img src="/aster/pfp/${val["author_uuid"]}.png" class="pfp_image">
             </span>
             `;
         }
