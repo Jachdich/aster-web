@@ -16,7 +16,6 @@ sockio = SocketIO(app, async_mode='threading')
 users = {}
 
 EMOJI_PATTERN = r"(\$:(?:(?:(?:(?:[a-zA-z\-]+)\:\/{1,3})?(?:[a-zA-Z0-9])(?:[a-zA-Z0-9\-\.]){1,61}(?:\.[a-zA-Z]{2,})+|\[(?:(?:(?:[a-fA-F0-9]){1,4})(?::(?:[a-fA-F0-9]){1,4}){7}|::1|::)\]|(?:(?:[0-9]{1,3})(?:\.[0-9]{1,3}){3}))|localhost)(?:\:[0-9]{1,5}):(?:[0-9]+):\$)"
-
 EMOJI_REGEX = re.compile(EMOJI_PATTERN)
 
 def parse_for_emoji(msg):
@@ -45,6 +44,11 @@ class User:
         self.uname = None
         self.passwd = None
 
+        #two temp vars for packets needed to create prefs
+        self.sync_data = None
+        self.sync_servers = None
+        self.prefs = None
+
     def connect(self, ip, port, uname, password, uuid=None, callback=None):
         """connect to a specific server"""
         client = asterpy.Client(ip, port, uname, password, uuid)
@@ -61,22 +65,28 @@ class User:
             client.run()
         except ConnectionError:
             if self.sync_server is client:
-                sockio.emit("sync_server_dead")
-
+                self.sockio_emit("sync_server_dead")
+            else:
+                self.sockio_emit("server_offline", {"server": client.uuid})
             self.servers.remove(client)
 
     def on_ready(self, server):
-        #if server == self.sync_server:
-        #    self.__set_prefs(server.get_sync())
+        if server == self.sync_server:
+            #self.__set_prefs(server.get_sync())
+            #server.on_packet("sync_get", self.__set_sync_data)
+            #server.on_packet("sync_get_servers", self.__set_sync_servers)
+            #server.send(the packets)
+            pass
+
         history = server.get_history(server.current_channel)
         self.__send_messages_to_web(history)
 
-        sockio.emit("login_successful", 0);
+        self.sockio_emit("login_successful", 0);
         emojis = server.list_emojis()
-        sockio.emit("emojis", emojis)
+        self.sockio_emit("emojis", emojis)
 
         channels = server.get_channels()
-        sockio.emit("channels", [channel.to_json() for channel in channels])
+        self.sockio_emit("channels", [channel.to_json() for channel in channels])
         if server.callback:
             server.callback()
 
@@ -96,11 +106,21 @@ class User:
             msg["content"] = parse_for_emoji(html.escape(msg["content"]))
             msgs.append(msg)
 
-        sockio.emit("message", {"messages": msgs}, to=self.sid)
+        self.sockio_emit("message", {"messages": msgs})
 
-    def __set_prefs(self, prefs):
-        pass
+    def __set_sync_data(self, sync_data: dict):
+        self.sync_data = sync_data
+        if self.sync_data is not None and self.sync_servers is not None:
+            self.__load_prefs()
 
+    def __set_sync_servers(self, sync_servers: dict):
+        self.sync_servers = sync_servers
+        if self.sync_data is not None and self.sync_servers is not None:
+            self.__load_prefs()
+
+    def __load_prefs(self):
+        self.prefs = asterpy.SyncData.from_json(self.sync_data, self.sync_servers)
+    
     def on_message(self, server, message):
         """called when any server sends a message"""
         print(f"on_message called with data {message.to_json()} to sid {self.sid}")
@@ -144,6 +164,9 @@ class User:
             pfp = server.get_pfp(uuid)
             if pfp is not None:
                 return pfp
+
+    def sockio_emit(self, message_id, data=None):
+        sockio.emit(message_id, data, to=self.sid)
 
 @app.route("/aster")
 def aster():

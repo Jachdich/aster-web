@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html><head>
+
+<link rel="stylesheet" href="stylesheet.css">
+<title>Aster</title>
+</head>
+<body class="vsc-initialized">
+<script src="/static/socket.io.js" type="text/javascript"></script>
+
+    <div class="top">
+        <div class="server-list">
+            <div class="server-module"><img src="republic.jpg" class="server-icon"></div>
+            <div class="server-module">
+                <img src="cospox.png" class="server-icon">
+                <div class="module-user-indicator"></div>
+                <img src="server_select.png" class="server-selection-indicator">
+            </div>
+            <div class="server-module-disabled"><img src="hhv3.png" class="server-icon-disabled"></div>
+        </div>
+        <button id="add-server"><img src="add_2.png" class="icon"></button>
+        <button id="settings"><img src="butterfly.png" class="pfp"></button>
+    </div>
+
+    <div class="server-header">
+        <h1 class="server-name">Cospox</h1>
+        <div class="user-indicator"></div>
+        <h1 id="server-user-label" class="server-status-label">n/a online</h1>
+        <img src="ping.png" class="ping-indicator">
+        <h1 id="server-ping-label" class="server-status-label">17ms</h1>
+        <div class="server-header-seperator"></div>
+        <button id="server-notifs"><img src="bell.png" class="icon-small"></button>
+    </div>
+
+    <div id="server-area">
+        <div id="server-channels">
+            <ul id="channel-list">
+                <button id="channel-button"><img src="channel_select.png" class="channel-selection-indicator"><p class="channel-button-label"># general</p></button>
+            </ul>
+        </div>
+        <div id="server-chat">
+            <input rows="1" autofocus="true" id="server-chat-msgbox" placeholder="send a message">
+            <div id="message-area">
+                <div class="message">
+                    <img src="butterfly.png" class="msgpfp">
+                    <p class="msguser">Jellycarno </p>
+                    <p class="msgbody">Bruh is the square root of a chicken, and I am the lord.</p>
+                    <p class="msgdate">12/05/22 1432</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</body></html>

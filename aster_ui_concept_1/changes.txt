@@ -1,0 +1,8 @@
+- messages 8px margin left, closer to the side
+- plus button is a bit meh
+- no outline over message box
+- placeholder text position
+- indicator on side of offline servers?
+- username is not in line ree
+- ping & unread messages on same circle but different colours?
+- message box span whole width?
