@@ -3,12 +3,6 @@
     src: url("didactgothic-regular.otf") format("opentype");
 }
 
-body {
-    background-color: #1C1C1C;
-    color: #d3d3d3;
-    font-family: didact-gothic;
-}
-
 .top {
     left: 12px;
     top: 12px;

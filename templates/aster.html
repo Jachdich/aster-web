@@ -9,6 +9,46 @@
 <script src="{{ url_for("static", filename="socket.io.js") }}" type="text/javascript"></script>
 
 <div id="idkwhatthisis">
+<div class="top">
+    <div class="server-list">
+        <div class="server-module"><img src="republic.jpg" class="server-icon"></div>
+        <div class="server-module">
+            <img src="cospox.png" class="server-icon">
+            <div class="module-user-indicator"></div>
+            <img src="server_select.png" class="server-selection-indicator">
+        </div>
+        <div class="server-module-disabled"><img src="hhv3.png" class="server-icon-disabled"></div>
+    </div>
+    <button id="add-server"><img src="add_2.png" class="icon"></button>
+    <button id="settings"><img src="butterfly.png" class="pfp"></button>
+</div>
+
+<div class="server-header">
+    <h1 class="server-name">Cospox</h1>
+    <div class="user-indicator"></div>
+    <h1 id="server-user-label" class="server-status-label">n/a online</h1>
+    <img src="ping.png" class="ping-indicator">
+    <h1 id="server-ping-label" class="server-status-label">17ms</h1>
+    <div class="server-header-seperator"></div>
+    <button id="server-notifs"><img src="bell.png" class="icon-small"></button>
+</div>
+
+<div id="server-area">
+    <div id="server-channels">
+        <ul id="channel-list">
+        </ul>
+    </div>
+    <div id="server-chat">
+        <input rows="1" autofocus="true" id="server-chat-msgbox" placeholder=" Send a message">
+        <div id="message-area">
+            <div class="message">
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!--
+<div id="idkwhatthisis">
     <div id="topcontent">
         <div id="servers"></div>
         <div id="buttons">
@@ -22,12 +62,12 @@
             <ul id="channel_list"></ul>
         </div>
         <div id="messagearea-outer">
-            <div id="messagearea"></div>
+            <div id="message-area"></div>
         </div>
         <div id="emojis"><p>test</p><p>test2</p></div>
     </div>
     <input rows="1" autofocus="true" id="msgbox">
-</div>
+</div>-->
 
 <div id="login">
     <label id="sync_ip_label" for="sync_ip_input">Sync&nbsp;server&nbsp;IP&nbsp;<span id="sync_info"><a href="{{ url_for("static", filename="sync_help.html") }}">info</a></span></label>
@@ -75,12 +115,13 @@
 <div id="background_fade"></div>
 
 <script>
-
+"use strict";
 let socket = io();
 let total_emojis = [];
 let show_emojis = false;
 let channel_buttons = [];
 let queued_errors = [];
+let self_user = undefined;
 
 function show_settings() {
     document.getElementById("prefs").style.display = "grid";
@@ -132,7 +173,7 @@ set_default_settings();
 clear_new_server();
 
 document.getElementById("settings").onclick = show_settings;
-document.getElementById("add_server").onclick = show_new_server;
+document.getElementById("add-server").onclick = show_new_server;
 document.getElementById("s_cancel").onclick = function() {
     hide_settings();
     set_default_settings();
@@ -169,18 +210,22 @@ socket.on("add_server_status", function(data) {
     add_server(data);
 });
 
-document.getElementById("msgbox").placeholder = "Send a message";
-document.getElementById("msgbox").onkeypress = function(key) {
-    let elem = document.getElementById("msgbox");
+socket.on("self", function(data) {
+    self_user = data;
+});
+
+document.getElementById("server-chat-msgbox").onkeypress = function(key) {
+    let elem = document.getElementById("server-chat-msgbox");
     if (key.keyCode === 13) {
         socket.send({req: "send_message", message: elem.value});
+        //TODO set partial message
         elem.value = "";
         return;
     }
 }
 
-document.getElementById("msgbox").oninput = function(event) {
-    const elem = document.getElementById("msgbox");
+document.getElementById("server-chat-msgbox").oninput = function(event) {
+    const elem = document.getElementById("server-chat-msgbox");
     const last_word = elem.value.split(" ").at(-1);
     if (last_word.startsWith(":") && !show_emojis) {
         show_emojis = true;
@@ -214,34 +259,39 @@ document.getElementById("login_button").onclick = function() {
 
 document.getElementById("idkwhatthisis").style.display = "none";
 
+function get_html_from_message(val) {
+    const small = false;
+    let smalltxt = "";
+    if (small) {
+        smalltxt = "small-";
+    }
+    let image_html = "";
+    if (!small) {
+        image_html = `
+        <img src="/aster/pfp/${val["author_uuid"]}.png" class="msgpfp">
+        `;
+    }
+
+    let date = new Date(val["date"] * 1000);
+    let date_str = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+    const html = `
+    <div class="${smalltxt}message">
+        ${image_html}
+        <p class="${smalltxt}msguser">${val["author"]}: </p>
+        <p class="${smalltxt}msgbody">${val["content"]}</p>
+        <p class="${smalltxt}msgdate">${date_str}</p>
+    </div>
+    `;
+    return html;
+}
+
 socket.on("message", function(data) {
     let total_html = "";
     for (const val of data["messages"]) {
-        const small = false;
-        let smalltxt = "";
-        if (small) {
-            smalltxt = "small-";
-        }
-        let image_html = "";
-        if (!small) {
-            image_html = `
-            <span class="pfp">
-                <img src="/aster/pfp/${val["author_uuid"]}.png" class="pfp_image">
-            </span>
-            `;
-        }
-        const html = `
-        <div class="${smalltxt}message">
-            ${image_html}
-            <span class="${smalltxt}uname">${val["author"]}: </span>
-            <p class="${smalltxt}msgbody">${val["content"]}</p>
-            <p class="${smalltxt}msgdate">12/05/22 14:32</p>
-        </div>
-        `;
-
+        let html = get_html_from_message(val);
         total_html += html;
     }
-    let elem = document.getElementById("messagearea");
+    let elem = document.getElementById("message-area");
     elem.innerHTML += total_html;
     elem.scrollTop = elem.scrollHeight;
 });
@@ -251,7 +301,7 @@ socket.on("login_successful", function(id) {
 });
 
 socket.on("channels", function(data) {
-    let elem = document.getElementById("channel_list");
+    let elem = document.getElementById("channel-list");
     for (let channel of channel_buttons) {
         channel.remove();
     }
@@ -260,9 +310,8 @@ socket.on("channels", function(data) {
         //basically what this atrosity does is
         //add # onto the start of the channel name if it doesn't already start with # or &
         const prefix = name.charAt(0) == '&' ? '' : (name.charAt(0) == '#' ? '' : '#');
-
         let button = document.createElement("button");
-        button.className = "channel_item";
+        button.className = "channel-button";
         button.onclick = function() { changeChannel(name, button); };
         button.innerText = prefix + name;
         button.setAttribute("value", 0);
@@ -288,7 +337,7 @@ function changeChannel(channel, button) {
         b.value = 0;
     }
     button.value = 1;
-    let elem = document.getElementById("messagearea");
+    let elem = document.getElementById("message-area");
     elem.innerHTML = "";
     socket.send({req: "change_channel", channel: channel});
 }

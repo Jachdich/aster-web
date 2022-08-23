@@ -40,6 +40,7 @@ class User:
         self.servers = []
         self.server_threads = []
         self.selected_server = 0
+        self.selected_channel = None
         self.sync_server = None
         self.uname = None
         self.passwd = None
@@ -77,9 +78,6 @@ class User:
             #server.on_packet("sync_get_servers", self.__set_sync_servers)
             #server.send(the packets)
             pass
-
-        history = server.get_history(server.current_channel)
-        self.__send_messages_to_web(history)
 
         self.sockio_emit("login_successful", 0);
         emojis = server.list_emojis()
@@ -129,23 +127,24 @@ class User:
     def on_web_message(self, message):
         """called when the web client sends us data"""
         if message["req"] == "send_message":
-            self.servers[self.selected_server].send(message["message"])
-            self.__send_messages_to_web([
-                asterpy.Message(
-                    message["message"],
-                    asterpy.User(
-                        self.servers[self.selected_server].self_uuid,
-                        self.servers[self.selected_server].username
-                    ),
-                    None,
-                    0
-                ),]
-            )
+            self.selected_channel.send(message["message"])
+            #TODO send partial message??
+            #self.__send_messages_to_web([
+            #    asterpy.Message(
+            #        message["message"],
+            #        asterpy.User(
+            #            self.servers[self.selected_server].self_uuid,
+            #            self.servers[self.selected_server].username
+            #        ),
+            #        None,
+            #        0
+            #    ),]
+            #)
                     
         elif message["req"] == "change_channel":
             serv = self.servers[self.selected_server]
-            serv.join(serv.get_channel_by_name(message["channel"]));
-            history = serv.get_history(serv.current_channel)
+            self.selected_channel = serv.get_channel_by_name(message["channel"])
+            history = serv.get_history(self.selected_channel)
             self.__send_messages_to_web(history)
 
         elif message["req"] == "login":
