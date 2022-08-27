@@ -56,6 +56,7 @@ class User:
         self.servers.append(client)
         client.on_message = lambda message: self.on_message(client, message)
         client.on_ready = lambda: self.on_ready(client)
+        client.on_packet = lambda packet: self.on_packet(client, packet)
         client.callback = callback
         t = sockio.start_background_task(lambda: self.run_client(client))
         self.server_threads.append(t)
@@ -123,6 +124,12 @@ class User:
         """called when any server sends a message"""
         print(f"on_message called with data {message.to_json()} to sid {self.sid}")
         self.__send_messages_to_web([message,])
+
+    def on_packet(self, server, packet):
+        if server == self.sync_server:
+            if packet["command"] == "register" or packet["command"] == "login":
+                uuid = packet["uuid"]
+                self.sockio_emit("pfp_button", {"uuid": str(uuid)})
 
     def on_web_message(self, message):
         """called when the web client sends us data"""

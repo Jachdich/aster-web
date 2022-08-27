@@ -11,26 +11,26 @@
 <div id="idkwhatthisis">
 <div class="top">
     <div class="server-list">
-        <div class="server-module"><img src="republic.jpg" class="server-icon"></div>
+        <div class="server-module"><img src="{{ url_for("static", filename="republic.jpg") }}" class="server-icon"></div>
         <div class="server-module">
-            <img src="cospox.png" class="server-icon">
+            <img src="{{ url_for("static", filename="cospox.png") }}" class="server-icon">
             <div class="module-user-indicator"></div>
-            <img src="server_select.png" class="server-selection-indicator">
+            <img src="{{ url_for("static", filename="server_select.png") }}" class="server-selection-indicator">
         </div>
-        <div class="server-module-disabled"><img src="hhv3.png" class="server-icon-disabled"></div>
+        <div class="server-module-disabled"><img src="{{ url_for("static", filename="hhv3.png") }}" class="server-icon-disabled"></div>
     </div>
-    <button id="add-server"><img src="add_2.png" class="icon"></button>
-    <button id="settings"><img src="butterfly.png" class="pfp"></button>
+    <button id="add-server"><img src="{{ url_for("static", filename="add.png") }}" class="icon"></button>
+    <button id="settings"><img src="{{ url_for("static", filename="default_pfp.png") }}" class="pfp" id="pfp_button"></button>
 </div>
 
 <div class="server-header">
     <h1 class="server-name">Cospox</h1>
     <div class="user-indicator"></div>
     <h1 id="server-user-label" class="server-status-label">n/a online</h1>
-    <img src="ping.png" class="ping-indicator">
+    <img src="{{ url_for("static", filename="ping.png") }}" class="ping-indicator">
     <h1 id="server-ping-label" class="server-status-label">17ms</h1>
     <div class="server-header-seperator"></div>
-    <button id="server-notifs"><img src="bell.png" class="icon-small"></button>
+    <button id="server-notifs"><img src="{{ url_for("static", filename="bell.png") }}" class="icon-small"></button>
 </div>
 
 <div id="server-area">
@@ -214,6 +214,10 @@ socket.on("self", function(data) {
     self_user = data;
 });
 
+socket.on("pfp_button", function(data) {
+    document.getElementById("pfp_button").src = "/aster/pfp/" + data["uuid"] + ".png";
+});
+
 document.getElementById("server-chat-msgbox").onkeypress = function(key) {
     let elem = document.getElementById("server-chat-msgbox");
     if (key.keyCode === 13) {
@@ -319,7 +323,6 @@ socket.on("channels", function(data) {
         channel_buttons.push(button);
         elem.appendChild(button);
     }
-    channel_buttons[0].value = "1";
 });
 
 socket.on("emojis", function(data) { for (const emoji of data) { total_emojis.push(emoji); } });
