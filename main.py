@@ -50,9 +50,9 @@ class User:
         self.sync_servers = None
         self.prefs = None
 
-    def connect(self, ip, port, uname, password, uuid=None, callback=None):
+    def connect(self, ip, port, uname, password, uuid=None, callback=None, login=True, register=False):
         """connect to a specific server"""
-        client = asterpy.Client(ip, port, uname, password, uuid)
+        client = asterpy.Client(ip, port, uname, password, uuid, login, register)
         self.servers.append(client)
         client.on_message = lambda message: self.on_message(client, message)
         client.on_ready = lambda: self.on_ready(client)
@@ -78,7 +78,7 @@ class User:
             #server.on_packet("sync_get", self.__set_sync_data)
             #server.on_packet("sync_get_servers", self.__set_sync_servers)
             #server.send(the packets)
-            pass
+            self.sockio_emit("connected_to_sync")
 
         self.sockio_emit("login_successful", 0);
         emojis = server.list_emojis()
@@ -156,6 +156,12 @@ class User:
 
         elif message["req"] == "login":
             server = self.connect(message["sync_ip"], message["sync_port"], message["uname"], message["password"])
+            self.uname = message["uname"]
+            self.passwd = message["password"]
+            self.sync_server = server
+        
+        elif message["req"] == "register":
+            server = self.connect(message["sync_ip"], message["sync_port"], message["uname"], message["password"], login=False, register=True)
             self.uname = message["uname"]
             self.passwd = message["password"]
             self.sync_server = server
