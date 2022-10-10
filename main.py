@@ -74,10 +74,11 @@ class User:
 
     def on_ready(self, server):
         if server == self.sync_server:
-            #self.__set_prefs(server.get_sync())
-            #server.on_packet("sync_get", self.__set_sync_data)
-            #server.on_packet("sync_get_servers", self.__set_sync_servers)
-            #server.send(the packets)
+            # self.__set_prefs(server.get_sync())
+            server.call_on_packet("sync_get", self.__set_sync_data)
+            server.call_on_packet("sync_get_servers", self.__set_sync_servers)
+            server.send({"command": "sync_get"})
+            server.send({"command": "sync_get_servers"})
             self.sockio_emit("connected_to_sync")
 
         self.sockio_emit("login_successful", 0);
@@ -118,7 +119,15 @@ class User:
             self.__load_prefs()
 
     def __load_prefs(self):
+        if self.sync_data["status"] == 404:
+            self.sync_data["uname"] = self.uname
+            self.sync_data["pfp"] = None
         self.prefs = asterpy.SyncData.from_json(self.sync_data, self.sync_servers)
+        # TODO set uname? self.uname = self.prefs.uname
+        self.sockio_emit("servers", [{
+            "img": f"/aster/server_img/{s['ip']}/{s['port']}.png",
+        } for s in self.sync_servers["servers"]])
+        # TODO set prefs?
     
     def on_message(self, server, message):
         """called when any server sends a message"""
@@ -208,6 +217,19 @@ def emoji(ip, port, uuid):
         response = make_response(base64.b64decode(emoji_val.data))
 
     response.headers.set('Content-Type', 'image/png')
+    return response
+
+@app.route("/aster/server_img/<ip>/<port>.png")
+def server_img(ip, port):
+    # TODO this is such a hack lmao figure out a better way 
+    client = asterpy.Client(ip, int(port), "", "", login=False)
+    def cb(p):
+        client.p = p
+        client.disconnect()
+    client.call_on_packet("get_icon", cb)
+    client.run(init_commands=[{"command": "get_icon"}])
+    response = make_response(base64.b64decode(client.p["data"]))
+    response.headers.set("Content-Type", "image/png")
     return response
 
 @sockio.event

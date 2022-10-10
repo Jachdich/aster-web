@@ -261,13 +261,13 @@ function server_button_clicked(button) {
 
 function add_server(server) {
     let button = document.createElement("button");
-    button.className = "server";
+    button.className = "server-module";
     button.setAttribute("value", 0);
     const img = document.createElement("img")
-    img.className = "serverimg";
+    img.className = "server-icon";
     img.src = server["img"];
     button.appendChild(img)
-    document.getElementById("servers").appendChild(button);
+    document.getElementById("server-list").appendChild(button);
 
     button.onclick = function() {
         server_button_clicked(button);
