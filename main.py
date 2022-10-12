@@ -88,7 +88,7 @@ class User:
         channels = server.get_channels()
         self.sockio_emit("channels", [channel.to_json() for channel in channels])
         if server.callback:
-            server.callback()
+            server.callback(server)
 
     def disconnect(self):
         for server in self.servers:
@@ -125,8 +125,8 @@ class User:
         self.prefs = asterpy.SyncData.from_json(self.sync_data, self.sync_servers)
         # TODO set uname? self.uname = self.prefs.uname
         self.sockio_emit("servers", [{
-            "img": f"/aster/server_img/{s['ip']}/{s['port']}.png",
-        } for s in self.sync_servers["servers"]])
+            "img": s.pfp,
+        } for s in self.prefs.servers])
         # TODO set prefs?
     
     def on_message(self, server, message):
@@ -176,7 +176,7 @@ class User:
             self.sync_server = server
 
         elif message["req"] == "add_server":
-            self.connect(message["ip"], message["port"], self.uname, self.passwd, callback=lambda server: self.add_server_status(server))
+            self.connect(message["ip"], message["port"], self.uname, self.passwd, callback=lambda server: self.add_server(server))
 
     def get_pfp(self, uuid):
         """get the profile picture associated with a particular UUID"""
@@ -217,19 +217,6 @@ def emoji(ip, port, uuid):
         response = make_response(base64.b64decode(emoji_val.data))
 
     response.headers.set('Content-Type', 'image/png')
-    return response
-
-@app.route("/aster/server_img/<ip>/<port>.png")
-def server_img(ip, port):
-    # TODO this is such a hack lmao figure out a better way 
-    client = asterpy.Client(ip, int(port), "", "", login=False)
-    def cb(p):
-        client.p = p
-        client.disconnect()
-    client.call_on_packet("get_icon", cb)
-    client.run(init_commands=[{"command": "get_icon"}])
-    response = make_response(base64.b64decode(client.p["data"]))
-    response.headers.set("Content-Type", "image/png")
     return response
 
 @sockio.event

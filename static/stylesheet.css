@@ -182,13 +182,14 @@ input:focus {
 }*/
 
 .server-module {
-    width: 60px;
+    width: 40px;
     height: 40px;
     background: #363636;
     border-radius: 16px;
     border-style: none;
     margin-left: 8px;
     margin-top: 3px;
+    display: grid;
 }
 
 .module-user-indicator {
@@ -202,8 +203,7 @@ input:focus {
 
 .server-selection-indicator {
     width: 29px;
-    margin-left: 16px;
-    margin-top: -30px;
+    margin-left: 2px;
 }
 
 .server-module-disabled {
@@ -312,6 +312,14 @@ input:focus {
     height: 12px;
 }
 
+.server-selection-indicator[shown="1"] {
+    display: block;
+}
+
+.server-selection-indicator[shown="0"] {
+    display: none;
+}
+
 #server-chat {
     box-sizing: border-box;
     width: 100%;
@@ -413,7 +421,7 @@ input:focus {
 .server-icon {
     width: 36px;
     height: 36px;
-    margin-left: 2px;
+    margin-left: -2px;
     margin-top: 2px;
     border-radius: 50%;
     border-style: none;

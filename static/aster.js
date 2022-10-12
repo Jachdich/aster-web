@@ -72,8 +72,8 @@ document.getElementById("n_ok").onclick = function() {
     const port = document.getElementById("n_port");
     const msg = {
         req: "add_server",
-        ip: ip,
-        port: port
+        ip: ip.value,
+        port: port.value
     };
     socket.send(msg);
     hide_new_server();
@@ -250,13 +250,13 @@ function changeChannel(channel, button) {
 let server_buttons = [];
 
 function server_button_clicked(button) {
-    if (button.value == "1") return; //no need to do anything, button already selected
+    if (button.children[1].getAttribute("shown") == 1) return; //no need to do anything, button already selected
 
     //disable all other buttons
     for (let b of server_buttons) {
-        b.value = "0";
+        b.children[1].setAttribute("shown", 0);
     }
-    button.value = "1";
+    button.children[1].setAttribute("shown", 1);
 }
 
 function add_server(server) {
@@ -265,8 +265,14 @@ function add_server(server) {
     button.setAttribute("value", 0);
     const img = document.createElement("img")
     img.className = "server-icon";
-    img.src = server["img"];
+    img.src = "data:image/png;base64," + server["img"];
     button.appendChild(img)
+    
+    const indicator = document.createElement("img");
+    indicator.src = "/static/server_select.png";
+    indicator.className = "server-selection-indicator";
+    indicator.setAttribute("shown", 0);
+    button.appendChild(indicator);
     document.getElementById("server-list").appendChild(button);
 
     button.onclick = function() {
