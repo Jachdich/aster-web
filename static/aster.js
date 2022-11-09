@@ -192,13 +192,11 @@ socket.on("connected_to_sync", function(data) {
 });
 
 socket.on("message", function(data) {
-    let total_html = "";
+    let elem = document.getElementById("message-area");
     for (const val of data["messages"]) {
         let html = get_html_from_message(val);
-        total_html += html;
+        elem.innerHTML += html;
     }
-    let elem = document.getElementById("message-area");
-    elem.innerHTML += total_html;
     elem.scrollTop = elem.scrollHeight;
 });
 
