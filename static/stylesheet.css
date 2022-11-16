@@ -176,10 +176,10 @@ input:focus {
     padding-right: 20px;
 }
 
-/*@font-face {
+@font-face {
     font-family: didact-gothic;
     src: url("didactgothic-regular.otf") format("opentype");
-}*/
+}
 
 .server-module {
     width: 40px;
