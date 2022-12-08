@@ -1,9 +1,7 @@
 import socket, sys, time, re, html
 
 #<DEBUG>
-sys.path.append("..")
-sys.path.append("../..")
-import aster.asterpy.src.asterpy as asterpy
+import asterpy
 #</DEBUG>
 
 import threading, base64
