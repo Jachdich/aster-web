@@ -31,7 +31,7 @@ type alias Server =
     , ip : String
     , port_ : Int
     , channels : Array Channel
-    , selected_channel : Int
+    , selected_channel : Maybe Channel
     }
 
 
@@ -42,7 +42,7 @@ type alias Model =
     , uname : String
     , password : String
     , servers : Array Server
-    , selected_server : Maybe Int
+    , selected_server : Maybe Server
     }
 
 
@@ -67,7 +67,7 @@ init =
                                     ]
                           }
                         ]
-              , selected_channel = 0
+              , selected_channel = Nothing
               }
             ]
     , selected_server = Nothing
@@ -107,10 +107,7 @@ update msg model =
             { model | password = text }
 
         ServerClicked server ->
-            let
-                idx = List.head (List.filter )
-            in
-            { model | selected_server = idx }
+            { model | selected_server = Just server }
 
         ChannelClicked channel ->
             case model.selected_server of
@@ -202,15 +199,14 @@ get_message_html message =
 get_selected_server : Model -> Maybe Server
 get_selected_server model =
     model.selected_server
-        |> andThen (\idx -> Array.get idx model.servers)
-
 
 get_selected_channel : Model -> Maybe Channel
 get_selected_channel model =
-    model.selected_server
-        |> andThen (\idx -> Array.get idx model.servers)
-        |> andThen (\serv -> Array.get serv.selected_channel serv.channels)
-
+    case model.selected_server of
+        Just sel_serv ->
+            sel_serv.selected_channel
+        Nothing ->
+            Nothing
 
 view : Model -> Html Msg
 view model =

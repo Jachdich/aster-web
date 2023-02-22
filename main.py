@@ -5,7 +5,7 @@ import asterpy
 #</DEBUG>
 
 import threading, base64
-from flask import Flask, render_template, request, make_response
+from flask import Flask, render_template, request, make_response, send_from_directory
 from flask_socketio import SocketIO
 
 app = Flask(__name__)
@@ -190,6 +190,10 @@ class User:
 @app.route("/aster")
 def aster():
     return render_template("aster.html")
+
+@app.route("/pkg/<path:path>")
+def pkg(path):
+    return send_from_directory("static/pkg", path)
 
 @app.route("/aster/pfp/<uuid>.png")
 def pfp(uuid):

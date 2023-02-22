@@ -1,0 +1,10 @@
+#build-errors {
+  padding: 1em;
+  background-color: #111;
+  color: #DDD;
+}
+
+#build-errors pre {
+    margin: 0;
+}
+
