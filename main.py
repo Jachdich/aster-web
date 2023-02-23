@@ -1,15 +1,17 @@
 import socket, sys, time, re, html
 
 #<DEBUG>
-import asterpy
+import asterpy_local as asterpy
 #</DEBUG>
 
 import threading, base64
 from flask import Flask, render_template, request, make_response, send_from_directory
-from flask_socketio import SocketIO
+# from flask_socketio import SocketIO
+from flask_sockets import Sockets
 
 app = Flask(__name__)
-sockio = SocketIO(app, async_mode='threading')
+# sockio = SocketIO(app, async_mode='threading')
+sockets = Sockets(app)
 
 users = {}
 
@@ -195,16 +197,10 @@ def aster():
 def pkg(path):
     return send_from_directory("static/pkg", path)
 
-@app.route("/aster/pfp/<uuid>.png")
-def pfp(uuid):
+@app.route("/aster/pfp/<ip>/<port>/<uuid>.png")
+def pfp(ip, port, uuid):
     uuid = int(uuid)
-    #TODO WHAT THE FUCK DO I DO HERE?
-    data = None
-    for v in users.values():
-        pfp = v.get_pfp(uuid)
-        if pfp is not None:
-            data = pfp
-            break
+    data = asterpy.fetch_pfp(ip, port, uuid)
     response = make_response(data)
     response.headers.set('Content-Type', 'image/png')
     return response
@@ -221,22 +217,33 @@ def emoji(ip, port, uuid):
     response.headers.set('Content-Type', 'image/png')
     return response
 
-@sockio.event
-def message(msg):
-    curr_user = users[request.sid]
-    curr_user.on_web_message(msg)
+# @sockio.event
+# def message(msg):
+#     curr_user = users[request.sid]
+#     curr_user.on_web_message(msg)
 
-@sockio.on("connect")
-def connect():
-    print(f"Connecting {request.sid}")
-    users[request.sid] = User(request.sid)
+# @sockio.on("connect")
+# def connect():
+#     print(f"Connecting {request.sid}")
+#     users[request.sid] = User(request.sid)
     
-@sockio.on("disconnect")
-def disconnect():
-    print(f"Disconnecting {request.sid}")
-    users[request.sid].disconnect()
-    print("after disconnect")
-    del users[request.sid]
+# @sockio.on("disconnect")
+# def disconnect():
+#     print(f"Disconnecting {request.sid}")
+#     users[request.sid].disconnect()
+#     print("after disconnect")
+#     del users[request.sid]
+
+@sockets.route("/aster/ws")
+def aster_socket(ws):
+    user = User(ws)
+    while not ws.closed:
+        user.on_web_message(ws.receive())
+    user.disconnect()
 
 if __name__ == "__main__":
-    sockio.run(app, debug=True, host="0.0.0.0")
+    from gevent import pywsgi
+    from geventwebsocket.handler import WebSocketHandler
+    server = pywsgi.WSGIServer(("", 5000), app, handler_class=WebSocketHandler)
+    server.serve_forever()
+    # sockio.run(app, debug=True, host="0.0.0.0")
