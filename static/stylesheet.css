@@ -34,7 +34,7 @@ body, html {
 body {
     background-color: #1C1C1C;
     color: #d3d3d3;
-    font-family: didact-gothic;
+    font-family: sans-serif;
 }
 
 #server-chat-msgbox:focus {
@@ -82,8 +82,16 @@ input:focus {
 
 #login {
     display: grid;
-    width: min-content;
-    margin: 0 auto;
+    padding: 10px;
+    border: 2px solid #444444;
+    border-radius: 6px;
+    position: absolute;
+    width: max-content;
+    left: 50%;
+    right: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
 }
 
 #login_button {

@@ -4,7 +4,7 @@
 #![allow(clippy::wildcard_imports)]
 
 use seed::{prelude::*, *};
-const WS_URL: &str = "ws://127.0.0.1:5000";
+const WS_URL: &str = "ws://127.0.0.1:5000/aster";
 
 fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
     Model { 
@@ -83,6 +83,10 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
         Msg::LoginClicked => {
             
         }
+        
+        Msg::RegisterClicked => {
+            
+        }
         _ => (), //TODO
     }
 }
@@ -129,6 +133,7 @@ where F: Fn(String) -> Msg + Clone + 'static {
                 At::Required => true,
                 At::Type => if id == "pw" { "password" } else { "text" },
                 At::Value => txt,
+                At::Class => "login_input",
             },
             input_ev(Ev::Input, msg),
         ]

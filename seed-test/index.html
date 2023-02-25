@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="modulepreload" href="/static/pkg/package.js" as="script" type="text/javascript">
-    <link rel="preload" href="/static/pkg/package_bg.wasm" as="fetch" type="application/wasm" crossorigin="anonymous">
+    <link rel="preload" href="/pkg/package_bg.wasm" as="fetch" type="application/wasm" crossorigin="anonymous">
     <link rel="stylesheet" href="/static/stylesheet.css"/>
 </head>
 
@@ -13,7 +13,7 @@
     <section id="app"></section>
     <script type="module">
         import init from '/pkg/package.js';
-        init('/static/pkg/package_bg.wasm');
+        init('/pkg/package_bg.wasm');
     </script>
 </body>
 
