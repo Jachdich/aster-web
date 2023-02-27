@@ -15,9 +15,10 @@ import threading, base64
 
 from starlette.applications import Starlette
 from starlette.responses import HTMLResponse, Response
-from starlette.routing import Route, Mount, WebSoketRoute
+from starlette.routing import Route, Mount, WebSocketRoute
 from starlette.templating import Jinja2Templates
 from starlette.staticfiles import StaticFiles
+from starlette.endpoints import WebSocketEndpoint
 import uvicorn
 
 templates = Jinja2Templates(directory="templates")
@@ -45,7 +46,6 @@ class User:
     def __init__(self, ws):
         self.ws = ws
         self.servers = []
-        self.server_threads = []
         self.selected_server = 0
         self.selected_channel = None
         self.sync_server = None
@@ -61,17 +61,29 @@ class User:
         """connect to a specific server"""
         client = asterpy.Client(ip, port, uname, password, uuid, login, register)
         self.servers.append(client)
-        client.on_message = lambda message: self.on_message(client, message)
-        client.on_ready = lambda: self.on_ready(client)
-        client.on_packet = lambda packet: self.on_packet(client, packet)
+        
+        async def on_message(message):
+            await self.on_message(client, message)
+        async def on_ready():
+            await self.on_ready(client)
+        async def on_packet(packet):
+            await self.on_packet(client, packet)
+        
+        # client.on_message = lambda message: self.on_message(client, message)
+        # client.on_ready = lambda: self.on_ready(client)
+        # client.on_packet = lambda packet: self.on_packet(client, packet)
         client.callback = callback
-        t = sockio.start_background_task(lambda: self.run_client(client))
-        self.server_threads.append(t)
+        client.on_message = on_message
+        client.on_ready = on_ready
+        client.on_packet = on_packet
+        client.task = asyncio.create_task(self.run_client())
+        # t = sockio.start_background_task(lambda: self.run_client(client))
+        # self.server_threads.append(t)
         return client
 
     async def run_client(self, client):
         try:
-            client.run()
+            await client.run()
         except ConnectionError:
             if self.sync_server is client:
                 await self.sockio_emit("sync_server_dead")
