@@ -4,9 +4,19 @@
 #![allow(clippy::wildcard_imports)]
 
 use seed::{prelude::*, *};
-const WS_URL: &str = "ws://127.0.0.1:5000";
+const WS_URL: &str = "ws://127.0.0.1:5000/aster/ws";
 
 fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
+    let msg_sender = orders.msg_sender();
+    
+    let socket = Websocket::builder(WS_URL, orders)
+        .on_open(|| Msg::WebSocketOpened)
+        .on_message(move |msg| decode_message(msg, msg_sender))
+        .on_close(Msg::WebSocketClosed)
+        .on_error(|| Msg::WebSocketFailed)
+        .build_and_open()
+        .unwrap();
+    
     Model { 
         state: AsterState::Login,
         sync_ip: "".into(),
@@ -83,6 +93,10 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
         Msg::LoginClicked => {
             
         }
+        
+        Msg::RegisterClicked => {
+            
+        }
         _ => (), //TODO
     }
 }
@@ -129,6 +143,7 @@ where F: Fn(String) -> Msg + Clone + 'static {
                 At::Required => true,
                 At::Type => if id == "pw" { "password" } else { "text" },
                 At::Value => txt,
+                At::Class => "login_input",
             },
             input_ev(Ev::Input, msg),
         ]

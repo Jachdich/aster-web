@@ -5,15 +5,23 @@ import asterpy_local as asterpy
 #</DEBUG>
 
 import threading, base64
-from flask import Flask, render_template, request, make_response, send_from_directory
+# from flask import Flask, render_template, request, make_response, send_from_directory
 # from flask_socketio import SocketIO
-from flask_sockets import Sockets
+# from flask_sockets import Sockets
 
-app = Flask(__name__)
+# app = Flask(__name__)
 # sockio = SocketIO(app, async_mode='threading')
-sockets = Sockets(app)
+# sockets = Sockets(app)
 
-users = {}
+from starlette.applications import Starlette
+from starlette.responses import HTMLResponse, Response
+from starlette.routing import Route, Mount, WebSocketRoute
+from starlette.templating import Jinja2Templates
+from starlette.staticfiles import StaticFiles
+from starlette.endpoints import WebSocketEndpoint
+import uvicorn
+
+templates = Jinja2Templates(directory="templates")
 
 EMOJI_PATTERN = r"(\$:(?:(?:(?:(?:[a-zA-z\-]+)\:\/{1,3})?(?:[a-zA-Z0-9])(?:[a-zA-Z0-9\-\.]){1,61}(?:\.[a-zA-Z]{2,})+|\[(?:(?:(?:[a-fA-F0-9]){1,4})(?::(?:[a-fA-F0-9]){1,4}){7}|::1|::)\]|(?:(?:[0-9]{1,3})(?:\.[0-9]{1,3}){3}))|localhost)(?:\:[0-9]{1,5}):(?:[0-9]+):\$)"
 EMOJI_REGEX = re.compile(EMOJI_PATTERN)
@@ -35,10 +43,9 @@ def parse_for_emoji(msg):
 
 class User:
     """Represents a web user"""
-    def __init__(self, sid):
-        self.sid = sid
+    def __init__(self, ws):
+        self.ws = ws
         self.servers = []
-        self.server_threads = []
         self.selected_server = 0
         self.selected_channel = None
         self.sync_server = None
@@ -50,36 +57,48 @@ class User:
         self.sync_servers = None
         self.prefs = None
 
-    def connect(self, ip, port, uname, password, uuid=None, callback=None, login=True, register=False):
+    async def connect(self, ip, port, uname, password, uuid=None, callback=None, login=True, register=False):
         """connect to a specific server"""
         client = asterpy.Client(ip, port, uname, password, uuid, login, register)
         self.servers.append(client)
-        client.on_message = lambda message: self.on_message(client, message)
-        client.on_ready = lambda: self.on_ready(client)
-        client.on_packet = lambda packet: self.on_packet(client, packet)
+        
+        async def on_message(message):
+            await self.on_message(client, message)
+        async def on_ready():
+            await self.on_ready(client)
+        async def on_packet(packet):
+            await self.on_packet(client, packet)
+        
+        # client.on_message = lambda message: self.on_message(client, message)
+        # client.on_ready = lambda: self.on_ready(client)
+        # client.on_packet = lambda packet: self.on_packet(client, packet)
         client.callback = callback
-        t = sockio.start_background_task(lambda: self.run_client(client))
-        self.server_threads.append(t)
+        client.on_message = on_message
+        client.on_ready = on_ready
+        client.on_packet = on_packet
+        client.task = asyncio.create_task(self.run_client())
+        # t = sockio.start_background_task(lambda: self.run_client(client))
+        # self.server_threads.append(t)
         return client
 
-    def run_client(self, client):
+    async def run_client(self, client):
         try:
-            client.run()
+            await client.run()
         except ConnectionError:
             if self.sync_server is client:
-                self.sockio_emit("sync_server_dead")
+                await self.sockio_emit("sync_server_dead")
             else:
-                self.sockio_emit("server_offline", {"server": client.uuid})
+                await self.sockio_emit("server_offline", {"server": client.uuid})
             self.servers.remove(client)
 
-    def on_ready(self, server):
+    async def on_ready(self, server):
         if server == self.sync_server:
             # self.__set_prefs(server.get_sync())
             server.call_on_packet("sync_get", self.__set_sync_data)
             server.call_on_packet("sync_get_servers", self.__set_sync_servers)
             server.send({"command": "sync_get"})
             server.send({"command": "sync_get_servers"})
-            self.sockio_emit("connected_to_sync")
+            await self.sockio_emit("connected_to_sync")
 
         self.sockio_emit("login_successful", 0);
         emojis = server.list_emojis()
@@ -90,7 +109,7 @@ class User:
         if server.callback:
             server.callback(server)
 
-    def disconnect(self):
+    async def disconnect(self):
         for server in self.servers:
             server.disconnect()
 
@@ -186,64 +205,70 @@ class User:
             if pfp is not None:
                 return pfp
 
-    def sockio_emit(self, message_id, data=None):
-        sockio.emit(message_id, data, to=self.sid)
+    async def sockio_emit(self, data):
+        await self.ws.send_text(json.dumps(data))
 
-@app.route("/aster")
-def aster():
-    return render_template("aster.html")
 
-@app.route("/pkg/<path:path>")
-def pkg(path):
-    return send_from_directory("static/pkg", path)
+# TODO in production use static files
+async def aster(request):
+    template = "aster.html"
+    context = {"request": request}
+    return templates.TemplateResponse(template, context)
 
-@app.route("/aster/pfp/<ip>/<port>/<uuid>.png")
-def pfp(ip, port, uuid):
-    uuid = int(uuid)
+async def pfp(request):
+    ip = request.path_params["ip"]
+    port = request.path_params["port"]
+    uuid = request.path_params["uuid"]
     data = asterpy.fetch_pfp(ip, port, uuid)
-    response = make_response(data)
-    response.headers.set('Content-Type', 'image/png')
-    return response
+    return Response(data, media_type="image/png")
 
-@app.route("/aster/emoji/<ip>/<port>/<uuid>.png")
-def emoji(ip, port, uuid):
+async def emoji(request):
+    ip = request.path_params["ip"]
+    port = request.path_params["port"]
+    uuid = request.path_params["uuid"]
     emoji_val = asterpy.fetch_emoji(f"<:{ip}:{port}:{uuid}:>")
     if emoji_val == None:
         with open("static/404_emoji.png", "rb") as f:
-            response = make_response(f.read())
+            return Response(f.read(), media_type="image/png")
     else:
-        response = make_response(base64.b64decode(emoji_val.data))
+        return Response(base64.b64decode(emoji_val.data), media_type="image/png")
 
-    response.headers.set('Content-Type', 'image/png')
-    return response
-
-# @sockio.event
-# def message(msg):
-#     curr_user = users[request.sid]
-#     curr_user.on_web_message(msg)
-
-# @sockio.on("connect")
-# def connect():
-#     print(f"Connecting {request.sid}")
-#     users[request.sid] = User(request.sid)
+async def websocket_endpoint(ws):
+    await ws.accept()
+    client = Client(ws)
+    while True:
+        msg = await ws.receive_text()
+        
+    await ws.close()
     
-# @sockio.on("disconnect")
-# def disconnect():
-#     print(f"Disconnecting {request.sid}")
-#     users[request.sid].disconnect()
-#     print("after disconnect")
-#     del users[request.sid]
+class WebSocketConnection(WebSocketEndpoint):
+    encoding = "json"
+    async def on_connect(self, websocket):
+        await websocket.accept()
+        self.user = User(websocket)
+    
+    async def on_receive(self, ws, data):
+        await self.user.on_web_message(data)
+            
+    async def on_disconnect(self, ws, code):
+        await self.user.disconnect()
 
-@sockets.route("/aster/ws")
-def aster_socket(ws):
-    user = User(ws)
-    while not ws.closed:
-        user.on_web_message(ws.receive())
-    user.disconnect()
+routes = [
+    Route("/aster", aster),
+    Mount("/pkg", app=StaticFiles(directory="pkg"), name="pkg"),
+    Mount("/static", app=StaticFiles(directory="static"), name="static"),
+    Route("/aster/emoji/{ip}/{port:int}/{uuid:int}.png", emoji),
+    Route("/aster/pfp/{ip}/{port:int}/{uuid:int}.png", pfp),
+    WebSocketRoute("/aster/ws", WebSocketConnection),
+]
 
+# @sockets.route("/aster/ws")
+# def aster_socket(ws):
+#     user = User(ws)
+#     while not ws.closed:
+#         user.on_web_message(ws.receive())
+#     user.disconnect()
+
+app = Starlette(debug=True, routes=routes)
 if __name__ == "__main__":
-    from gevent import pywsgi
-    from geventwebsocket.handler import WebSocketHandler
-    server = pywsgi.WSGIServer(("", 5000), app, handler_class=WebSocketHandler)
-    server.serve_forever()
-    # sockio.run(app, debug=True, host="0.0.0.0")
+    uvicorn.run(app, host="0.0.0.0", port=5000)
