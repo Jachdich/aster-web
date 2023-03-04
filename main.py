@@ -20,6 +20,8 @@ from starlette.templating import Jinja2Templates
 from starlette.staticfiles import StaticFiles
 from starlette.endpoints import WebSocketEndpoint
 import uvicorn
+import json
+import asyncio
 
 templates = Jinja2Templates(directory="templates")
 
@@ -69,16 +71,11 @@ class User:
         async def on_packet(packet):
             await self.on_packet(client, packet)
         
-        # client.on_message = lambda message: self.on_message(client, message)
-        # client.on_ready = lambda: self.on_ready(client)
-        # client.on_packet = lambda packet: self.on_packet(client, packet)
         client.callback = callback
         client.on_message = on_message
         client.on_ready = on_ready
         client.on_packet = on_packet
-        client.task = asyncio.create_task(self.run_client())
-        # t = sockio.start_background_task(lambda: self.run_client(client))
-        # self.server_threads.append(t)
+        client.task = asyncio.create_task(self.run_client(client))
         return client
 
     async def run_client(self, client):
@@ -86,37 +83,34 @@ class User:
             await client.run()
         except ConnectionError:
             if self.sync_server is client:
-                await self.sockio_emit("sync_server_dead")
+                await self.sockio_emit({"command": "sync_server_dead"})
             else:
-                await self.sockio_emit("server_offline", {"server": client.uuid})
+                await self.sockio_emit({"command": "server_offline", "server": client.uuid})
             self.servers.remove(client)
 
     async def on_ready(self, server):
         if server == self.sync_server:
             # self.__set_prefs(server.get_sync())
-            server.call_on_packet("sync_get", self.__set_sync_data)
-            server.call_on_packet("sync_get_servers", self.__set_sync_servers)
-            server.send({"command": "sync_get"})
-            server.send({"command": "sync_get_servers"})
-            await self.sockio_emit("connected_to_sync")
+            # server.call_on_packet("sync_get", self.__set_sync_data)
+            # server.call_on_packet("sync_get_servers", self.__set_sync_servers)
+            # server.send({"command": "sync_get"})
+            # server.send({"command": "sync_get_servers"})
+            await self.sockio_emit({"command": "connected_to_sync"})
 
-        self.sockio_emit("login_successful", 0);
+        self.sockio_emit({"command": "login_successful"});
         emojis = server.list_emojis()
-        self.sockio_emit("emojis", emojis)
+        self.sockio_emit({"command": "emojis", "data": emojis})
 
         channels = server.get_channels()
-        self.sockio_emit("channels", [channel.to_json() for channel in channels])
+        self.sockio_emit({"command": "channels", "channels": [channel.to_json() for channel in channels]})
         if server.callback:
             server.callback(server)
 
     async def disconnect(self):
         for server in self.servers:
-            server.disconnect()
+            await server.disconnect()
 
-        for t in self.server_threads:
-            t.join()
-
-    def __send_messages_to_web(self, messages):
+    async def __send_messages_to_web(self, messages):
         msgs = []
         for message in messages:
             msg = message.to_json()
@@ -125,7 +119,7 @@ class User:
             msg["content"] = parse_for_emoji(html.escape(msg["content"]))
             msgs.append(msg)
 
-        self.sockio_emit("message", {"messages": msgs})
+        await self.sockio_emit({"command": "messages", "messages": msgs})
 
     def __set_sync_data(self, sync_data: dict):
         self.sync_data = sync_data
@@ -159,10 +153,10 @@ class User:
                 uuid = packet["uuid"]
                 self.sockio_emit("pfp_button", {"uuid": str(uuid)})
 
-    def on_web_message(self, message):
+    async def on_web_message(self, message):
         """called when the web client sends us data"""
         if message["req"] == "send_message":
-            self.selected_channel.send(message["message"])
+            await self.selected_channel.send(message["message"])
             #TODO send partial message??
             #self.__send_messages_to_web([
             #    asterpy.Message(
@@ -179,11 +173,11 @@ class User:
         elif message["req"] == "change_channel":
             serv = self.servers[self.selected_server]
             self.selected_channel = serv.get_channel_by_name(message["channel"])
-            history = serv.get_history(self.selected_channel)
-            self.__send_messages_to_web(history)
+            history = await serv.fetch_history(self.selected_channel)
+            await self.__send_messages_to_web(history)
 
         elif message["req"] == "login":
-            server = self.connect(message["sync_ip"], message["sync_port"], message["uname"], message["password"])
+            server = await self.connect(message["sync_ip"], message["sync_port"], message["uname"], message["password"])
             self.uname = message["uname"]
             self.passwd = message["password"]
             self.sync_server = server
@@ -196,14 +190,6 @@ class User:
 
         elif message["req"] == "add_server":
             self.connect(message["ip"], message["port"], self.uname, self.passwd, callback=lambda server: self.add_server(server))
-
-    def get_pfp(self, uuid):
-        """get the profile picture associated with a particular UUID"""
-        #TODO this will not work with different pfps in different servers
-        for server in self.servers:
-            pfp = server.get_pfp(uuid)
-            if pfp is not None:
-                return pfp
 
     async def sockio_emit(self, data):
         await self.ws.send_text(json.dumps(data))
@@ -233,14 +219,6 @@ async def emoji(request):
     else:
         return Response(base64.b64decode(emoji_val.data), media_type="image/png")
 
-async def websocket_endpoint(ws):
-    await ws.accept()
-    client = Client(ws)
-    while True:
-        msg = await ws.receive_text()
-        
-    await ws.close()
-    
 class WebSocketConnection(WebSocketEndpoint):
     encoding = "json"
     async def on_connect(self, websocket):

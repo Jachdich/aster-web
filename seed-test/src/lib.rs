@@ -1,22 +1,21 @@
-// (Lines like the one below ignore selected Clippy rules
-//  - it's useful when you want to check your code with `cargo make verify`
-// but some rules are too "annoying" or are not applicable for your case.)
 #![allow(clippy::wildcard_imports)]
 
+use serde_json::json;
+use serde::Deserialize;
 use seed::{prelude::*, *};
 const WS_URL: &str = "ws://127.0.0.1:5000/aster/ws";
 
-fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
-    let msg_sender = orders.msg_sender();
+fn init(_: Url, orders: &mut impl Orders<Msg>) -> Model {
+    // let msg_sender = orders.msg_sender();
     
-    let socket = Websocket::builder(WS_URL, orders)
+    let socket = WebSocket::builder(WS_URL, orders)
         .on_open(|| Msg::WebSocketOpened)
-        .on_message(move |msg| decode_message(msg, msg_sender))
+        .on_message(move |msg| decode_message(msg))
         .on_close(Msg::WebSocketClosed)
         .on_error(|| Msg::WebSocketFailed)
         .build_and_open()
         .unwrap();
-    
+
     Model { 
         state: AsterState::Login,
         sync_ip: "".into(),
@@ -25,6 +24,18 @@ fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
         pword: "".into(),
         servers: Vec::new(),
         selected_server: Some(0),
+        web_socket: socket,
+        error_showing: None,
+        connection_status: ConnectionStatus::Disconnected,
+    }
+}
+
+fn decode_message(message: WebSocketMessage) -> Option<Msg> {
+    if message.contains_text() {
+        let decoded = message.json::<serde_json::Value>().ok()?;
+        Some(Msg::WebSocketMessage(decoded))
+    } else {
+        None
     }
 }
 
@@ -37,6 +48,15 @@ struct Model {
     pword: String,
     servers: Vec<Server>,
     selected_server: Option<usize>,
+    web_socket: WebSocket,
+    error_showing: Option<String>,
+    connection_status: ConnectionStatus,
+}
+
+enum ConnectionStatus {
+    Connected(usize),
+    Disconnected,
+    Reconnecting,
 }
 
 enum AsterState {
@@ -53,9 +73,11 @@ struct Server {
     selected_channel: usize,
 }
 
+#[derive(Deserialize)]
 struct Channel {
     name: String,
     uuid: i64,
+    #[serde(skip)]
     messages: Vec<Message>,
 }
 
@@ -76,12 +98,15 @@ enum Msg {
     PwordChanged(String),
     ServerClicked(usize),
     ChannelClicked(usize),
+    WebSocketOpened,
+    WebSocketClosed(CloseEvent),
+    WebSocketFailed,
+    WebSocketMessage(serde_json::Value),
 }
 
 // `update` describes how to handle each `Msg`.
 fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
     match msg {
-        Msg::LoginClicked => (),
         Msg::SyncIpChanged(ip) => model.sync_ip = ip,
         Msg::SyncPortChanged(port) => {
             if port.is_empty() || port.parse::<u16>().is_ok() {
@@ -90,20 +115,62 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
         },
         Msg::UnameChanged(uname) => model.uname = uname,
         Msg::PwordChanged(pword) => model.pword = pword,
-        Msg::LoginClicked => {
-            
-        }
-        
+         
         Msg::RegisterClicked => {
-            
-        }
+            if model.uname.is_empty() || model.pword.is_empty() {
+                return; //TODO show "this field is required"
+            }
+            model.web_socket.send_json(&json!({
+                "req": "register",
+                "uname": model.uname,
+                "password": model.pword,
+                "sync_ip": model.sync_ip,
+                "sync_port": model.sync_port}));
+        },
+        
+        Msg::LoginClicked => {
+            if model.uname.is_empty() || model.pword.is_empty() {
+                return; //TODO show "this field is required"
+            }
+            model.web_socket.send_json(&json!({
+                "req": "login",
+                "uname": model.uname,
+                "password": model.pword,
+                "sync_ip": model.sync_ip,
+                "sync_port": model.sync_port}));
+        },
+        
+        Msg::WebSocketOpened    => model.connection_status = ConnectionStatus::Connected(0),
+        Msg::WebSocketClosed(_) => model.connection_status = ConnectionStatus::Disconnected,
+        Msg::WebSocketFailed    => model.error_showing = Some("Failed to create a websocket: Your browser is probably too old to run this web app.".to_string()),
+        Msg::WebSocketMessage(msg) => handle_web_message(model, msg),
         _ => (), //TODO
+    }
+}
+
+fn handle_web_message(model: &mut Model, msg: serde_json::Value) {
+    match msg["command"] {
+        "login_successful" => model.state = AsterState::Home,
+        "channels" => {
+            model.channels.clear();
+            for channel in msg["channels"] {
+                let ch = serde_json::from_str::<Channel>(channel).unwrap(); //TODO unwrap bade!!!1
+                model.channels.push(ch);
+            }
+        }
     }
 }
 
 // `view` describes what to display.
 fn view(model: &Model) -> Node<Msg> {
     div![
+        if let Some(msg) = model.error_showing {
+            div![
+                attrs!{At::Class => "popup"},
+                
+            ]
+        } else { empty![] },
+
         match &model.state {
           AsterState::Login => {
                 let port = model.sync_port;
