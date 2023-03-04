@@ -18,6 +18,8 @@ wasm-bindgen-test = "0.3.18"
 [dependencies]
 seed = "0.8.0"
 serde = "*"
+serde_json = "*"
+enum_dispatch = "*"
 
 [profile.release]
 lto = true
