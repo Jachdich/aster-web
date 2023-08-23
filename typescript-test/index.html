@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="stylesheet.css">
+    <title>Aster</title>
+  </head>
+  <body>
+    <div id="login">
+      <label id="login-sync-ip-label" for="login-sync-ip-input">Sync&nbsp;server&nbsp;IP&nbsp;</label>
+      <input id="login-sync-ip-input" type="text" placeholder="Enter IP" class="login-input" required>
+      <label id="login-sync-port-label" for="login-sync-port-input">Sync&nbsp;server&nbsp;port</label>
+      <input id="login-sync-port-input" type="text" placeholder="Enter port" class="login-input" required>
+      <label id="login-uname-label" for="login-uname-input">Username</label>
+      <input id="login-uname-input" type="text" placeholder="Enter Username" class="login-input" required>
+      <label id="login-pword-label" for="login-pword-input">Password</label>
+      <input id="login-pword-input" type="password" placeholder="Enter Password" class="login-input" required>
+      <button id="login-button">Login</button>
+      <button id="register-button">New here? Register</button>
+    </div>
+
+    <div id="loading" style="display: none;">
+      <p style="text-align: center;">Loading...</p>
+    </div>
+
+    <div id="prefs" class="popup">
+      <span id="prefs-uname-label">Username</span>
+      <input id="prefs-uname-input">
+
+      <span id="prefs-pfp-label">Profile Picture</span>
+      <button id="prefs-pfp-button">test</button>
+
+      <span id="prefs-passwd-label">Password</span>
+      <input type="password" id="prefs-passwd-input">
+
+      <button id="prefs-cancel">Cancel</button>
+      <button id="prefs-ok">Ok</button>
+    </div>
+
+    <div id="new-server" class="popup">
+      <span id="new-ip-label">IP</span>
+      <input id="new-ip-input">
+
+      <span id="new-port-label">Port</span>
+      <input id="new-port-input">
+      <div id="new-buttons">
+        <button id="new-cancel">Cancel</button>
+        <button id="new-ok">Ok</button>
+      </div>
+    </div>
+
+    <div id="error-box" class="popup">
+      <span id="error-msg"></span>
+      <button id="error-ok">Ok</button>
+    </div>
+
+    <div id="background-fade"></div>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>
