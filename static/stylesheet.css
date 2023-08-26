@@ -5,7 +5,7 @@ input, textarea, button {
     background-color: inherit;
 }
 
-.server-list {
+#server-list {
     background: #232323;
     border-radius: 16px;
     border-style: none;
@@ -17,7 +17,7 @@ input, textarea, button {
     flex-direction: row;
 }
 
-.top {
+#top {
     left: 12px;
     top: 12px;
     height: 46px;
@@ -80,18 +80,24 @@ input:focus {
     margin-bottom: 10px;
 }
 
-#login {
+.popup {
     display: grid;
-    padding: 10px;
+    z-index: 2;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #222222;
+    padding: 20px;
     border: 2px solid #444444;
     border-radius: 6px;
-    position: absolute;
     width: max-content;
-    left: 50%;
-    right: 50%;
-    top: 50%;
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
+}
+
+#login {
+    /*just make it so popups appear over the login window even though
+      it's technically also a popup*/
+    z-index: 0;
 }
 
 #login_button {
@@ -135,17 +141,6 @@ input:focus {
     z-index: 1;
 }
 
-.popup {
-    z-index: 2;
-    position: absolute;
-    display: none; /*hidden by default, set to grid to show*/
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #222222;
-    padding: 20px;
-}
-
 #s_t_uname  { grid-row: 1; grid-column: 1; }
 #s_uname    { grid-row: 1; grid-column: 2; }
 #s_t_pfp    { grid-row: 2; grid-column: 1; }
@@ -177,17 +172,19 @@ input:focus {
 }
 
 #error_msg { grid-row: 1; grid-column: 1; }
-#e_ok {
+#error_ok {
     grid-row: 2;
     grid-column: 1;
     padding-left: 20px;
     padding-right: 20px;
+    width: min-content;
+    margin: 0 auto;
 }
 
-@font-face {
+/*@font-face {
     font-family: didact-gothic;
     src: url("didactgothic-regular.otf") format("opentype");
-}
+}*/
 
 .server-module {
     width: 40px;
@@ -224,7 +221,7 @@ input:focus {
     margin-top: 3px;
 }
 
-.server-header {
+#server-header {
     height: 37px;
     width: 100%;
     display: flex;

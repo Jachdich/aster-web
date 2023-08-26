@@ -11,13 +11,14 @@ fn init(_: Url, orders: &mut impl Orders<Msg>) -> Model {
     
     Model {
         state: AsterState::Login,
-        sync_ip: "".into(),
+        sync_ip: "localhost".into(),
         sync_port: 2345,
-        uname: "".into(),
-        pword: "".into(),
+        uname: "KingJellyfish".into(),
+        pword: "asdf".into(),
         servers: HashMap::new(),
         selected_server: None,
         error_showing: None,
+        sync_uuid: 0,
     }
 }
 
@@ -40,6 +41,7 @@ struct Model {
     servers: HashMap<u64, Server>,
     selected_server: Option<u64>,
     error_showing: Option<String>,
+    sync_uuid: u64,
 }
 
 enum ConnectionStatus {
@@ -70,7 +72,7 @@ impl Server {
         let mut hasher = DefaultHasher::new();
         format!("{}{}", ip, port).hash(&mut hasher);
         let uuid = hasher.finish();
-        let socket = WebSocket::builder(format!("wss://{}:{}", ip, port), orders)
+        let socket = WebSocket::builder(format!("ws://{}:{}", ip, port), orders)
             .on_open(move || Msg::WebSocketOpened(uuid))
             .on_message(move |msg| decode_message(msg, uuid))
             .on_close(move |e| Msg::WebSocketClosed(e, uuid))
@@ -93,12 +95,17 @@ impl Server {
     fn login(&self, uname: &str, pword: &str) {
         
     }
+
     fn register(&self, uname: &str, pword: &str) {
         
     }
 
-    fn handle_message(&mut self, msg: serde_json::Value) {
+    fn init(&self) {
         
+    }
+
+    fn handle_message(&mut self, msg: serde_json::Value) {
+        log!(msg);
     }
 }
 
@@ -134,6 +141,9 @@ enum Msg {
     WebSocketClosed(CloseEvent, u64),
     WebSocketFailed(u64),
     WebSocketMessage(serde_json::Value, u64),
+    ErrorOkClicked,
+    AddServerClicked,
+    SettingsClicked,
 }
 
 // `update` describes how to handle each `Msg`.
@@ -158,13 +168,27 @@ fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
             } else {
                 s.login(&model.uname, &model.pword);
             }
+            model.sync_uuid = s.uuid;
             model.servers.insert(s.uuid, s);
+            model.state = AsterState::Loading;
         },
         
-        // Msg::WebSocketOpened    => model.connection_status = ConnectionStatus::Connected(0),
-        // Msg::WebSocketClosed(_) => model.connection_status = ConnectionStatus::Disconnected,
-        Msg::WebSocketFailed(uuid)    => model.error_showing = Some("Failed to create a websocket: Your browser is probably too old to run this web app.".to_string()),
+        Msg::WebSocketOpened(uuid)    => model.servers.get(&uuid).unwrap().init(),
+        Msg::WebSocketClosed(e, uuid) => {
+            model.error_showing = Some(format!("Closed: {:?}", e));
+            if uuid == model.sync_uuid {
+                model.state = AsterState::Login;
+            }
+        },
+        Msg::WebSocketFailed(uuid) => {
+            model.error_showing = Some("Failed to create a websocket: Your browser is probably too old to run this web app.".to_string());
+            if uuid == model.sync_uuid {
+                model.state = AsterState::Login;
+            }
+        },
         Msg::WebSocketMessage(msg, uuid) => model.servers.get_mut(&uuid).unwrap().handle_message(msg),
+
+        Msg::ErrorOkClicked => model.error_showing = None,
         _ => (), //TODO
     }
 }
@@ -173,18 +197,29 @@ fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
 fn view(model: &Model) -> Node<Msg> {
     div![
         if let Some(msg) = &model.error_showing {
-            div![
-                attrs!{At::Class => "popup"},
-                
+            vec![
+                div![
+                    attrs!{At::Class => "popup"},
+                    span![
+                        attrs!{At::Id => "error_msg"},
+                        msg
+                    ],
+                    button![
+                        ev(Ev::Click, |_| Msg::ErrorOkClicked),
+                        attrs!{At::Id => "error_ok"},
+                        "OK",
+                    ]   
+                ],
+                div![attrs!{At::Id => "background_fade"}]
             ]
-        } else { empty![] },
+        } else { vec![empty![]] }, //TODO this is ugly
 
         match &model.state {
           AsterState::Login => {
                 let port = model.sync_port;
                 let port_str = if port != 0 { port.to_string() } else { "".into() };
                 div![
-                    attrs!{At::Id => "login"},
+                    attrs!{At::Id => "login", At::Class => "popup"},
                     view_form_entry(&model.sync_ip, Msg::SyncIpChanged, "sync_ip", "Sync server IP", "Enter IP"),
                     view_form_entry(&port_str, Msg::SyncPortChanged, "sync_port", "Sync server port", "Enter port"),
                     view_form_entry(&model.uname, Msg::UnameChanged, "uname", "Username", "Enter username"),
@@ -193,9 +228,42 @@ fn view(model: &Model) -> Node<Msg> {
                     button![ev(Ev::Click, |_| Msg::LoginClicked), "Log in"],
                 ]
             },
-            AsterState::Loading => empty![],
-            AsterState::Home => empty![],
+            AsterState::Loading => p!["Loading..."],
+            AsterState::Home => view_home_screen(model),
         }
+    ]
+}
+
+fn view_home_screen(model: &Model) -> Node<Msg> {
+    div![
+        attrs!{At::Id => "idkwhatthisis"},
+        div![
+            attrs!{At::Id => "top"},
+            div![
+                attrs!{At::Id => "server-list"},
+                
+            ],
+            model.servers.iter().map(|(_, server)| view_server_icon(server)).collect::<Vec<Node<Msg>>>(),
+            button![
+                ev(Ev::Click, |_| Msg::AddServerClicked),
+                attrs!{At::Id => "add-server"},
+                img![attrs!{At::Src => "static/add.png"}]
+            ],
+            button![
+                ev(Ev::Click, |_| Msg::SettingsClicked),
+                attrs!{At::Id => "settings"},
+                img![attrs!{At::Src => "static/settings.png"}]
+            ],
+        ]
+    ]
+}
+
+fn view_server_icon(server: &Server) -> Node<Msg> {
+    div![
+        attrs!{At::Class => "server-module"},
+        img![
+            attrs!{At::Class => "server-icon", At::Src => format!("http://127.0.0.1:5000/aster/icon/{}/{}.png", server.ip, server.port)}
+        ]
     ]
 }
 
