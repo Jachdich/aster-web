@@ -1,6 +1,14 @@
 <script lang="ts">
 	import Message from "./Message.svelte";
-	const messages = ["A", "B", "C", "D", "E", "F"];
+	class MessageInfo {
+		content: string;
+		username: string;
+		constructor(content: string, username: string) {
+			this.username = username;
+			this.content = content;
+		}
+	}
+	const messages = [new MessageInfo("Test message 1", "KingJellyfish"), new MessageInfo("Very good observation james", "ConnorCole01"), new MessageInfo("beans", "Elecarno")];
 </script>
 
 <svelte:head>
@@ -10,13 +18,13 @@
 
 <div id="message-area">
 {#each messages as message}
-<Message content="{message}" />
+<Message message={message} />
 {/each}
 </div>
 
 <style>
 #message-area {
-	background-color: red;
+	background-color: #222222;
 	display: flex;
   flex-direction: column;
 }
