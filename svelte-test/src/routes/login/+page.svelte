@@ -2,16 +2,17 @@
 <script lang="ts">
     import { browser } from '$app/environment';
     import { goto } from '$app/navigation';
-    import { add_server, Server} from "../network";
+    import { set_sync_server, Server} from "../network";
+    import { onMount } from 'svelte'
 
-    if (browser) {
+    onMount(() => {
         (document.getElementById("login-sync-port-input") as HTMLInputElement).value = "2345"; // dumb hack to set default value of input
-    }
-
-    let sync_ip: string;
-    let sync_port: string;
-    let uname: string;
-    let password: string;
+    });
+  
+    let sync_ip: string = "localhost";
+    let sync_port: string = "2345";
+    let uname: string = "KingJellyfish";
+    let password: string = "12asd";
 
     let error_msg = "";
     let show_login = true;
@@ -24,7 +25,7 @@
         }
         let server = new Server(sync_ip, port);
         server.connect(uname, password).then(() => {
-            add_server(server);
+            set_sync_server(server);
             goto("/aster");
         }, (err) => {
             error_msg = err;

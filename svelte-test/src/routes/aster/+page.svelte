@@ -1,18 +1,23 @@
 <script lang="ts">
 	import Message from "../Message.svelte";
 	import type { MessageInfo } from "../network";
-  import { servers } from "../network";
-  let result = servers[0].
-
-  async function init_servers() {
-    
+  import { sync_server, servers } from "../network";
+  import {browser} from '$app/environment';
+  export async function init_servers() {
+    if (sync_server) {
+      console.log("did send packet");
+      let data = await sync_server.request({"command": "ping"});
+      console.log(data);
+    } else {
+      console.log("no sync server!");
+    }
   }
-  init_servers().then(() => 0);
 	// function add_message() {
 	// 	messages.push(new MessageInfo("teast ahofhaefhiuj", "KingJellyfish"));
 	// 	messages = messages;
 	// }
 	let messages: Array<MessageInfo> = [];
+  init_servers().then(() => console.log("done init"));
 
 </script>
 

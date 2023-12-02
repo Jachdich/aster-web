@@ -26,6 +26,8 @@ export class Peer {
             obj.pfp !== undefined) {
             return new Peer(obj.name, obj.pfp, obj.uuid);
         }
+        console.log("Invalid peer: ")
+        console.log(obj);
         return null;
     }
 }
@@ -61,6 +63,9 @@ export class Server {
             });
             this.socket.addEventListener("message", (event) => {
                 let obj = JSON.parse(event.data);
+                if (this.waiting_for.has(obj["command"])) {
+                    this.waiting_for.get(obj["command"])(obj);
+                }
         
                 if (obj["command"] == "login" && obj["status"] == HTTP_FORBIDDEN) {
                     reject("Incorrect username or password! Try again.");
@@ -71,11 +76,13 @@ export class Server {
                         this.my_uuid = obj["uuid"];
                         resolve();
                     } else if (obj["command"] == "metadata") {
-                        let peer = Peer.from(obj);
-                        if (peer !== null) {
-                            this.known_peers.set(obj["uuid"], peer);
-                        } else {
-                            console.log("Peer json invalid froom " + this.ip + ":" + this.port);
+                        for (const peer_json of obj["data"]) {
+                            let peer = Peer.from(peer_json);
+                            if (peer !== null) {
+                                this.known_peers.set(peer_json["uuid"], peer);
+                            } else {
+                                console.log("Peer json invalid froom " + this.ip + ":" + this.port);
+                            }
                         }
                     }
                 }
@@ -89,13 +96,17 @@ export class Server {
                 reject("Not connected");
                 return;
             }
-            this.waiting_for.set(data["request"], (data: any) => resolve(data));
+            this.waiting_for.set(data["command"], (data: any) => resolve(data));
             this.socket.send(JSON.stringify(data));
         });
     }
 }
 
 export let servers: Array<Server> = [];
+export let sync_server: Server | null = null;
+export function set_sync_server(server: Server) {
+    sync_server = server;
+}
 export function add_server(server: Server) {
     servers.push(server);
     servers = servers;
