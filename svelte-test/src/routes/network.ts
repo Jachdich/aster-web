@@ -50,9 +50,9 @@ export class Server {
     ip: string;
     port: number;
     private waiting_for: Map<string, any> = new Map();
-    logged_in: boolean = false;
     cached_channels: Map<number, Channel> = new Map();
-    
+    logged_in: boolean = false;
+    we_have_the_metadata_lads: boolean = false;
     constructor(ip: string, port: number) {
         this.ip = ip;
         this.port = port;
@@ -75,6 +75,7 @@ export class Server {
                 this.socket.send(JSON.stringify({"command": "login", "uname": uname, "passwd": pword}));
             });
             this.socket.addEventListener("message", (event) => {
+                console.log(event.data);
                 let obj = JSON.parse(event.data);
                 if (this.waiting_for.has(obj["command"])) {
                     this.waiting_for.get(obj["command"])(obj);
@@ -88,9 +89,9 @@ export class Server {
                 } else {
                     if (obj["command"] == "login") {
                         this.my_uuid = obj["uuid"];
-                        this.socket.send(JSON.stringify({"command": "metadata"}));
+                        this.socket.send(JSON.stringify({"command": "get_metadata"}));
                         this.logged_in = true;
-                    } else if (obj["command"] == "metadata") {
+                    } else if (obj["command"] == "get_metadata") {
                         for (const peer_json of obj["data"]) {
                             let peer = Peer.from(peer_json);
                             if (peer !== null) {
@@ -99,10 +100,11 @@ export class Server {
                                 console.log("Peer json invalid froom " + this.ip + ":" + this.port);
                             }
                         }
-                        if (this.logged_in) {
-                            resolve();
-                        }
+                        this.we_have_the_metadata_lads = true;
                     }
+                }
+                if (this.logged_in && this.we_have_the_metadata_lads) {
+                    resolve();
                 }
             });
         });

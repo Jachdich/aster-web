@@ -18,10 +18,6 @@
                 messages.push(new MessageInfo(message["content"], (sync_server.known_peers.get(message["author_uuid"]) as Peer).display_name));
             }
             messages = messages;
-            console.log(messages);
-            console.log(channels);
-            console.log(general);
-            console.log(history);
         } else {
             console.log("no sync server!");
         }
