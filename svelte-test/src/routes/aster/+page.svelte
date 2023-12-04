@@ -1,35 +1,49 @@
 <script lang="ts">
-	import Message from "../Message.svelte";
-	import type { MessageInfo } from "../network";
-  import { sync_server, servers } from "../network";
-  import {browser} from '$app/environment';
-  export async function init_servers() {
-    if (sync_server) {
-      console.log("did send packet");
-      let data = await sync_server.request({"command": "ping"});
-      console.log(data);
-    } else {
-      console.log("no sync server!");
+    import Message from "../Message.svelte";
+    import { MessageInfo } from "../network";
+    import { sync_server, servers, Server, add_server, Peer } from "../network";
+    export async function init_servers() {
+        if (sync_server) {
+            const server_list = (await sync_server.request({"command": "sync_get_servers"}))["servers"];
+            for (const server of server_list) {
+                console.log("Connectiong to " + server["ip"] + ":" + server["port"]);
+                const connection = new Server(server["ip"], server["port"]);
+                await connection.connect("KingJellyfish", "asdf");
+                add_server(connection);
+            }
+            const channels = await sync_server.request({"command": "list_channels"});
+            const general = channels["data"][0]["uuid"];
+            const history = await sync_server.request({"command": "history", "num": 100, "channel": general});
+            for (const message of history["data"]) {
+                messages.push(new MessageInfo(message["content"], (sync_server.known_peers.get(message["author_uuid"]) as Peer).display_name));
+            }
+            messages = messages;
+            console.log(messages);
+            console.log(channels);
+            console.log(general);
+            console.log(history);
+        } else {
+            console.log("no sync server!");
+        }
     }
-  }
-	// function add_message() {
-	// 	messages.push(new MessageInfo("teast ahofhaefhiuj", "KingJellyfish"));
-	// 	messages = messages;
-	// }
-	let messages: Array<MessageInfo> = [];
-  init_servers().then(() => console.log("done init"));
+    // function add_message() {
+    //     messages.push(new MessageInfo("teast ahofhaefhiuj", "KingJellyfish"));
+    //     messages = messages;
+    // }
+    let messages: Array<MessageInfo> = [];
+    init_servers().then(() => console.log("done init"));
 
 </script>
 
 <svelte:head>
-	<title>Aster</title>
-	<meta name="description" content="Aster web client" />
+    <title>Aster</title>
+    <meta name="description" content="Aster web client" />
 </svelte:head>
 
 <div id="message-area">
-	{#each messages as message (message)}
-		<Message message={message} />
-	{/each}
+    {#each messages as message (message)}
+        <Message message={message} />
+    {/each}
 </div>
 
 <style>
@@ -68,8 +82,8 @@ input:focus {
 }
 
 #message-area {
-	background-color: #222222;
-	display: flex;
+    background-color: #222222;
+    display: flex;
   flex-direction: column;
 }
 </style>

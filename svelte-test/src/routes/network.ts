@@ -32,6 +32,17 @@ export class Peer {
     }
 }
 
+export class Channel {
+    uuid: number;
+    name: string;
+    cached_messages: Array<MessageInfo> = new Array();
+
+    constructor(uuid: number, name: string) {
+        this.uuid = uuid;
+        this.name = name;
+    }
+}
+
 export class Server {
     socket: WebSocket | null = null;
     my_uuid: string | null = null;
@@ -39,6 +50,8 @@ export class Server {
     ip: string;
     port: number;
     private waiting_for: Map<string, any> = new Map();
+    logged_in: boolean = false;
+    cached_channels: Map<number, Channel> = new Map();
     
     constructor(ip: string, port: number) {
         this.ip = ip;
@@ -65,6 +78,7 @@ export class Server {
                 let obj = JSON.parse(event.data);
                 if (this.waiting_for.has(obj["command"])) {
                     this.waiting_for.get(obj["command"])(obj);
+                    this.waiting_for.delete(obj["command"]);
                 }
         
                 if (obj["command"] == "login" && obj["status"] == HTTP_FORBIDDEN) {
@@ -74,7 +88,8 @@ export class Server {
                 } else {
                     if (obj["command"] == "login") {
                         this.my_uuid = obj["uuid"];
-                        resolve();
+                        this.socket.send(JSON.stringify({"command": "metadata"}));
+                        this.logged_in = true;
                     } else if (obj["command"] == "metadata") {
                         for (const peer_json of obj["data"]) {
                             let peer = Peer.from(peer_json);
@@ -84,10 +99,18 @@ export class Server {
                                 console.log("Peer json invalid froom " + this.ip + ":" + this.port);
                             }
                         }
+                        if (this.logged_in) {
+                            resolve();
+                        }
                     }
                 }
             });
         });
+    }
+    // TODO think *really really hard* about this function
+    // hint: fetch vs get
+    public get_channel(uuid: number) {
+        
     }
 
     public request(data: any): Promise<any> {

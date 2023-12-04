@@ -1,6 +1,5 @@
 
 <script lang="ts">
-    import { browser } from '$app/environment';
     import { goto } from '$app/navigation';
     import { set_sync_server, Server} from "../network";
     import { onMount } from 'svelte'
