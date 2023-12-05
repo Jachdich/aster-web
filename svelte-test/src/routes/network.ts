@@ -41,6 +41,15 @@ export class Channel {
         this.uuid = uuid;
         this.name = name;
     }
+    public static from(obj: any): Channel | null {
+        if (obj.uuid !== undefined &&
+            obj.name !== undefined) {
+            return new Channel(obj.uuid, obj.name);
+        }
+        console.log("Invalid channel: ")
+        console.log(obj);
+        return null;
+    }
 }
 
 export class Server {
@@ -53,6 +62,7 @@ export class Server {
     cached_channels: Map<number, Channel> = new Map();
     logged_in: boolean = false;
     we_have_the_metadata_lads: boolean = false;
+    we_have_the_channels_lads: boolean = false;
     constructor(ip: string, port: number) {
         this.ip = ip;
         this.port = port;
@@ -89,7 +99,7 @@ export class Server {
                 } else {
                     if (obj["command"] == "login") {
                         this.my_uuid = obj["uuid"];
-                        this.socket.send(JSON.stringify({"command": "get_metadata"}));
+                        this.socket.send(JSON.stringify({"command": "list_channels"}));
                         this.logged_in = true;
                     } else if (obj["command"] == "get_metadata") {
                         for (const peer_json of obj["data"]) {
@@ -103,16 +113,32 @@ export class Server {
                         this.we_have_the_metadata_lads = true;
                     }
                 }
-                if (this.logged_in && this.we_have_the_metadata_lads) {
+                if (obj["command"] == "list_channels") {
+                    for (const channel_json of obj["data"]) {
+                        let channel = Channel.from(channel_json);
+                        if (channel !== null) {
+                            this.cached_channels.set(channel.uuid, channel);
+                        }
+                    }
+                    this.we_have_the_channels_lads = true;
+                }
+                if (this.logged_in && this.we_have_the_metadata_lads && this.we_have_the_channels_lads) {
                     resolve();
                 }
+
             });
         });
     }
-    // TODO think *really really hard* about this function
-    // hint: fetch vs get
-    public get_channel(uuid: number) {
-        
+    public get_channel(uuid: number): Channel | undefined {
+        return this.cached_channels.get(uuid);
+    }
+
+    public get_channel_by_name(name: string): Channel | undefined {
+        for (const channel of this.cached_channels.values()) {
+            if (channel.name == name) {
+                return channel;
+            }
+        }
     }
 
     public request(data: any): Promise<any> {

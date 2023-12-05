@@ -1,3 +1,7 @@
+<script>
+    import { goto } from '$app/navigation';
+    goto("/login");
+</script>
 <style global>
 input, textarea, button {
     border: 1px solid #444444;
