@@ -99,6 +99,7 @@ export class Server {
                 } else {
                     if (obj["command"] == "login") {
                         this.my_uuid = obj["uuid"];
+                        this.socket.send(JSON.stringify({"command": "get_metadata"}));
                         this.socket.send(JSON.stringify({"command": "list_channels"}));
                         this.logged_in = true;
                     } else if (obj["command"] == "get_metadata") {
@@ -138,6 +139,31 @@ export class Server {
             if (channel.name == name) {
                 return channel;
             }
+        }
+    }
+
+    public async get_history(channel_uuid: number): Promise<Array<MessageInfo> | undefined> {
+        let channel = this.get_channel(channel_uuid);
+        if (channel === undefined) {
+            return undefined;
+        }
+        if (channel.cached_messages.length < 100) {
+            let history = await this.request({"command": "history", "channel": channel_uuid, "num": 100});
+            let messages = new Array<MessageInfo>(100);
+            let i = 0;
+            for (const message of history["data"]) {
+                let peer = this.known_peers.get(message["author_uuid"]);
+                if (peer !== undefined) {
+                    messages[i] = new MessageInfo(message["content"], peer.display_name);
+                    i++;
+                } else {
+                    console.log("Nonexistent peer: " + message["author_uuid"]);
+                }
+            }
+            channel.cached_messages = messages; // update cached - TODO: should this all be in the generic packet receiver function?
+            return messages;
+        } else {
+            return channel.cached_messages;
         }
     }
 

@@ -11,17 +11,9 @@
                 await connection.connect("KingJellyfish", "asdf");
                 add_server(connection);
             }
-            const general = sync_server.get_channel_by_name("general");
-            const history = await sync_server.request({"command": "history", "num": 100, "channel": general.uuid});
-            for (const message of history["data"]) {
-                let peer = sync_server.known_peers.get(message["author_uuid"]);
-                if (peer !== undefined) {
-                    messages.push(new MessageInfo(message["content"], peer.display_name));
-                } else {
-                    console.log("Nonexistent peer: " + message["author_uuid"]);
-                }
-            }
-            messages = messages;
+            const general = sync_server.get_channel_by_name("general").uuid;
+            messages = await sync_server.get_history(general);
+            console.log(messages);
         } else {
             console.log("no sync server!");
         }
