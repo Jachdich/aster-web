@@ -1,5 +1,7 @@
 <script lang="ts">
     import Message from "../Message.svelte";
+    import ChannelButton from "../ChannelButton.svelte";
+    import { goto } from '$app/navigation';
     import { MessageInfo } from "../network";
     import { sync_server, servers, Server, add_server, Peer } from "../network";
     export async function init_servers() {
@@ -14,8 +16,10 @@
             const general = sync_server.get_channel_by_name("general").uuid;
             messages = await sync_server.get_history(general);
             console.log(messages);
+            channels = sync_server.list_channels();
+            console.log(channels);
         } else {
-            console.log("no sync server!");
+            goto("/login");
         }
     }
     // function add_message() {
@@ -23,7 +27,15 @@
     //     messages = messages;
     // }
     let messages: Array<MessageInfo> = [];
+    let channels: Array<Channel> = [];
     init_servers().then(() => console.log("done init"));
+
+    function switch_channel(event) {
+        // for 
+        // TODO either keep a list of channel button objects, or use radio buttons
+        // also consider splitting this file into ChannelList, ServerList, MessageList, etc.
+        // also consider not using sveltekit and having only one page.
+    }
 
 </script>
 
@@ -32,10 +44,23 @@
     <meta name="description" content="Aster web client" />
 </svelte:head>
 
-<div id="message-area">
-    {#each messages as message (message)}
-        <Message message={message} />
-    {/each}
+
+<div id="server-area">
+    <div id="server-channels">
+        <ul id="channel-list">
+            {#each channels as channel (channel)}
+                <ChannelButton channel={channel} on:click={switch_channel} />
+            {/each}
+        </ul>
+    </div>
+    <div id="server-messages">
+        <input rows="1" autofocus="true" id="message-input" placeholder=" Send a message"/>
+        <div id="message-area">
+            {#each messages as message (message)}
+                <Message message={message} />
+            {/each}
+        </div>
+    </div>
 </div>
 
 <style>

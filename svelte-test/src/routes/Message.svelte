@@ -7,10 +7,10 @@
 	</script>
 
 <div class="message">
-	<!-- <img src="{img_src}" class="message-pfp"/> -->
-	<div class="message-username">{message.username}</div>
+	<img src="data:image/png;base64,{message.author.pfp}" class="message-pfp"/>
+	<div class="message-username">{message.author.display_name}</div>
 	<div class="message-body">{message.content}</div>
-	<!-- <div class="message-date">{date}</div> -->
+	<div class="message-date">{message.date.toLocaleString()}</div>
 </div>
 
 <style>
@@ -33,13 +33,13 @@
     margin: 0;
     margin-left: 5px;
     font-size: 10px;
-    margin-top: 11px;
+    margin-top: 8px;
 }
 
 .message-pfp {
     margin: 0;
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     border-style: none;
     background-position: center;

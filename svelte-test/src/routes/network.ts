@@ -4,10 +4,14 @@ const HTTP_FORBIDDEN = 403;
 
 export class MessageInfo {
     content: string;
-    username: string;
-    constructor(content: string, username: string) {
-    	this.username = username;
-    	this.content = content;
+    author: Peer;
+    date: Date;
+    uuid: number;
+    constructor(content: string, author: Peer, date: Date, uuid: number) {
+    	  this.content = content;
+        this.author = author;
+        this.date = date;
+        this.uuid = uuid;
     }
 }
 
@@ -130,6 +134,11 @@ export class Server {
             });
         });
     }
+
+    public list_channels(): Channel[] {
+        return Array.from(this.cached_channels.values());
+    }
+    
     public get_channel(uuid: number): Channel | undefined {
         return this.cached_channels.get(uuid);
     }
@@ -148,13 +157,13 @@ export class Server {
             return undefined;
         }
         if (channel.cached_messages.length < 100) {
-            let history = await this.request({"command": "history", "channel": channel_uuid, "num": 100});
-            let messages = new Array<MessageInfo>(100);
+            let history = await this.request({"command": "history", "channel": channel_uuid, "num": 1000});
+            let messages = new Array<MessageInfo>();
             let i = 0;
             for (const message of history["data"]) {
                 let peer = this.known_peers.get(message["author_uuid"]);
                 if (peer !== undefined) {
-                    messages[i] = new MessageInfo(message["content"], peer.display_name);
+                    messages[i] = new MessageInfo(message["content"], peer, new Date(message["date"] * 1000), message["uuid"]);
                     i++;
                 } else {
                     console.log("Nonexistent peer: " + message["author_uuid"]);
