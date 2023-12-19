@@ -30,9 +30,15 @@
     let channels: Array<Channel> = [];
     init_servers().then(() => console.log("done init"));
 
-    function switch_channel(event) {
-        // for 
-        // TODO either keep a list of channel button objects, or use radio buttons
+    function switch_channel(event, channel) {
+        for (const chan of channels) {
+            if (chan !== channel) {
+                chan.button.reset();
+            }
+        }
+        const uuid = channel.uuid;
+        sync_server.get_history(uuid).then((msg) => messages = msg);
+        // TODO this solution is kinda ugly... maybe radiobutton?
         // also consider splitting this file into ChannelList, ServerList, MessageList, etc.
         // also consider not using sveltekit and having only one page.
     }
@@ -49,7 +55,7 @@
     <div id="server-channels">
         <ul id="channel-list">
             {#each channels as channel (channel)}
-                <ChannelButton channel={channel} on:click={switch_channel} />
+                <ChannelButton channel={channel} on:click={(event) => switch_channel(event, channel)} bind:this={channel.button} />
             {/each}
         </ul>
     </div>
