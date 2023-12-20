@@ -1,9 +1,10 @@
 <script lang="ts">
+    // also consider not using sveltekit and having only one page.
     import Message from "../Message.svelte";
-    import ChannelButton from "../ChannelButton.svelte";
+    import ChannelList from "../ChannelList.svelte";
     import { goto } from '$app/navigation';
-    import { MessageInfo } from "../network";
-    import { sync_server, servers, Server, add_server, Peer } from "../network";
+    import type { MessageInfo } from "../network";
+    import { sync_server, servers, Server, add_server, Peer, Channel } from "../network";
     export async function init_servers() {
         if (sync_server) {
             const server_list = (await sync_server.request({"command": "sync_get_servers"}))["servers"];
@@ -13,34 +14,20 @@
                 await connection.connect("KingJellyfish", "asdf");
                 add_server(connection);
             }
-            const general = sync_server.get_channel_by_name("general").uuid;
-            messages = await sync_server.get_history(general);
-            console.log(messages);
             channels = sync_server.list_channels();
-            console.log(channels);
         } else {
             goto("/login");
         }
     }
-    // function add_message() {
-    //     messages.push(new MessageInfo("teast ahofhaefhiuj", "KingJellyfish"));
-    //     messages = messages;
-    // }
     let messages: Array<MessageInfo> = [];
     let channels: Array<Channel> = [];
     init_servers().then(() => console.log("done init"));
 
-    function switch_channel(event, channel) {
-        for (const chan of channels) {
-            if (chan !== channel) {
-                chan.button.reset();
-            }
-        }
-        const uuid = channel.uuid;
+    function switch_channel(channel: CustomEvent<Channel>) {
+        const uuid = channel.detail.uuid;
+        console.log(channel);
+        messages = [];
         sync_server.get_history(uuid).then((msg) => messages = msg);
-        // TODO this solution is kinda ugly... maybe radiobutton?
-        // also consider splitting this file into ChannelList, ServerList, MessageList, etc.
-        // also consider not using sveltekit and having only one page.
     }
 
 </script>
@@ -53,14 +40,10 @@
 
 <div id="server-area">
     <div id="server-channels">
-        <ul id="channel-list">
-            {#each channels as channel (channel)}
-                <ChannelButton channel={channel} on:click={(event) => switch_channel(event, channel)} bind:this={channel.button} />
-            {/each}
-        </ul>
+        <ChannelList {channels} on:switch_channel={switch_channel} />
     </div>
     <div id="server-messages">
-        <input rows="1" autofocus="true" id="message-input" placeholder=" Send a message"/>
+        <input autofocus={true} id="message-input" placeholder=" Send a message"/>
         <div id="message-area">
             {#each messages as message (message)}
                 <Message message={message} />

@@ -1,13 +1,13 @@
 <script lang="ts">
-    export let channel;
+    import type { Channel } from "./network";
+    export let channel: Channel;
     import { createEventDispatcher } from 'svelte';
     const dispatch = createEventDispatcher();
-    export let button;
+    let button: HTMLButtonElement;
     
     function clicked() {
-        console.log("Channel " + channel.name + " clicked");
-        button.setAttribute("value", "1");
         dispatch("click", {"channel": channel});
+        button.setAttribute("value", "1");
     }
 
     export function reset() {
