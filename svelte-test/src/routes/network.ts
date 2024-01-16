@@ -7,11 +7,13 @@ export class MessageInfo {
     author: Peer;
     date: Date;
     uuid: number;
-    constructor(content: string, author: Peer, date: Date, uuid: number) {
-    	  this.content = content;
+    channel_uuid: number;
+    constructor(content: string, author: Peer, date: Date, uuid: number, channel_uuid: number) {
+        this.content = content;
         this.author = author;
         this.date = date;
         this.uuid = uuid;
+        this.channel_uuid = channel_uuid;
     }
 }
 
@@ -67,6 +69,7 @@ export class Server {
     logged_in: boolean = false;
     we_have_the_metadata_lads: boolean = false;
     we_have_the_channels_lads: boolean = false;
+    message_callback: null | ((_: MessageInfo) => undefined) = null;
     constructor(ip: string, port: number) {
         this.ip = ip;
         this.port = port;
@@ -86,7 +89,7 @@ export class Server {
                 reject(err_msg);
             });
             this.socket.addEventListener("open", (_) => {
-                this.socket.send(JSON.stringify({"command": "login", "uname": uname, "passwd": pword}));
+                this.socket?.send(JSON.stringify({"command": "login", "uname": uname, "passwd": pword}));
             });
             this.socket.addEventListener("message", (event) => {
                 console.log(event.data);
@@ -103,12 +106,12 @@ export class Server {
                 } else {
                     if (obj["command"] == "login") {
                         this.my_uuid = obj["uuid"];
-                        this.socket.send(JSON.stringify({"command": "get_metadata"}));
-                        this.socket.send(JSON.stringify({"command": "list_channels"}));
+                        this.socket?.send(JSON.stringify({"command": "get_metadata"}));
+                        this.socket?.send(JSON.stringify({"command": "list_channels"}));
                         this.logged_in = true;
                     } else if (obj["command"] == "get_metadata") {
                         for (const peer_json of obj["data"]) {
-                            let peer = Peer.from(peer_json);
+                            const peer = Peer.from(peer_json);
                             if (peer !== null) {
                                 this.known_peers.set(peer_json["uuid"], peer);
                             } else {
@@ -116,23 +119,40 @@ export class Server {
                             }
                         }
                         this.we_have_the_metadata_lads = true;
-                    }
-                }
-                if (obj["command"] == "list_channels") {
-                    for (const channel_json of obj["data"]) {
-                        let channel = Channel.from(channel_json);
-                        if (channel !== null) {
-                            this.cached_channels.set(channel.uuid, channel);
+                    } else if (obj["command"] == "list_channels") {
+                        for (const channel_json of obj["data"]) {
+                            const channel = Channel.from(channel_json);
+                            if (channel !== null) {
+                                this.cached_channels.set(channel.uuid, channel);
+                            }
+                        }
+                        this.we_have_the_channels_lads = true;
+                    } else if (obj["command"] == "content") {
+                        console.log(this.message_callback);
+                        if (this.message_callback !== null) {
+                            const info = this.make_message(obj);
+                            if (info !== null) {
+                                this.message_callback(info);
+                            }
                         }
                     }
-                    this.we_have_the_channels_lads = true;
-                }
-                if (this.logged_in && this.we_have_the_metadata_lads && this.we_have_the_channels_lads) {
-                    resolve();
+                    if (this.logged_in && this.we_have_the_metadata_lads && this.we_have_the_channels_lads) {
+                        resolve();
+                    }
                 }
 
             });
         });
+    }
+
+    private make_message(message: any): MessageInfo | null {
+        const peer = this.known_peers.get(message["author_uuid"]);
+        if (peer !== undefined) {
+            return new MessageInfo(message["content"], peer, new Date(message["date"] * 1000), message["uuid"], message["channel_uuid"]);
+        } else {
+            console.log("Nonexistent peer: " + message["author_uuid"]);
+        }
+        return null;
     }
 
     public list_channels(): Channel[] {
@@ -152,21 +172,19 @@ export class Server {
     }
 
     public async get_history(channel_uuid: number): Promise<Array<MessageInfo> | undefined> {
-        let channel = this.get_channel(channel_uuid);
+        const channel = this.get_channel(channel_uuid);
         if (channel === undefined) {
             return undefined;
         }
         if (channel.cached_messages.length < 100) {
-            let history = await this.request({"command": "history", "channel": channel_uuid, "num": 1000});
+            const history = await this.request({"command": "history", "channel": channel_uuid, "num": 1000});
             let messages = new Array<MessageInfo>();
             let i = 0;
             for (const message of history["data"]) {
-                let peer = this.known_peers.get(message["author_uuid"]);
-                if (peer !== undefined) {
-                    messages[i] = new MessageInfo(message["content"], peer, new Date(message["date"] * 1000), message["uuid"]);
+                let info = this.make_message(message);
+                if (info !== null) {
+                    messages[i] = info;
                     i++;
-                } else {
-                    console.log("Nonexistent peer: " + message["author_uuid"]);
                 }
             }
             channel.cached_messages = messages; // update cached - TODO: should this all be in the generic packet receiver function?

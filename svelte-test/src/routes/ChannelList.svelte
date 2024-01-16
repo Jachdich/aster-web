@@ -28,3 +28,9 @@
     {/each}
 </ul>
 
+<style>
+#channel-list {
+    margin-top: 25px;
+    padding-left: 4px;
+}
+</style>
