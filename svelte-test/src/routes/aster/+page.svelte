@@ -1,4 +1,6 @@
 <script lang="ts">
+    // TODO
+    // Make messages scroll to the bottom. This is hard.
     // also consider not using sveltekit and having only one page.
     import Message from "../Message.svelte";
     import ChannelList from "../ChannelList.svelte";
@@ -27,6 +29,21 @@
     function on_message(message: MessageInfo) {
         messages.push(message);
         messages = messages;
+        // can't scroll here, it doesn't know that we've added a message to the div yet!
+    }
+
+    function scroll_to_bottom(node: HTMLElement) {
+        const message_elems = node.children;
+        console.log(message_elems);
+        if (message_elems.length == 0) {
+            return;
+        }
+        message_elems[message_elems.length - 1].scrollIntoView();
+        
+    }
+
+    function scroll_to_this(node: HTMLElement) {
+        node.scrollIntoView();
     }
 
     function switch_channel(channel: CustomEvent<Channel>) {
@@ -49,6 +66,7 @@
 
     let message_input: string = "";
     let selected_channel_uuid: number | null = null;
+    // let message_area: HTMLDivElement;
 
 </script>
 
@@ -66,7 +84,7 @@
         <input autofocus={true} id="message-input" placeholder=" Send a message" on:keypress={send_message} bind:value={message_input}/>
         <div id="message-area">
             {#each messages as message (message)}
-                <Message message={message} />
+                <div use:scroll_to_this><Message message={message} /></div>
             {/each}
         </div>
     </div>

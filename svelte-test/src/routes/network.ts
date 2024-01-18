@@ -2,6 +2,8 @@
 const HTTP_OK = 200;
 const HTTP_FORBIDDEN = 403;
 
+const MY_API_VERSION = [1, 0, 0];
+
 export class MessageInfo {
     content: string;
     author: Peer;
@@ -134,6 +136,16 @@ export class Server {
                             if (info !== null) {
                                 this.message_callback(info);
                             }
+                        }
+                    } else if (obj["command"] == "API_version") {
+                        // TODO make this function actually show an error
+                        const remote_version = obj["version"];
+                        if (remote_version[0] < MY_API_VERSION[0]) {
+                            console.log("Server is too old!");
+                        } else if (remote_version[0] > MY_API_VERSION[0]) {
+                            console.log("Server is too new!");
+                        } else {
+                            // uhh we're ok
                         }
                     }
                     if (this.logged_in && this.we_have_the_metadata_lads && this.we_have_the_channels_lads) {
