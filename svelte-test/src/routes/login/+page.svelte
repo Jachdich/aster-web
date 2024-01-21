@@ -2,7 +2,9 @@
 <script lang="ts">
     import { goto } from '$app/navigation';
     import { set_sync_server, Server} from "../network";
-    import { onMount } from 'svelte'
+    import { onMount } from 'svelte';
+    import "../popup.css";
+    import "../styles.css";
 
     onMount(() => {
         (document.getElementById("login-sync-port-input") as HTMLInputElement).value = "2345"; // dumb hack to set default value of input
@@ -22,8 +24,8 @@
             error_msg = "The port number must not be greater than 65535";
             return;
         }
-        let server = new Server(sync_ip, port);
-        server.connect(uname, password).then(() => {
+        let server = new Server(sync_ip, port, uname, password);
+        server.connect().then(() => {
             set_sync_server(server);
             goto("/aster");
         }, (err) => {
@@ -70,29 +72,13 @@
 {/if}
 
 {#if error_msg != ""}
-    <div id="error" class="centre-window">
+    <div id="error" class="popup centre-window">
         <div style="margin-bottom: 5px;">{error_msg}</div>
         <button on:click={dismiss_error} id="error-dismiss">Ok</button>
     </div>
 {/if}
 
 <style>
-input, button {
-    border: 1px solid #444444;
-    border-radius: 6px;
-    color: inherit;
-    background-color: inherit;
-}
-
-:global(body) {
-    background-color: #1C1C1C;
-    color: #d3d3d3;
-    font-family: sans-serif;
-}
-
-input:focus {
-    outline: none;
-}
 
 .login-input {
     width: 300px;
@@ -101,21 +87,6 @@ input:focus {
     background-color: inherit;
     margin-left: 8px;
     margin-bottom: 10px;
-}
-
-.centre-window {
-    display: grid;
-    padding: 10px;
-    border: 2px solid #444444;
-    background-color: #1C1C1C;
-    border-radius: 6px;
-    position: absolute;
-    width: max-content;
-    left: 50%;
-    right: 50%;
-    top: 50%;
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
 }
 
 #login-button {
@@ -132,10 +103,6 @@ input:focus {
 #login-uname-input     { grid-row: 3; grid-column: 2; }
 #login-pword-label     { grid-row: 4; grid-column: 1; }
 #login-pword-input     { grid-row: 4; grid-column: 2; }
-
-#error {
-    z-index: 1;
-}
 
 #error-dismiss {
     width: 64px;
