@@ -1,8 +1,21 @@
 // import {browser} from '$app/environment';
-const HTTP_OK = 200;
-const HTTP_FORBIDDEN = 403;
+
+enum Error {
+    Ok = 200,
+    Forbidden = 403,
+    NotFound = 404,
+}
 
 const MY_API_VERSION = [1, 0, 0];
+
+export class ServerError {
+    code: number;
+    constructor(code: number) {
+        this.code = code;
+    }
+}
+export class ChannelNotFound {};
+export class Forbidden {};
 
 export class MessageInfo {
     content: string;
@@ -66,18 +79,22 @@ export class Server {
     known_peers: Map<number, Peer> = new Map();
     ip: string;
     port: number;
+    username: string;
+    password: string; // TODO is this a good idea?
     private waiting_for: Map<string, any> = new Map();
     cached_channels: Map<number, Channel> = new Map();
     logged_in: boolean = false;
     we_have_the_metadata_lads: boolean = false;
     we_have_the_channels_lads: boolean = false;
-    message_callback: null | ((_: MessageInfo) => undefined) = null;
-    constructor(ip: string, port: number) {
+    message_callback: null | ((_: MessageInfo) => void) = null;
+    constructor(ip: string, port: number, uname: string, pword: string) {
         this.ip = ip;
         this.port = port;
+        this.username = uname;
+        this.password = pword;
     }
 
-    public connect(uname: string, pword: string): Promise<void> {
+    public connect(): Promise<void> {
         return new Promise((resolve, reject) => {
             try {
                 this.socket = new WebSocket("ws://" + this.ip + ":" + this.port);
@@ -85,13 +102,13 @@ export class Server {
                 reject("Invalid server IP/port");
                 return;
             }
-            this.socket.addEventListener("error", (error) => {
+            this.socket.addEventListener("error", (_) => {
                 let err_msg = "Could not connect to server: Error in websocket. Is the server down?";
                 console.log(err_msg);
                 reject(err_msg);
             });
             this.socket.addEventListener("open", (_) => {
-                this.socket?.send(JSON.stringify({"command": "login", "uname": uname, "passwd": pword}));
+                this.socket?.send(JSON.stringify({"command": "login", "uname": this.username, "passwd": this.password}));
             });
             this.socket.addEventListener("message", (event) => {
                 console.log(event.data);
@@ -101,9 +118,9 @@ export class Server {
                     this.waiting_for.delete(obj["command"]);
                 }
         
-                if (obj["command"] == "login" && obj["status"] == HTTP_FORBIDDEN) {
+                if (obj["command"] == "login" && obj["status"] == Error.Forbidden) {
                     reject("Incorrect username or password! Try again.");
-                } else if (obj["status"] != HTTP_OK) {
+                } else if (obj["status"] != Error.Ok) {
                     // err_msg = "Command '" + obj["command"] + "' failed with error code " + obj["status"];
                 } else {
                     if (obj["command"] == "login") {
@@ -130,7 +147,6 @@ export class Server {
                         }
                         this.we_have_the_channels_lads = true;
                     } else if (obj["command"] == "content") {
-                        console.log(this.message_callback);
                         if (this.message_callback !== null) {
                             const info = this.make_message(obj);
                             if (info !== null) {
@@ -183,13 +199,20 @@ export class Server {
         }
     }
 
-    public async get_history(channel_uuid: number): Promise<Array<MessageInfo> | undefined> {
+    public async get_history(channel_uuid: number): Promise<Array<MessageInfo> | ChannelNotFound | Forbidden | ServerError> {
         const channel = this.get_channel(channel_uuid);
         if (channel === undefined) {
-            return undefined;
+            return new ChannelNotFound();
         }
         if (channel.cached_messages.length < 100) {
             const history = await this.request({"command": "history", "channel": channel_uuid, "num": 1000});
+            if (history["status"] == Error.NotFound) {
+                return new ChannelNotFound();
+            } else if (history["status"] == Error.Forbidden) {
+                return new Forbidden();
+            } else if (history["status"] != Error.Ok) {
+                return new ServerError(history["status"]);
+            }
             let messages = new Array<MessageInfo>();
             let i = 0;
             for (const message of history["data"]) {
@@ -218,12 +241,7 @@ export class Server {
     }
 }
 
-export let servers: Array<Server> = [];
 export let sync_server: Server | null = null;
 export function set_sync_server(server: Server) {
     sync_server = server;
-}
-export function add_server(server: Server) {
-    servers.push(server);
-    servers = servers;
 }

@@ -4,53 +4,71 @@
     // also consider not using sveltekit and having only one page.
     import Message from "../Message.svelte";
     import ChannelList from "../ChannelList.svelte";
+    import ServerList from "../ServerList.svelte";
+    import AddServerDialog from "../AddServerDialog.svelte";
     import { goto } from '$app/navigation';
     import type { MessageInfo } from "../network";
-    import { sync_server, servers, Server, add_server, Peer, Channel } from "../network";
+    import { sync_server, Server, Peer, Channel, ChannelNotFound, ServerError, Forbidden } from "../network";
+    import add_server_img from "$lib/images/add_server.png";
+
+    import "../styles.css";
+
     export async function init_servers() {
         if (sync_server) {
             const server_list = (await sync_server.request({"command": "sync_get_servers"}))["servers"];
             for (const server of server_list) {
                 console.log("Connectiong to " + server["ip"] + ":" + server["port"]);
-                const connection = new Server(server["ip"], server["port"]);
-                await connection.connect("KingJellyfish", "asdf");
-                add_server(connection);
+                const connection = new Server(server["ip"], server["port"], sync_server.username, sync_server.password);
+                await connection.connect();
+                servers.push(server);
             }
-            channels = sync_server.list_channels();
-            sync_server.message_callback = on_message;
+            servers = servers;
         } else {
             goto("/login");
         }
     }
-    let messages: Array<MessageInfo> = [];
-    let channels: Array<Channel> = [];
+    let messages: MessageInfo[] = [];
+    let channels: Channel[] = [];
+    let servers: Server[] = [];
+    let profile_img = "";
     init_servers().then(() => console.log("done init"));
 
     function on_message(message: MessageInfo) {
-        messages.push(message);
-        messages = messages;
-        // can't scroll here, it doesn't know that we've added a message to the div yet!
+        if (message.channel_uuid == selected_channel_uuid) {
+            messages.push(message);
+            messages = messages;
+        }
     }
 
     function scroll_to_bottom(node: HTMLElement) {
         const message_elems = node.children;
-        console.log(message_elems);
         if (message_elems.length == 0) {
             return;
         }
         message_elems[message_elems.length - 1].scrollIntoView();
-        
     }
 
-    function scroll_to_this(node: HTMLElement) {
-        node.scrollIntoView();
+    function scroll_to_this(node: HTMLElement, flag: boolean) {
+        if (flag) {
+            node.scrollIntoView();
+        }
     }
 
     function switch_channel(channel: CustomEvent<Channel>) {
         const uuid = channel.detail.uuid;
-        console.log(channel);
         messages = [];
-        sync_server?.get_history(uuid).then((msg) => messages = msg);
+        sync_server?.get_history(uuid).then((msg) => {
+            if (msg instanceof ChannelNotFound) {
+                
+            } else if (msg instanceof Forbidden) {
+                
+            } else if (msg instanceof ServerError) {
+                
+            } else {
+                messages = msg;
+                setTimeout(() => scroll_to_bottom(message_area), 1); // Horrible hack because svelte is annoying
+            }
+        });
         selected_channel_uuid = uuid;
     }
 
@@ -59,14 +77,35 @@
             return;
         }
         if (event.key === "Enter") {
+            if (message_input.trim().length == 0) {
+                return;
+            }
             sync_server?.request({command: "send", content: message_input, channel: selected_channel_uuid});
             message_input = "";
         }
     }
 
+    // Add a new server
+    function add_server(_: Event) {
+        // ...sike! Actually only show the popup for the new server
+        show_add_server = true;
+    }
+
+    // This time it actually adds the server, I promise
+    // TODO: get rid of the any in the signature
+    function add_server_for_real(info: CustomEvent<any>) {
+        let ip: string = info.detail.ip;
+        let port: number = info.detail.port;
+        sync_server?.request({command: "sync_set_servers", servers: [{user_uuid: 12345, server_uuid: 69420, ip: ip, port: port, idx: 0}]}).then((response) => console.log(response));
+    }
+
+    function switch_server(server: CustomEvent<Server>) {
+    }
+
     let message_input: string = "";
     let selected_channel_uuid: number | null = null;
-    // let message_area: HTMLDivElement;
+    let message_area: HTMLDivElement;
+    let show_add_server: boolean = false;
 
 </script>
 
@@ -75,37 +114,67 @@
     <meta name="description" content="Aster web client" />
 </svelte:head>
 
-
-<div id="server-area">
-    <div id="server-channels" class="container">
-        <ChannelList {channels} on:switch_channel={switch_channel} />
+<div id="page">
+    <div id="top">
+        <button id="add-server" on:click={add_server}><img src={add_server_img} alt="Add new server" class="icon"></button>
+        <button id="settings"><img src={profile_img} alt="View profile" class="pfp" id="pfp_button"></button>
+        <ServerList {servers} id="server-list" on:switch_server={switch_server}/>
     </div>
-    <div id="server-messages" class="container">
-        <input autofocus={true} id="message-input" placeholder=" Send a message" on:keypress={send_message} bind:value={message_input}/>
-        <div id="message-area">
-            {#each messages as message (message)}
-                <div use:scroll_to_this><Message message={message} /></div>
-            {/each}
+    <div id="server-area">
+        <div id="server-channels" class="container">
+            <ChannelList {channels} on:switch_channel={switch_channel} />
+        </div>
+        <div id="server-messages" class="container">
+            <input autofocus={true} id="message-input" placeholder=" Send a message" on:keypress={send_message} bind:value={message_input}/>
+            <div id="message-area" bind:this={message_area}>
+                {#each messages as message, idx (message.uuid)}
+                    <div use:scroll_to_this={idx == messages.length - 1}><Message message={message} /></div>
+                {/each}
+            </div>
         </div>
     </div>
 </div>
 
+{#if show_add_server}
+    <AddServerDialog on:dismiss={() => show_add_server = false } on:add_server={add_server_for_real}/>
+{/if}
+
 <style>
-input, textarea, button {
-    border: 1px solid #444444;
-    border-radius: 6px;
-    color: inherit;
-    background-color: inherit;
+
+#top {
+    height: 37px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
 }
 
-:global(body) {
-    background-color: #1C1C1C;
-    color: #d3d3d3;
-    font-family: sans-serif;
+.pfp {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border-style: none;
+    background-position: center;
+    object-fit: cover;
+}
+.icon {
+    width: 16x;
+    height: 16px;
 }
 
-input:focus {
-    outline: none;
+#add-server, #settings {
+    background-color: #232323;
+    border-radius: 16px;
+    border-style: none;
+    height: 46px;
+    width: 46px;
+    margin-left: 6px;
+    margin-top: 0;
+}
+
+    
+#page {
+    display: flex;
+    flex-direction: column;
 }
 
 ::-webkit-scrollbar {
