@@ -127,6 +127,8 @@ export class Server {
                         this.my_uuid = obj["uuid"];
                         this.socket?.send(JSON.stringify({"command": "get_metadata"}));
                         this.socket?.send(JSON.stringify({"command": "list_channels"}));
+                        // this.socket?.send(JSON.stringify({"command": "get_name"}));
+                        // this.socket?.send(JSON.stringify({"command": "get_icon"}));
                         this.logged_in = true;
                     } else if (obj["command"] == "get_metadata") {
                         for (const peer_json of obj["data"]) {

@@ -13,6 +13,7 @@
 
     import "../styles.css";
 
+    let servers: Server[] = [];
     export async function init_servers() {
         if (sync_server) {
             const server_list = (await sync_server.request({"command": "sync_get_servers"}))["servers"];
@@ -20,7 +21,8 @@
                 console.log("Connectiong to " + server["ip"] + ":" + server["port"]);
                 const connection = new Server(server["ip"], server["port"], sync_server.username, sync_server.password);
                 await connection.connect();
-                servers.push(server);
+                servers.push(connection);
+                connection.message_callback = (message) => on_message(message, server);
             }
             servers = servers;
         } else {
@@ -29,11 +31,10 @@
     }
     let messages: MessageInfo[] = [];
     let channels: Channel[] = [];
-    let servers: Server[] = [];
     let profile_img = "";
     init_servers().then(() => console.log("done init"));
 
-    function on_message(message: MessageInfo) {
+    function on_message(message: MessageInfo, _: Server) {
         if (message.channel_uuid == selected_channel_uuid) {
             messages.push(message);
             messages = messages;
@@ -57,7 +58,7 @@
     function switch_channel(channel: CustomEvent<Channel>) {
         const uuid = channel.detail.uuid;
         messages = [];
-        sync_server?.get_history(uuid).then((msg) => {
+        selected_server?.get_history(uuid).then((msg) => {
             if (msg instanceof ChannelNotFound) {
                 
             } else if (msg instanceof Forbidden) {
@@ -73,14 +74,14 @@
     }
 
     function send_message(event: KeyboardEvent) {
-        if (selected_channel_uuid === null) {
+        if (selected_channel_uuid === null || selected_server === null) {
             return;
         }
         if (event.key === "Enter") {
             if (message_input.trim().length == 0) {
                 return;
             }
-            sync_server?.request({command: "send", content: message_input, channel: selected_channel_uuid});
+            selected_server.request({command: "send", content: message_input, channel: selected_channel_uuid});
             message_input = "";
         }
     }
@@ -94,18 +95,55 @@
     // This time it actually adds the server, I promise
     // TODO: get rid of the any in the signature
     function add_server_for_real(info: CustomEvent<any>) {
+        if (!sync_server) {
+            // TODO: this shouldn't really be needed, and maybe we should throw an error instead?
+            return;
+        }
         let ip: string = info.detail.ip;
         let port: number = info.detail.port;
-        sync_server?.request({command: "sync_set_servers", servers: [{user_uuid: 12345, server_uuid: 69420, ip: ip, port: port, idx: 0}]}).then((response) => console.log(response));
+        
+        class SyncServer {
+            user_uuid: number;
+            server_uuid: number;
+            ip: string;
+            port: number;
+            idx: number;
+            constructor(user_uuid: number, server_uuid: number, ip: string, port: number, idx: number) {
+                this.user_uuid = user_uuid;
+                this.server_uuid = server_uuid;
+                this.ip = ip;
+                this.port = port;
+                this.idx = idx;
+            }
+        }
+        const connection = new Server(ip, port, sync_server.username, sync_server.password);
+        connection.connect().then(() => {
+            servers.push(connection);
+            servers = servers;
+            let serialised_servers: SyncServer[] = [];
+            let index: number = 0;
+            for (const server of servers) {
+                // TODO: hack
+                const sync_server = new SyncServer(server.my_uuid as any, 0, server.ip, server.port, index++);
+                serialised_servers.push(sync_server);
+            }
+            console.log(servers);
+        
+            sync_server?.request({command: "sync_set_servers", servers: serialised_servers}).then((response) => console.log(response));
+        });
     }
 
     function switch_server(server: CustomEvent<Server>) {
+        selected_server = server.detail;
+        channels = selected_server.list_channels();
+        messages = [];
     }
 
     let message_input: string = "";
     let selected_channel_uuid: number | null = null;
     let message_area: HTMLDivElement;
     let show_add_server: boolean = false;
+    let selected_server: Server | null = null;
 
 </script>
 
