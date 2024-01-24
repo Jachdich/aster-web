@@ -43,7 +43,7 @@ export const actions = {
 			game.guesses[i] += key;
 		}
 
-		cookies.set('sverdle', game.toString());
+		/* @migration task: add path argument */ cookies.set('sverdle', game.toString());
 	},
 
 	/**
@@ -60,10 +60,10 @@ export const actions = {
 			return fail(400, { badGuess: true });
 		}
 
-		cookies.set('sverdle', game.toString());
+		/* @migration task: add path argument */ cookies.set('sverdle', game.toString());
 	},
 
 	restart: async ({ cookies }) => {
-		cookies.delete('sverdle');
+		/* @migration task: add path argument */ cookies.delete('sverdle');
 	}
 } satisfies Actions;
