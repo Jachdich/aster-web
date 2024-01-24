@@ -1,14 +1,14 @@
 <script lang="ts">
     // TODO: unify this and ChannelList? idk how though
-    import type { Server } from "./network";
+    import type { Connection } from "./network";
     import { createEventDispatcher } from 'svelte';
     import ServerButton from "./ServerButton.svelte";
 
     // ugly hack: basically so we can store an extra `button` attribute on each channel. One day I'll fix this...
     export let servers: Array<any>;
     const dispatch = createEventDispatcher();
-    let selected_server: Server | null = null;
-    function switch_server(_: Event, server: Server) {
+    let selected_server: Connection | null = null;
+    function switch_server(_: Event, server: Connection) {
         if (selected_server === server) {
             return;
         }

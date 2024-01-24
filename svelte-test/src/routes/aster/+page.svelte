@@ -6,8 +6,9 @@
     import ServerList from "../ServerList.svelte";
     import AddServerDialog from "../AddServerDialog.svelte";
     import { goto } from '$app/navigation';
-    import { sync_server, Server, Peer, Channel, ChannelNotFound, ServerError, Forbidden } from "../network";
+    import { sync_server, Connection, Peer, Channel, ChannelNotFound, ServerError, Forbidden } from "../network";
     import add_server_img from "$lib/images/add_server.png";
+    import { Server } from "../server";
 
     import "../styles.css";
 
@@ -18,10 +19,9 @@
             const server_list = (await sync_server.request({"command": "sync_get_servers"}))["servers"];
             for (const server of server_list) {
                 console.log("Connectiong to " + server["ip"] + ":" + server["port"]);
-                const connection = new Server(server["ip"], server["port"], sync_server.username, sync_server.password);
+                const connection = new Connection(server["ip"], server["port"], sync_server.username, sync_server.password);
                 await connection.connect();
-                servers.push(connection);
-                connection.message_callback = (message) => on_message(message, server); // TODO here:
+                servers.push(new Server(connection));
             }
             servers = servers;
         } else {
@@ -61,15 +61,15 @@
                 this.idx = idx;
             }
         }
-        const connection = new Server(ip, port, sync_server.username, sync_server.password);
+        const connection = new Connection(ip, port, sync_server.username, sync_server.password);
         connection.connect().then(() => {
-            servers.push(connection);
+            servers.push(new Server(connection));
             servers = servers;
             let serialised_servers: SyncServer[] = [];
             let index: number = 0;
             for (const server of servers) {
                 // TODO: hack
-                const sync_server = new SyncServer(server.my_uuid as any, 0, server.ip, server.port, index++);
+                const sync_server = new SyncServer(server.conn.my_uuid as any, 0, server.conn.ip, server.conn.port, index++);
                 serialised_servers.push(sync_server);
             }
             console.log(servers);

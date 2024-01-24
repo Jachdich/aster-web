@@ -1,7 +1,7 @@
 
 <script lang="ts">
     import { goto } from '$app/navigation';
-    import { set_sync_server, Server} from "../network";
+    import { set_sync_server, Connection} from "../network";
     import { onMount } from 'svelte';
     import "../popup.css";
     import "../styles.css";
@@ -24,7 +24,7 @@
             error_msg = "The port number must not be greater than 65535";
             return;
         }
-        let server = new Server(sync_ip, port, uname, password);
+        let server = new Connection(sync_ip, port, uname, password);
         server.connect().then(() => {
             set_sync_server(server);
             goto("/aster");

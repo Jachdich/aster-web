@@ -73,7 +73,7 @@ export class Channel {
     }
 }
 
-export class Server {
+export class Connection {
     socket: WebSocket | null = null;
     my_uuid: string | null = null;
     known_peers: Map<number, Peer> = new Map();
@@ -243,7 +243,7 @@ export class Server {
     }
 }
 
-export let sync_server: Server | null = null;
-export function set_sync_server(server: Server) {
+export let sync_server: Connection | null = null;
+export function set_sync_server(server: Connection) {
     sync_server = server;
 }

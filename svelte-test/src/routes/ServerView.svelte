@@ -1,25 +1,16 @@
 <script lang="ts">
     import Message from "./Message.svelte";
     import ChannelList from "./ChannelList.svelte";
-    import type { MessageInfo } from "./network";
-    import { Server, Channel, ChannelNotFound, ServerError, Forbidden } from "./network";
+    import type { Server } from "./server";
+    import { Channel, ChannelNotFound, ServerError, Forbidden } from "./network";
 
     import "./styles.css";
     
     export let server: Server;
-    let messages: MessageInfo[] = [];
-    let channels: Channel[] = server.list_channels();
+    let channels: Channel[] = server.conn.list_channels();
     let message_input: string = "";
-    let selected_channel_uuid: number | null = null;
     let message_area: HTMLDivElement;
 
-    function on_message(message: MessageInfo, _: Server) {
-        if (message.channel_uuid == selected_channel_uuid) {
-            messages.push(message);
-            messages = messages;
-        }
-    }
-    
     function scroll_to_bottom(node: HTMLElement) {
         const message_elems = node.children;
         if (message_elems.length == 0) {
@@ -36,8 +27,8 @@
 
     function switch_channel(channel: CustomEvent<Channel>) {
         const uuid = channel.detail.uuid;
-        messages = [];
-        server.get_history(uuid).then((msg) => {
+        server.messages = [];
+        server.conn.get_history(uuid).then((msg) => {
             if (msg instanceof ChannelNotFound) {
                 
             } else if (msg instanceof Forbidden) {
@@ -45,22 +36,22 @@
             } else if (msg instanceof ServerError) {
                 
             } else {
-                messages = msg;
+                server.messages = msg;
                 setTimeout(() => scroll_to_bottom(message_area), 1); // Horrible hack because svelte is annoying
             }
         });
-        selected_channel_uuid = uuid;
+        server.selected_channel_uuid = uuid;
     }
 
     function send_message(event: KeyboardEvent) {
-        if (selected_channel_uuid === null) {
+        if (server.selected_channel_uuid === null) {
             return;
         }
         if (event.key === "Enter") {
             if (message_input.trim().length == 0) {
                 return;
             }
-            server.request({command: "send", content: message_input, channel: selected_channel_uuid});
+            server.conn.request({command: "send", content: message_input, channel: server.selected_channel_uuid});
             message_input = "";
         }
     }
@@ -75,8 +66,8 @@
     <div id="server-messages" class="container">
         <input autofocus={true} id="message-input" placeholder=" Send a message" on:keypress={send_message} bind:value={message_input}/>
         <div id="message-area" bind:this={message_area}>
-            {#each messages as message, idx (message.uuid)}
-                <div use:scroll_to_this={idx == messages.length - 1}><Message message={message} /></div>
+            {#each server.messages as message, idx (message.uuid)}
+                <div use:scroll_to_this={idx == server.messages.length - 1}><Message message={message} /></div>
             {/each}
         </div>
     </div>

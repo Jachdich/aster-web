@@ -1,6 +1,6 @@
 <script lang="ts">
-    import type { Server } from "./network";
-    export let server: Server;
+    import type { Connection } from "./network";
+    export let server: Connection;
     import { createEventDispatcher } from 'svelte';
     const dispatch = createEventDispatcher();
     let button: HTMLButtonElement;
