@@ -1,0 +1,3 @@
+bugs:
+	- switching servers doesn't actually change the channels or anything. Wtf??
+	- everything is bad... idk man
