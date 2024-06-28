@@ -2,7 +2,7 @@
     import Message from "./Message.svelte";
     import ChannelList from "./ChannelList.svelte";
     import type { Server } from "./server";
-    import { MessageInfo } from "./network";
+    import { MessageInfo, can_notify } from "./network";
     import {
         Channel,
         ChannelNotFound,
@@ -11,24 +11,35 @@
     } from "./network";
 
     export let server: Server;
-    server.conn.message_callback = on_message;
-    let channels: Channel[] = server.conn.list_channels();
+    let channels: Channel[];
+    // TODO this gets called twice when switching channels (should be called 0 times???) for some reason
+    // not critical but performance issue
+    $: {
+        server.conn.message_callback = on_message;
+        channels = server.conn.list_channels();
+        console.log("called");
+    }
     let message_input: string = "";
-    let message_area: HTMLDivElement;
 
-    function scroll_to_bottom(node: HTMLElement) {
-        const message_elems = node.children;
-        if (message_elems.length == 0) {
-            return;
-        }
-        message_elems[message_elems.length - 1].scrollIntoView();
-    }
-
-    function scroll_to_this(node: HTMLElement, flag: boolean) {
-        if (flag) {
+    // this is a bit of a hack
+    // so basically, svelte seems to add objects from bottom-to-top, sometimes.
+    // Therefore, we can't just wait for this to be called on the last element, and scroll it into view.
+    // Essentially it will be called on the last element first, which we have to take a note of, and then
+    // when it gets called on the first element (last), we can scroll the last element (first) into view.
+    // we also try to scroll the last (first) element into view, just in case it is actually added last instead of first.
+    let last_node: HTMLElement | undefined;
+    const scroll_to_this = (
+        node: HTMLElement,
+        { is_last, is_first }: { is_last: boolean; is_first: boolean },
+    ) => {
+        if (is_last) {
             node.scrollIntoView();
+            last_node = node;
         }
-    }
+        if (is_first) {
+            last_node?.scrollIntoView();
+        }
+    };
 
     function switch_channel(channel: CustomEvent<Channel>) {
         const uuid = channel.detail.uuid;
@@ -38,8 +49,10 @@
             } else if (msg instanceof Forbidden) {
             } else if (msg instanceof ServerError) {
             } else {
-                server.messages = msg;
-                setTimeout(() => scroll_to_bottom(message_area), 1); // Horrible hack because svelte is annoying
+                for (const m of msg) {
+                    server.messages.push(m);
+                }
+                server.messages = server.messages;
             }
         });
         server.selected_channel_uuid = uuid;
@@ -63,18 +76,44 @@
     }
 
     function on_message(message: MessageInfo) {
-        console.log("Got message from server " + this.conn?.port.toString());
+        console.log("Got message from server " + server.conn.port.toString());
         console.log(message);
         if (message.channel_uuid == server.selected_channel_uuid) {
             server.messages.push(message);
+            server.messages = server.messages;
         }
-        server.messages = server.messages;
+        if (
+            can_notify &&
+            message.author.uuid != server.conn.my_uuid &&
+            (!document.hasFocus() ||
+                message.channel_uuid != server.selected_channel_uuid)
+        ) {
+            new Notification(
+                `${server.conn.name} #${server.conn.get_channel(message.channel_uuid)?.name}`,
+                { body: `${message.author.display_name}: ${message.content}` },
+            );
+        }
     }
+
+    function get_selected_channel(server: Server): Channel | undefined {
+        if (server.selected_channel_uuid !== undefined) {
+            return server.conn.get_channel(server.selected_channel_uuid);
+        } else {
+            return undefined;
+        }
+    }
+
+    let selected_channel: Channel | undefined;
+    $: selected_channel = get_selected_channel(server);
 </script>
 
 <div id="server-area">
     <div id="server-channels" class="container">
-        <ChannelList {channels} on:switch_channel={switch_channel} />
+        <ChannelList
+            {channels}
+            selected_channel={selected_channel}
+            on:switch_channel={switch_channel}
+        />
     </div>
     <div id="server-messages" class="container">
         <input
@@ -84,9 +123,14 @@
             on:keypress={send_message}
             bind:value={message_input}
         />
-        <div id="message-area" bind:this={message_area}>
+        <div id="message-area">
             {#each server.messages as message, idx (message.uuid)}
-                <div use:scroll_to_this={idx == server.messages.length - 1}>
+                <div
+                    use:scroll_to_this={{
+                        is_last: idx == server.messages.length - 1,
+                        is_first: idx == 0,
+                    }}
+                >
                     <Message {message} />
                 </div>
             {/each}

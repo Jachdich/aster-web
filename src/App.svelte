@@ -1,7 +1,7 @@
 <script lang="ts">
     import LoginPrompt from "./lib/LoginPrompt.svelte";
     import Loading from "./lib/Loading.svelte";
-    import { Connection } from "./lib/network";
+    import { Connection, set_can_notify } from "./lib/network";
     import { Server } from "./lib/server";
     import ServerView from "./lib/ServerView.svelte";
     import ServerList from "./lib/ServerList.svelte";
@@ -12,9 +12,9 @@
     let show_add_server = false;
     let error_msg = "";
     let servers: Server[] = [];
-    let selected_server: Server | null = null;
+    let selected_server: Server | undefined = undefined;
     let profile_img = "";
-    let sync_server: Connection | null = null;
+    let sync_server: Connection | undefined = undefined;
 
     function login(
         uname: string,
@@ -23,6 +23,10 @@
         sync_port: number,
         action: "Login" | "Register",
     ) {
+        // now sounds like a good time to ask for notif perms...
+        Notification.requestPermission().then((permission) => {
+            set_can_notify(permission === "granted");
+        });
         let server = new Connection(sync_ip, sync_port, uname, password);
         server.connect(action).then(
             () => {
@@ -55,9 +59,8 @@
             try {
                 await connection.connect("Login");
             } catch (err) {
-                console.log("ERror connecting to server");
+                console.log("Error connecting to server");
                 console.log(err);
-                servers.push(new Server(null));
             }
             servers.push(new Server(connection));
         }
@@ -70,50 +73,36 @@
 
     function switch_server(server: CustomEvent<Server>) {
         selected_server = server.detail;
+        console.log("selected", server.detail);
     }
 
     // TODO: get rid of the any in the signature
-    function add_server(info: CustomEvent<any>) {
-        if (!sync_server) {
+    async function add_server(info: CustomEvent<any>) {
+        if (sync_server === undefined) {
             // TODO: this shouldn't really be needed, and maybe we should throw an error instead?
             return;
         }
         let ip: string = info.detail.ip;
         let port: number = info.detail.port;
 
-        const connection = new Connection(
+        let connection: Connection | [string, number] = new Connection(
             ip,
             port,
             sync_server.username,
             sync_server.password,
         );
-        connection.connect("Login").then(
-            () => {
-                let server = new Server(connection);
-                servers.push(server);
-                servers = servers;
-                sync_server.update_sync_servers(servers);
-            },
-            (_) => {
-                // let's try to register instead
-                const connection = new Connection(
-                    ip,
-                    port,
-                    sync_server.username,
-                    sync_server.password,
-                );
-                connection.connect("Register").then(
-                    () => {
-                        let server = new Server(connection);
-                        servers.push(server);
-                        servers = servers;
-                        sync_server.update_sync_servers(servers);
-                    },
-                    (err) =>
-                        (error_msg = "Could not connect to the server: " + err),
-                );
-            },
-        );
+        try {
+            await connection.connect("Login");
+        } catch (err) {
+            try {
+                await connection.connect("Register");
+            } catch (err) {
+                // I guess we're not online...
+            }
+        }
+        servers.push(new Server(connection));
+        servers = servers;
+        sync_server.update_sync_servers(servers);
     }
 </script>
 
@@ -144,7 +133,7 @@
                 >
                 <ServerList {servers} on:switch_server={switch_server} />
             </div>
-            {#if selected_server !== null}
+            {#if selected_server !== undefined}
                 <ServerView server={selected_server} />
             {/if}
         </div>

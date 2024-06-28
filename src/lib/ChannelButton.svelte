@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { Channel } from "./network";
     export let channel: Channel;
+    export let init_selected: boolean;
     import { createEventDispatcher } from 'svelte';
     const dispatch = createEventDispatcher();
     let button: HTMLButtonElement;
@@ -13,9 +14,10 @@
     export function reset() {
         button.setAttribute("value", "0");
     }
+
 </script>
 
-<button class="channel-button" on:click={clicked} value="0" bind:this={button}>{channel.name}</button>
+<button class="channel-button" on:click={clicked} value="{init_selected ? '1' : '0'}" bind:this={button}>{channel.name}</button>
 
 <style>
 .channel-button {
@@ -30,13 +32,7 @@
 }
 
 button:global(.channel-button[value="1"]) {
-    border-left: 4px solid white;
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
-}
-
-button:global(.channel-button[value="0"]) {
-    margin-left: 4px;
-    border-radius: 0;
+    background-color: #444444;
+    border-radius: 4px;
 }
 </style>

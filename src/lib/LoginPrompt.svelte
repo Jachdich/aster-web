@@ -1,9 +1,9 @@
 <script lang="ts">
     import "../popup.css";
 
-    let sync_ip: string = "localhost";
+    let sync_ip: string = "cospox.com";
     let sync_port: string = "2345";
-    let uname: string = "KingJellyfish";
+    let uname: string = "";
     let password: string = "12asd";
     
     function validate_port() {

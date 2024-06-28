@@ -1,5 +1,8 @@
 import { Server } from "./server";
 
+export let can_notify = false;
+export const set_can_notify = (x: boolean) => { can_notify = x };
+
 enum Status {
     Ok = 200,
     Forbidden = 403,
@@ -35,8 +38,8 @@ export class MessageInfo {
 export class Peer {
     display_name: string;
     pfp: string;
-    uuid: string;
-    constructor(display_name: string, pfp: string, uuid: string) {
+    uuid: number;
+    constructor(display_name: string, pfp: string, uuid: number) {
         this.display_name = display_name;
         this.pfp = pfp;
         this.uuid = uuid;
@@ -180,11 +183,14 @@ export class Connection {
                         }
                         this.we_have_the_channels_lads = true;
                     } else if (obj["command"] == "content") {
-                        if (this.message_callback !== undefined) {
-                            const info = this.make_message(obj);
-                            if (info !== undefined) {
+                        const info = this.make_message(obj);
+                        if (info !== undefined) {
+                            if (this.message_callback !== undefined) {
                                 this.message_callback(info);
                             }
+                            let channel_uuid = obj["channel_uuid"];
+                            let channel = this.get_channel(channel_uuid);
+                            channel?.cached_messages.push(info);
                         }
                     } else if (obj["command"] == "API_version") {
                         // TODO make this function actually show an error
@@ -242,7 +248,7 @@ export class Connection {
             return new ChannelNotFound();
         }
         if (channel.cached_messages.length < 100) {
-            const history = await this.request({ "command": "history", "channel": channel_uuid, "num": 1000 });
+            const history = await this.request({ "command": "history", "channel": channel_uuid, "num": 100 });
             if (history["status"] == Status.NotFound) {
                 return new ChannelNotFound();
             } else if (history["status"] == Status.Forbidden) {
