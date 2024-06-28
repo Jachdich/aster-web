@@ -290,7 +290,7 @@ export class Connection {
             let uname = server.conn?.username || this.username;
             let name = server.conn?.name;
             let pfp = server.conn?.pfp;
-            const sync_server = new SyncServer(server.conn?.my_uuid, server.ip, server.port, index++, uname, pfp, name);
+            const sync_server = new SyncServer(server.conn?.my_uuid, server.conn.ip, server.conn.port, index++, uname, pfp, name);
             serialised_servers.push(sync_server);
         }
         console.log(servers);
