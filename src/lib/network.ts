@@ -118,6 +118,8 @@ export class Connection {
     logged_in: boolean = false;
     we_have_the_metadata_lads: boolean = false;
     we_have_the_channels_lads: boolean = false;
+    got_name: boolean = false;
+    got_icon: boolean = false;
     message_callback: undefined | ((_: MessageInfo) => void) = undefined;
     constructor(ip: string, port: number, uname: string, pword: string) {
         this.ip = ip;
@@ -157,7 +159,7 @@ export class Connection {
                 } else if (obj["status"] != Status.Ok) {
                     // err_msg = "Command '" + obj["command"] + "' failed with error code " + obj["status"];
                 } else {
-                    if (obj["command"] == "login") {
+                    if (obj["command"] == "login" || obj["command"] == "register"){
                         this.my_uuid = obj["uuid"];
                         this.socket?.send(JSON.stringify({ "command": "get_metadata" }));
                         this.socket?.send(JSON.stringify({ "command": "list_channels" }));
@@ -204,10 +206,12 @@ export class Connection {
                         }
                     } else if (obj["command"] == "get_name") {
                         this.name = obj["data"];
+                        this.got_name = true;
                     } else if (obj["command"] == "get_icon") {
                         this.pfp = obj["data"];
+                        this.got_icon = true;
                     }
-                    if (this.logged_in && this.we_have_the_metadata_lads && this.we_have_the_channels_lads) {
+                    if (this.logged_in && this.we_have_the_metadata_lads && this.we_have_the_channels_lads && this.got_name && this.got_icon) {
                         resolve();
                     }
                 }
