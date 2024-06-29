@@ -1,41 +1,32 @@
 
 <script lang="ts">
     import { goto } from '$app/navigation';
-    import { set_sync_server, Connection} from "../network";
-    import { onMount } from 'svelte';
+    import { set_sync_server, Connection, ConnectionMode } from "../network";
     import "../popup.css";
     import "../styles.css";
 
-    onMount(() => {
-        (document.getElementById("login-sync-port-input") as HTMLInputElement).value = "2345"; // dumb hack to set default value of input
-    });
-  
     let sync_ip: string = "localhost";
     let sync_port: string = "2345";
     let uname: string = "KingJellyfish";
-    let password: string = "12asd";
+    let password: string = "12343";
 
     let error_msg = "";
     let show_login = true;
 
-    function login() {
+    function login(mode: ConnectionMode) {
         let port = Number.parseInt(sync_port);
         if (port > 65535) {
             error_msg = "The port number must not be greater than 65535";
             return;
         }
         let server = new Connection(sync_ip, port, uname, password);
-        server.connect().then(() => {
+        server.connect(mode).then(() => {
             set_sync_server(server);
             goto("/aster");
         }, (err) => {
             error_msg = err;
         });
         show_login = false;
-    }
-
-    function register() {
-        
     }
     function dismiss_error() {
         error_msg = "";
@@ -64,8 +55,8 @@
       <input id="login-uname-input" type="text" placeholder="Enter Username" class="login-input" bind:value={uname} required>
       <label id="login-pword-label" for="login-pword-input">Password</label>
       <input id="login-pword-input" type="password" placeholder="Enter Password" class="login-input" bind:value={password} required>
-      <button id="login-button" on:click={login}>Login</button>
-      <button id="register-button" on:click={register}>New here? Register</button>
+      <button id="login-button" on:click={l() => login(ConnectionModel.Login)}>Login</button>
+      <button id="register-button" on:click={() => login(ConnectionMode.Register)}>New here? Register</button>
     </div>
 {:else}
     <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>

@@ -6,7 +6,7 @@
     import ServerList from "../ServerList.svelte";
     import AddServerDialog from "../AddServerDialog.svelte";
     import { goto } from '$app/navigation';
-    import { sync_server, Connection, Peer, Channel, ChannelNotFound, ServerError, Forbidden } from "../network";
+    import { sync_server, Connection, Peer, Channel, ChannelNotFound, ServerError, Forbidden, ConnectionMode } from "../network";
     import add_server_img from "$lib/images/add_server.png";
     import { Server } from "../server";
 
@@ -20,10 +20,14 @@
             for (const server of server_list) {
                 console.log("Connectiong to " + server["ip"] + ":" + server["port"]);
                 const connection = new Connection(server["ip"], server["port"], sync_server.username, sync_server.password);
-                await connection.connect();
+                await connection.connect(ConnectionMode.Login);
                 servers.push(new Server(connection));
             }
+            if (servers.length === 0) {
+                servers.push(new Server(sync_server));
+            }
             servers = servers;
+            switch_server({ detail: servers[0] } as any);
         } else {
             goto("/login");
         }
@@ -37,6 +41,20 @@
         show_add_server = true;
     }
 
+    class SyncServer {
+        user_uuid: number;
+        server_uuid: number;
+        ip: string;
+        port: number;
+        idx: number;
+        constructor(user_uuid: number, server_uuid: number, ip: string, port: number, idx: number) {
+            this.user_uuid = user_uuid;
+            this.server_uuid = server_uuid;
+            this.ip = ip;
+            this.port = port;
+            this.idx = idx;
+        }
+    }
     // This time it actually adds the server, I promise
     // TODO: get rid of the any in the signature
     function add_server_for_real(info: CustomEvent<any>) {
@@ -47,22 +65,8 @@
         let ip: string = info.detail.ip;
         let port: number = info.detail.port;
         
-        class SyncServer {
-            user_uuid: number;
-            server_uuid: number;
-            ip: string;
-            port: number;
-            idx: number;
-            constructor(user_uuid: number, server_uuid: number, ip: string, port: number, idx: number) {
-                this.user_uuid = user_uuid;
-                this.server_uuid = server_uuid;
-                this.ip = ip;
-                this.port = port;
-                this.idx = idx;
-            }
-        }
         const connection = new Connection(ip, port, sync_server.username, sync_server.password);
-        connection.connect().then(() => {
+        connection.connect(ConnectionMode.Login).then(() => {
             servers.push(new Server(connection));
             servers = servers;
             let serialised_servers: SyncServer[] = [];

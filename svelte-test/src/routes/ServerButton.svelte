@@ -15,7 +15,7 @@
     }
 </script>
 
-<button class="server-button" on:click={clicked} value="0" bind:this={button}>{server.ip}</button>
+<button class="server-button" on:click={clicked} value="0" bind:this={button}>{server.conn.server_name}</button>
 
 <style>
 .server-button {

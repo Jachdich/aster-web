@@ -73,6 +73,12 @@ export class Channel {
     }
 }
 
+export enum ConnectionMode {
+    Login,
+    Register,
+    Neither,
+}
+
 export class Connection {
     socket: WebSocket | null = null;
     my_uuid: string | null = null;
@@ -86,7 +92,9 @@ export class Connection {
     logged_in: boolean = false;
     we_have_the_metadata_lads: boolean = false;
     we_have_the_channels_lads: boolean = false;
+    we_have_the_name_lads: boolean = false; //TODO temporary
     message_callback: null | ((_: MessageInfo) => void) = null;
+    server_name: string | null = null;
     constructor(ip: string, port: number, uname: string, pword: string) {
         this.ip = ip;
         this.port = port;
@@ -94,7 +102,8 @@ export class Connection {
         this.password = pword;
     }
 
-    public connect(): Promise<void> {
+    //TODO forbid logging in and registering
+    public connect(mode: ConnectionMode): Promise<void> {
         return new Promise((resolve, reject) => {
             try {
                 this.socket = new WebSocket("ws://" + this.ip + ":" + this.port);
@@ -104,11 +113,14 @@ export class Connection {
             }
             this.socket.addEventListener("error", (_) => {
                 let err_msg = "Could not connect to server: Error in websocket. Is the server down?";
-                console.log(err_msg);
                 reject(err_msg);
             });
             this.socket.addEventListener("open", (_) => {
-                this.socket?.send(JSON.stringify({"command": "login", "uname": this.username, "passwd": this.password}));
+                if (mode == ConnectionMode.Login) {
+                    this.socket?.send(JSON.stringify({"command": "login", "uname": this.username, "passwd": this.password}));
+                } else if (mode == ConnectionMode.Register) {
+                    this.socket?.send(JSON.stringify({"command": "register", "uname": this.username, "passwd": this.password}));
+                }
             });
             this.socket.addEventListener("message", (event) => {
                 console.log(event.data);
@@ -118,16 +130,16 @@ export class Connection {
                     this.waiting_for.delete(obj["command"]);
                 }
         
-                if (obj["command"] == "login" && obj["status"] == Error.Forbidden) {
+                if (obj["command"] == "login" && (obj["status"] == Error.Forbidden || obj["status"] == Error.NotFound)) {
                     reject("Incorrect username or password! Try again.");
                 } else if (obj["status"] != Error.Ok) {
                     // err_msg = "Command '" + obj["command"] + "' failed with error code " + obj["status"];
                 } else {
-                    if (obj["command"] == "login") {
+                    if (obj["command"] == "login" || obj["command"] == "register") {
                         this.my_uuid = obj["uuid"];
                         this.socket?.send(JSON.stringify({"command": "get_metadata"}));
                         this.socket?.send(JSON.stringify({"command": "list_channels"}));
-                        // this.socket?.send(JSON.stringify({"command": "get_name"}));
+                        this.socket?.send(JSON.stringify({"command": "get_name"})); // TODO temporary
                         // this.socket?.send(JSON.stringify({"command": "get_icon"}));
                         this.logged_in = true;
                     } else if (obj["command"] == "get_metadata") {
@@ -148,6 +160,9 @@ export class Connection {
                             }
                         }
                         this.we_have_the_channels_lads = true;
+                    } else if (obj["command"] == "get_name") {
+                        this.server_name = obj["data"];
+                        this.we_have_the_name_lads = true;
                     } else if (obj["command"] == "content") {
                         if (this.message_callback !== null) {
                             const info = this.make_message(obj);
@@ -166,7 +181,7 @@ export class Connection {
                             // uhh we're ok
                         }
                     }
-                    if (this.logged_in && this.we_have_the_metadata_lads && this.we_have_the_channels_lads) {
+                    if (this.logged_in && this.we_have_the_metadata_lads && this.we_have_the_channels_lads && this.we_have_the_name_lads) {
                         resolve();
                     }
                 }

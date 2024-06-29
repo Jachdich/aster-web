@@ -2,7 +2,7 @@
     import Message from "./Message.svelte";
     import ChannelList from "./ChannelList.svelte";
     import type { Server } from "./server";
-    import { Channel, ChannelNotFound, ServerError, Forbidden } from "./network";
+    import { Channel, ChannelNotFound, ServerError, Forbidden, MessageInfo } from "./network";
 
     import "./styles.css";
     
@@ -10,6 +10,14 @@
     let channels: Channel[] = server.conn.list_channels();
     let message_input: string = "";
     let message_area: HTMLDivElement;
+    let messages: MessageInfo[] = server.messages;
+
+    function on_message() {
+        messages = server.messages;
+    }
+
+    server.call_on_message = on_message;
+    switch_channel({ detail: channels[0]} as any);
 
     function scroll_to_bottom(node: HTMLElement) {
         const message_elems = node.children;
@@ -37,6 +45,7 @@
                 
             } else {
                 server.messages = msg;
+                messages = server.messages; // what
                 setTimeout(() => scroll_to_bottom(message_area), 1); // Horrible hack because svelte is annoying
             }
         });
@@ -61,12 +70,12 @@
 
 <div id="server-area">
     <div id="server-channels" class="container">
-        <ChannelList {channels} on:switch_channel={switch_channel} />
+        <ChannelList {channels} on:switch_channel={switch_channel}/>
     </div>
     <div id="server-messages" class="container">
         <input autofocus={true} id="message-input" placeholder=" Send a message" on:keypress={send_message} bind:value={message_input}/>
         <div id="message-area" bind:this={message_area}>
-            {#each server.messages as message, idx (message.uuid)}
+            {#each messages as message, idx (message.uuid)}
                 <div use:scroll_to_this={idx == server.messages.length - 1}><Message message={message} /></div>
             {/each}
         </div>

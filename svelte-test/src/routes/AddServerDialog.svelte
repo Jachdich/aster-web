@@ -20,11 +20,17 @@
 </script>
 
 <div class="popup centre-window">
-    <span id="n_t_ip">IP</span>
+    <label for="n_ip" id="n_t_ip">IP</label>
     <input id="n_ip" bind:value={ip}>
 
-    <span id="n_t_port">Port</span>
+    <label for="n_port" id="n_t_port">Port</label>
     <input id="n_port" on:input={validate_port} bind:this={port_input} bind:value={port}>
+
+    <input type="radio" id="register_radio" name="how_to_connect_lol" checked={true}>
+    <label for="register_radio">Register</label>
+
+    <input type="radio" id="login_radio" name="how_to_connect_lol">
+    <label for="login_radio">Login (I've connected before)</label>
     <div id="n_buttons">
         <button id="n_cancel" on:click={cancel}>Cancel</button>
         <button id="n_ok" on:click={ok}>Ok</button>

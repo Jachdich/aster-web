@@ -4,6 +4,14 @@
     import { createEventDispatcher } from 'svelte';
     const dispatch = createEventDispatcher();
     let button: HTMLButtonElement;
+    //<hack>
+    export let index: number;
+    function thing(button: any) {
+        if (index == 0) {
+            button.setAttribute("value", "1");
+        }
+    }
+    //</hack>
     
     function clicked() {
         dispatch("click", {"channel": channel});
@@ -15,7 +23,7 @@
     }
 </script>
 
-<button class="channel-button" on:click={clicked} value="0" bind:this={button}>{channel.name}</button>
+<button class="channel-button" on:click={clicked} value="0" bind:this={button} use:thing>{channel.name}</button>
 
 <style>
 .channel-button {

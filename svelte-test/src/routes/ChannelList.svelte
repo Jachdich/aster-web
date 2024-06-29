@@ -23,8 +23,8 @@
 </script>
 
 <ul id="channel-list">
-    {#each channels as channel (channel)}
-        <ChannelButton channel={channel} on:click={(event) => switch_channel(event, channel)} bind:this={channel.button} />
+    {#each channels as channel, index (channel)}
+        <ChannelButton channel={channel} index={index} on:click={(event) => switch_channel(event, channel)} bind:this={channel.button} />
     {/each}
 </ul>
 
