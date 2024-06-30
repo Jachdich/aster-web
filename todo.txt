@@ -1,3 +1,29 @@
 bugs:
-	- switching servers doesn't actually change the channels or anything. Wtf??
-	- everything is bad... idk man
+	- messages don't display newlines
+	- messages wrap badly reee
+features:
+	- allow newlines on the input
+	- markdown
+	- save selected channels
+	- commands/shortcuts for everything
+	- change pfp/username/whatever
+	- nicknames for individual servers
+	- future: when editing/deleting, use arrows to navigate and select the message, then a command to edit/delete
+	- future: also right-click menu for edit/delete
+	- clickable links
+	- server folders
+	- cache nick changes etc. for offline servers
+	- display offline servers as such
+	- try to reconnect to offline servers
+	- ping servers to see if they're still online
+	- command completion
+done:
+
+
+general features (move this lol):
+	- unreads
+	- text colours
+	- editing mesages
+	- deleting messages
+	- DMs
+	- images
