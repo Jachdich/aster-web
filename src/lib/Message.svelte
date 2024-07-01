@@ -47,6 +47,7 @@
         margin-top: var(--date-top);
         margin-left: auto;
         margin-right: 10px;
+        min-width: 120px;
         font-family: "Red Hat Mono", monospace;
     }
 
