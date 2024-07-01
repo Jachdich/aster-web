@@ -31,6 +31,6 @@
 <style>
 #server-list {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
 }
 </style>

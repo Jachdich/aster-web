@@ -6,7 +6,8 @@
     import ServerView from "./lib/ServerView.svelte";
     import ServerList from "./lib/ServerList.svelte";
     import AddServerDialog from "./lib/AddServerDialog.svelte";
-    import add_server_img from "./assets/add_server.png";
+    import { Icon } from 'svelte-icons-pack';
+    import { FiPlus, FiUser } from "svelte-icons-pack/fi";
 
     let show: "Login" | "Loading" | "Main" = "Login";
     let show_add_server = false;
@@ -113,24 +114,21 @@
         <Loading />
     {:else if show == "Main"}
         <div id="page">
-            <div id="top">
-                <button
-                    id="add-server"
-                    on:click={() => (show_add_server = true)}
-                    ><img
-                        src={add_server_img}
-                        alt="Add new server"
-                        class="icon"
-                    /></button
-                >
-                <button id="settings"
-                    ><img
-                        src={profile_img}
-                        alt="View profile"
-                        class="pfp"
-                        id="pfp_button"
-                    /></button
-                >
+            <div id="sidebar">
+                <div id="top-buttons">
+                    <button id="add-server" on:click={() => (show_add_server = true)}>
+                        <Icon src={FiPlus} size=25px/>
+                    </button>
+                    <button id="settings">
+                        <!-- <img
+                            src={profile_img}
+                            alt="View profile"
+                            class="pfp"
+                            id="pfp_button"
+                        /> -->
+                        <Icon src={FiUser} size=25px/>
+                    </button>
+                </div>
                 <ServerList {servers} on:switch_server={switch_server} />
             </div>
             {#if selected_server !== undefined}
@@ -154,11 +152,19 @@
 </main>
 
 <style>
-    #top {
-        height: 37px;
-        width: 100%;
+    #sidebar {
+        height: 100%;
+        min-width: 200px;
+        width: 200px;
+    }
+
+    #top-buttons {
         display: flex;
         flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
     }
 
     .pfp {
@@ -169,25 +175,27 @@
         background-position: center;
         object-fit: cover;
     }
-    .icon {
-        width: 16x;
-        height: 16px;
-    }
 
-    #add-server,
-    #settings {
-        background-color: #232323;
+    #add-server, #settings {
+        background-color: var(--panel-2);
         border-radius: 16px;
         border-style: none;
         height: 46px;
         width: 46px;
         margin-left: 6px;
         margin-top: 0;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        color: var(--white-1);
     }
 
     #page {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        height: 100%;
+        width: 100%;
     }
     #error-dismiss {
         width: 64px;

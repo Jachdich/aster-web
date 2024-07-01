@@ -1,8 +1,8 @@
 .centre-window {
     display: grid;
     padding: 10px;
-    border: 2px solid #444444;
-    background-color: #1C1C1C;
+    border-bottom: 3px solid var(--panel-3);
+    background-color: var(--panel-2);
     border-radius: 6px;
     position: absolute;
     width: max-content;

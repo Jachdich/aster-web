@@ -159,17 +159,20 @@
 
 <style>
     #message-area {
-        background-color: #222222;
         display: flex;
         flex-direction: column;
         overflow: hidden;
         overflow-y: scroll;
+        margin-left: 10px;
+        margin-right: 10px;
+        border-radius: 16px;
+        border-top-left-radius: 0px;
+        border-top-right-radius: 0px;
     }
 
     #server-messages {
         box-sizing: border-box;
         width: 100%;
-        height: 100%;
         display: flex;
         margin-left: 13px;
         flex-direction: column-reverse;
@@ -177,39 +180,35 @@
 
     #message-input {
         width: auto;
-        height: 28px;
-        min-height: 28px;
+        min-height: 36px;
         margin: 16px;
-        background: #363636;
-        border-radius: 16px;
+        margin-bottom: 20px;
+        background: var(--panel-1);
+        border-radius: 36px;
         border-style: none;
         text-indent: 12px;
         color: #d3d3d3;
+        font-size: 15px;
     }
 
     #server-area {
-        position: absolute;
-        left: 12px;
-        top: 95px;
-        bottom: 12px;
-        right: 12px;
-        width: auto;
-        height: auto;
+        width: 100%;
+        margin-right: 18px;
+        margin-bottom: 25px;
         display: flex;
         flex-direction: row;
     }
     #server-channels {
-        width: 220px;
-        height: 100%;
-        background: #232323;
-        border-radius: 16px;
+        width: 280px;
         display: flex;
         flex-direction: column;
     }
 
     .container {
-        background: #232323;
-        /*border: 2px solid #444444;*/
+        background-color: var(--panel-2);
+        height: 100%;
         border-radius: 16px;
+        border-top-left-radius: 0px;
+        border-top-right-radius: 0px;
     }
 </style>

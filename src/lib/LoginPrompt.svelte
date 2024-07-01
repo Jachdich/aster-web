@@ -25,41 +25,70 @@
 </script>
 
 <div id="login" class="centre-window">
-    <label id="login-sync-ip-label" for="login-sync-ip-input">Sync&nbsp;server&nbsp;IP&nbsp;</label>
-    <input id="login-sync-ip-input" type="text" placeholder="Enter IP" class="login-input" bind:value={sync_ip} required>
-    <label id="login-sync-port-label" for="login-sync-port-input">Sync&nbsp;server&nbsp;port</label>
-    <input id="login-sync-port-input" type="text" placeholder="Enter port" class="login-input" on:input={validate_port} bind:value={sync_port} required>
-    <label id="login-uname-label" for="login-uname-input">Username</label>
-    <input id="login-uname-input" type="text" placeholder="Enter Username" class="login-input" bind:value={uname} required>
-    <label id="login-pword-label" for="login-pword-input">Password</label>
-    <input id="login-pword-input" type="password" placeholder="Enter Password" class="login-input" bind:value={password} required>
-    <button id="login-button" on:click={login}>Login</button>
-    <button id="register-button" on:click={register}>New here? Register</button>
+    <div class="input-container">
+        <p id="login-sync-ip-label">Sync&nbsp;Server&nbsp;IP&nbsp;</p>
+        <input id="login-sync-ip-input" type="text" placeholder="Enter IP" class="login-input" bind:value={sync_ip} required>
+    </div>
+    <div class="input-container">
+        <p id="login-sync-port-label">Sync&nbsp;Server&nbsp;Port</p>
+        <input id="login-sync-port-input" type="text" placeholder="Enter port" class="login-input" on:input={validate_port} bind:value={sync_port} required>
+    </div>
+    <div class="input-container">
+        <p id="login-uname-label">Username</p>
+        <input id="login-uname-input" type="text" placeholder="Enter Username" class="login-input" bind:value={uname} required>
+    </div>
+    <div class="input-container">
+        <p id="login-pword-label">Password</p>
+        <input id="login-pword-input" type="password" placeholder="Enter Password" class="login-input" bind:value={password} required>
+    </div>
+    <div class="input-container">
+        <button class="login-button" style="margin-right: 4px; background-color: var(--accent-1-light);" on:click={register}>Register</button>
+        <button class="login-button" style="margin-left: 4px; background-color: var(--accent-1-light);" on:click={login}>Login</button>
+    </div>
 </div>
 
-
 <style>
+#login {
+    color: var(--white-1);
+    background-color: var(--panel-2);
+    width: 30%;
+    min-width: 410px;
+    max-width: 500px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+
+    padding: 15px;
+}
+
 .login-input {
-    width: 300px;
-    display: inline-block;
-    color: inherit;
-    background-color: inherit;
+    width: 70%;
+    color: var(--white-1);
     margin-left: 8px;
-    margin-bottom: 10px;
+    text-align: center;
+    font-size: 15px;
 }
 
-#login-button {
-    grid-row: 5;
-    grid-column: 2;
-    margin-left: 8px;
+.login-button {
+    width: 80%;
+    height: 40px;
+    font-size: 15px;
+    color: var(--text-dark);
 }
 
-#login-sync-ip-label   { grid-row: 1; grid-column: 1; }
-#login-sync-ip-input   { grid-row: 1; grid-column: 2; }
-#login-sync-port-label { grid-row: 2; grid-column: 1; }
-#login-sync-port-input { grid-row: 2; grid-column: 2; }
-#login-uname-label     { grid-row: 3; grid-column: 1; }
-#login-uname-input     { grid-row: 3; grid-column: 2; }
-#login-pword-label     { grid-row: 4; grid-column: 1; }
-#login-pword-input     { grid-row: 4; grid-column: 2; }
+.input-container {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    flex-direction: row;
+    margin-bottom: 8px;
+    margin-top: 8px;
+}
+
+.input-container p {
+    width: 30%;
+    font-size: 15px;
+}
 </style>

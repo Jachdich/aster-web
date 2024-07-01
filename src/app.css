@@ -1,9 +1,68 @@
+/* variables */
+:root {
+  --panel-0: #1e2329;
+  --panel-1: #272e39;
+  --panel-2: #31363F;
+  --panel-3: #3c424f;
 
+  --accent-1-light: #be8fd0;
+  --accent-1-dark: #be8fd0;
+
+  --white-1: #d3d3d3;
+
+  --text-dark: #1b0a24;
+  --text-gray: #929292;
+}
+
+/* fonts */
+.atkinson-hyperlegible-regular {
+  font-family: "Atkinson Hyperlegible", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.atkinson-hyperlegible-bold {
+  font-family: "Atkinson Hyperlegible", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.atkinson-hyperlegible-regular-italic {
+  font-family: "Atkinson Hyperlegible", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.atkinson-hyperlegible-bold-italic {
+  font-family: "Atkinson Hyperlegible", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.red-hat-mono-regular {
+  font-family: "Red Hat Mono", monospace;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.red-hat-mono-italic {
+  font-family: "Red Hat Mono", monospace;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: italic;
+}
+
+* {
+  font-family: "Atkinson Hyperlegible", sans-serif;;
+}
+
+/* styles */
 input, textarea, button {
-    border: 1px solid #444444;
+    border: 1px none;
     border-radius: 6px;
-    color: inherit;
-    background-color: inherit;
+    color: var(--white-1);
+    background-color: var(--panel-1);
 }
 
 body, html {
@@ -13,32 +72,18 @@ body, html {
 }
 
 body {
-    background-color: #1C1C1C;
-    color: #d3d3d3;
-    font-family: sans-serif;
+    background-color: var(--panel-0);
+    color: var(--white-1);
 }
 
 input:focus {
     outline: none;
 }
 
-::-webkit-scrollbar {
-    width: 10px;
+#app, main {
+  width: 100%;
+  height: 100%;
 }
-
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #363636;
-    border-radius: 15px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #565656;
-}
-
 
 /*
 :root {

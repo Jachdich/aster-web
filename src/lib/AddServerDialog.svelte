@@ -18,55 +18,54 @@
     let port_input: HTMLInputElement;
 </script>
 
-<div class="popup centre-window">
-    <span id="n_t_ip">IP</span>
-    <input id="n_ip" bind:value={ip} />
-
-    <span id="n_t_port">Port</span>
-    <input
-        id="n_port"
-        on:input={validate_port}
-        bind:this={port_input}
-        bind:value={port}
-    />
-    <div id="n_buttons">
-        <button id="n_cancel" on:click={cancel}>Cancel</button>
-        <button id="n_ok" on:click={ok}>Ok</button>
+<div id="add-server-dialog" class="popup centre-window">
+    <div class="input-container">
+        <p id="n_t_ip">IP</p>
+        <input id="n_ip" bind:value={ip} />
+    </div>
+    <div class="input-container">
+        <p id="n_t_port">Port</p>
+        <input
+            id="n_port"
+            on:input={validate_port}
+            bind:this={port_input}
+            bind:value={port}
+        />
+    </div>
+    <div class="input-container">
+        <button id="n_cancel" style="margin-right: 5px" on:click={cancel}>Cancel</button>
+        <button id="n_ok" style="margin-left: 5px" on:click={ok}>Ok</button>
     </div>
 </div>
 
 <style>
-    #n_t_ip {
-        grid-row: 1;
-        grid-column: 1;
-    }
-    #n_ip {
-        grid-row: 1;
-        grid-column: 2;
-    }
-    #n_t_port {
-        grid-row: 2;
-        grid-column: 1;
-    }
-    #n_port {
-        grid-row: 2;
-        grid-column: 2;
-    }
-    #n_buttons {
-        grid-row: 3;
-        grid-column-start: 1;
-        grid-column-end: 3;
-        width: 100%;
+    #add-server-dialog {
+        min-width: 280px;
+        min-height: 130px;
+        border: 3px solid var(--panel-3);
     }
 
-    #n_ok {
-        float: left;
-        width: 47%;
+    .input-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: stretch;
+        align-items: center;
+        font-size: 15px;
+    }
+
+    .input-container p {
+        width: 30%;
         margin: 0;
     }
-    #n_cancel {
-        float: right;
-        width: 47%;
-        margin: 0;
+
+    .input-container input {
+        height: 30px;
+        padding-left: 10px;
     }
+
+    .input-container button {
+        width: 100%;
+        height: 30px;
+    }
+
 </style>

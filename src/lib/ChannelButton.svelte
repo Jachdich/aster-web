@@ -25,14 +25,17 @@
     list-style-type: none;
     border: none;
     background-color: inherit;
-    color: inherit;
+    color: var(--text-gray);
     width: 96%;
     text-align: left;
-    border-radius: 0;
+    padding-left: 20px;
+    border-radius: 4px;
+    min-height: 30px;
+    font-size: 15px;
 }
 
 button:global(.channel-button[value="1"]) {
-    background-color: #444444;
-    border-radius: 4px;
+    background-color: var(--panel-3);
+
 }
 </style>
