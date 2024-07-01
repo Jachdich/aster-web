@@ -1,7 +1,7 @@
 bugs:
-	- messages don't display newlines
 	- messages wrap badly reee
 features:
+	- load more messages when you scroll to the top
 	- allow newlines on the input
 	- markdown
 	- save selected channels
@@ -17,13 +17,14 @@ features:
 	- try to reconnect to offline servers
 	- ping servers to see if they're still online
 	- command completion
+in progress:
+	- editing mesages
+	- show "edited" indicator
 done:
-
-
+	- messages don't display newlines
 general features (move this lol):
 	- unreads
 	- text colours
-	- editing mesages
 	- deleting messages
 	- DMs
 	- images

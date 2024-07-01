@@ -59,5 +59,6 @@
         color: #d3d3d3;
         margin-left: 2px;
         margin-top: var(--body-top);
+        white-space: pre-line;
     }
 </style>

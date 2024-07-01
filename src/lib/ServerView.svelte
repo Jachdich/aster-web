@@ -16,6 +16,7 @@
     // not critical but performance issue
     $: {
         server.conn.message_callback = on_message;
+        server.conn.edit_callback = on_edit;
         channels = server.conn.list_channels();
         console.log("called");
     }
@@ -92,6 +93,24 @@
                 `${server.conn.name} #${server.conn.get_channel(message.channel_uuid)?.name}`,
                 { body: `${message.author.display_name}: ${message.content}` },
             );
+        }
+    }
+
+    function on_edit(channel_uuid: number) {
+        if (channel_uuid == server.selected_channel_uuid) {
+            // literally re-get the history. It's probably cached, anyway
+            server.messages = [];
+            server.conn.get_history(channel_uuid).then((msg) => {
+                if (msg instanceof ChannelNotFound) {
+                } else if (msg instanceof Forbidden) {
+                } else if (msg instanceof ServerError) {
+                } else {
+                    for (const m of msg) {
+                        server.messages.push(m);
+                    }
+                    server.messages = server.messages;
+                }
+            });
         }
     }
 

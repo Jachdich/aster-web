@@ -121,6 +121,7 @@ export class Connection {
     got_name: boolean = false;
     got_icon: boolean = false;
     message_callback: undefined | ((_: MessageInfo) => void) = undefined;
+    edit_callback: undefined | ((_: number) => void) = undefined;
     constructor(ip: string, port: number, uname: string, pword: string) {
         this.ip = ip;
         this.port = port;
@@ -193,6 +194,25 @@ export class Connection {
                             let channel_uuid = obj["channel_uuid"];
                             let channel = this.get_channel(channel_uuid);
                             channel?.cached_messages.push(info);
+                        }
+                    } else if (obj["command"] == "message_edited") {
+                        const uuid = obj["message"] as number;
+                        const content = obj["new_content"] as string;
+                        let done = false;
+                        for (const channel of this.cached_channels) {
+                            for (const msg of channel[1].cached_messages) {
+                                if (msg.uuid === uuid) {
+                                    msg.content = content;
+                                    if (this.edit_callback !== undefined) {
+                                        this.edit_callback(channel[1].uuid);
+                                    }
+                                    done = true;
+                                    break;
+                                }
+                                if (done) {
+                                    break;
+                                }
+                            }
                         }
                     } else if (obj["command"] == "API_version") {
                         // TODO make this function actually show an error
