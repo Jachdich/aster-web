@@ -1,7 +1,13 @@
 <script lang="ts">
     import LoginPrompt from "./lib/LoginPrompt.svelte";
     import Loading from "./lib/Loading.svelte";
-    import { Connection, set_can_notify } from "./lib/network";
+    import {
+        Connection,
+        set_can_notify,
+        ServerError,
+        ConnectionError,
+        Status,
+    } from "./lib/network";
     import { Server } from "./lib/server";
     import ServerView from "./lib/ServerView.svelte";
     import ServerList from "./lib/ServerList.svelte";
@@ -28,17 +34,25 @@
             set_can_notify(permission === "granted");
         });
         let server = new Connection(sync_ip, sync_port, uname, password);
-        server.connect(action).then(
-            () => {
+        server.connect(action).then((result) => {
+            if (result instanceof ServerError) {
+                if (result.request == "login" && result.status == Status.NotFound) {
+                    error_msg = "Unknown username";
+                } else if (result.request == "login" && result.status == Status.Forbidden) {
+                    error_msg = "Incorrect password";
+                } else if (result.request == "register" && result.status == Status.Conflict) {
+                    error_msg = "Username already in use";
+                }
+                show = "Login";
+            } else if (result instanceof ConnectionError) {
+                error_msg = "Error connecting to sync server, is the server down or did you mistype the IP? (details: " + result.detail + ")";
+                show = "Login";
+            } else {
                 sync_server = server;
                 init_servers(server);
                 show = "Main";
-            },
-            (err: string) => {
-                error_msg = err;
-                show = "Login";
-            },
-        );
+            }
+        });
         show = "Loading";
     }
 
@@ -56,11 +70,23 @@
                 sync_server.username,
                 sync_server.password,
             );
-            try {
-                await connection.connect("Login");
-            } catch (err) {
-                console.log("Error connecting to server");
-                console.log(err);
+            let result = await connection.connect("Login");
+
+            let name: string;
+            if (server["name"] != null) {
+                name = server["name"];
+            } else {
+                name = "<" + server["ip"] + ":" + server["port"] + ">"
+            }
+            if (result instanceof ServerError) {
+                if (result.request == "login" && result.status == Status.NotFound) {
+                    error_msg = "Unknown username for server " + name;
+                } else if (result.request == "login" && result.status == Status.Forbidden) {
+                    error_msg = "Incorrect password for server " + name;
+                }
+            } else if (result instanceof ConnectionError) {
+                // for now, ignore it ig
+                // this probably just means the server is down...
             }
             servers.push(new Server(connection));
         }
@@ -91,18 +117,27 @@
             sync_server.username,
             sync_server.password,
         );
-        try {
-            await connection.connect("Login");
-        } catch (err) {
-            try {
-                await connection.connect("Register");
-            } catch (err) {
-                // I guess we're not online...
-            }
+        
+        let result = await connection.connect("Login");
+        if (result instanceof ServerError && result.status == Status.NotFound) {
+            // try to register instead
+            result = await connection.connect("Register");
         }
-        servers.push(new Server(connection));
-        servers = servers;
-        sync_server.update_sync_servers(servers);
+
+        
+        if (result instanceof ServerError) {
+            if (result.request == "login" && result.status == Status.Forbidden) {
+                error_msg = "Incorrect password";
+            } else if (result.request == "register" && result.status == Status.Conflict) {
+                error_msg = "Username already in use";
+            }
+        } else if (result instanceof ConnectionError) {
+            error_msg = "Couldn't connect to the server (is it down?)";
+        } else {
+            servers.push(new Server(connection));
+            servers = servers;
+            sync_server.update_sync_servers(servers);
+        }
     }
 </script>
 

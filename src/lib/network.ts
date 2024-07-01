@@ -3,22 +3,33 @@ import { Server } from "./server";
 export let can_notify = false;
 export const set_can_notify = (x: boolean) => { can_notify = x };
 
-enum Status {
+export enum Status {
     Ok = 200,
     Forbidden = 403,
     NotFound = 404,
+    BadRequest = 400,
+    Conflict = 409,
 }
 
 const MY_API_VERSION = [0, 2, 0];
 
 export class ServerError {
-    code: number;
-    constructor(code: number) {
-        this.code = code;
+    status: number;
+    request: string;
+    constructor(request: string, status: number) {
+        this.status = status;
+        this.request = request;
     }
 }
 export class ChannelNotFound { };
 export class Forbidden { };
+
+export class ConnectionError {
+    detail: any;
+    constructor(e: any) {
+        this.detail = e;
+    }
+};
 
 export class MessageInfo {
     content: string;
@@ -129,18 +140,16 @@ export class Connection {
         this.password = pword;
     }
 
-    public connect(auth: "Login" | "Register"): Promise<void> {
-        return new Promise((resolve, reject) => {
+    public connect(auth: "Login" | "Register"): Promise<void | ConnectionError | ServerError> {
+        return new Promise((resolve, _) => {
             try {
                 this.socket = new WebSocket("ws://" + this.ip + ":" + this.port);
             } catch (e) {
-                reject("Invalid server IP/port");
+                resolve(new ConnectionError(e));
                 return;
             }
-            this.socket.addEventListener("error", (_) => {
-                let err_msg = "Could not connect to server: Error in websocket. Is the server down?";
-                console.log(err_msg);
-                reject(err_msg);
+            this.socket.addEventListener("error", (e) => {
+                resolve(new ConnectionError(e));
             });
             this.socket.addEventListener("open", (_) => {
                 this.socket?.send(JSON.stringify({ "command": auth.toLowerCase(), "uname": this.username, "passwd": this.password }));
@@ -153,14 +162,12 @@ export class Connection {
                     this.waiting_for.delete(obj["command"]);
                 }
 
-                if (obj["command"] == "login" && obj["status"] == Status.Forbidden) {
-                    reject("Incorrect username or password! Try again.");
-                } else if (obj["command"] == "login" && obj["status"] == Status.NotFound) {
-                    reject("Unknown username");
+                if ((obj["command"] == "login" || obj["command"] == "register") && obj["status"] != Status.Ok) {
+                    resolve(new ServerError(obj["command"], obj["status"]))
                 } else if (obj["status"] != Status.Ok) {
                     // err_msg = "Command '" + obj["command"] + "' failed with error code " + obj["status"];
                 } else {
-                    if (obj["command"] == "login" || obj["command"] == "register"){
+                    if (obj["command"] == "login" || obj["command"] == "register") {
                         this.my_uuid = obj["uuid"];
                         this.socket?.send(JSON.stringify({ "command": "get_metadata" }));
                         this.socket?.send(JSON.stringify({ "command": "list_channels" }));
@@ -278,7 +285,7 @@ export class Connection {
             } else if (history["status"] == Status.Forbidden) {
                 return new Forbidden();
             } else if (history["status"] != Status.Ok) {
-                return new ServerError(history["status"]);
+                return new ServerError(history["command"], history["status"]);
             }
             let messages = new Array<MessageInfo>();
             let i = 0;
