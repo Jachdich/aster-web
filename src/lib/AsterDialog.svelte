@@ -1,6 +1,7 @@
 <script lang="ts">
     import "../popup.css";
     import { createEventDispatcher } from "svelte";
+    import aster_logo_wide from "../assets/aster_logo_wide.png";
     const dispatch = createEventDispatcher();
     function cancel(_: Event) {
         dispatch("dismiss");
@@ -8,7 +9,7 @@
 </script>
 
 <div id="bg-darken">
-    <img id="logo" class="pixel-img" src="src/assets/aster_logo_wide.png" alt="aster_logo_wide.png">
+    <img id="logo" class="pixel-img" src={aster_logo_wide} alt="aster_logo_wide.png">
     <div id="add-server-dialog" class="popup centre-window">
         <div class="input-container">
             <p style="width: 100%">settings or smth can go here, will probably put themes here actually.</p>

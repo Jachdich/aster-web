@@ -16,6 +16,7 @@
     import { FiPlus, FiUser } from "svelte-icons-pack/fi";
     import AsterDialog from "./lib/AsterDialog.svelte";
     import AccountDialog from "./lib/AccountDialog.svelte";
+    import aster_logo_small_grey from "./assets/aster_logo_small_grey.png";
 
     let show: "Login" | "Loading" | "Main" = "Login";
     let show_add_server = false;
@@ -158,7 +159,7 @@
                     <button id="aster-button" on:click={() => (show_aster_dialog = true)}>
                         <img 
                             id="aster-logo" class="pixel-img" style="width: 32px;"
-                            src="src/assets/aster_logo_small_grey.png" 
+                            src={aster_logo_small_grey} 
                             alt="aster_logo_small_grey.png"
                         >
                     </button>

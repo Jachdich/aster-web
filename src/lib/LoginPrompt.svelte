@@ -1,5 +1,6 @@
 <script lang="ts">
     import "../popup.css";
+    import aster_logo_wide from "../assets/aster_logo_wide.png";
 
     let sync_ip: string = "cospox.com";
     let sync_port: string = "2345";
@@ -25,7 +26,7 @@
 </script>
 
 <div style="position: fixed; width: 100%; height: 100%;">
-    <img id="logo" class="pixel-img" src="src/assets/aster_logo_wide.png" alt="aster_logo_wide.png">
+    <img id="logo" class="pixel-img" src={aster_logo_wide} alt="aster_logo_wide.png">
     <div id="login" class="centre-window">
         <div class="input-container">
             <p id="login-sync-ip-label">Sync&nbsp;Server&nbsp;IP&nbsp;</p>
