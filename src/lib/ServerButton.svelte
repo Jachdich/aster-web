@@ -7,6 +7,7 @@
 
     function clicked() {
         dispatch("click", { server: server });
+        console.log(server.conn.port)
         button.setAttribute("value", "1");
     }
 

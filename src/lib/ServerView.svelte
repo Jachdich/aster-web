@@ -128,6 +128,10 @@
 
 <div id="server-area">
     <div id="server-channels" class="container">
+        <div id="server-info">
+            <p>{server.conn.ip}:{server.conn.port}</p>
+            <div class="separator"/>
+        </div>
         <ChannelList
             {channels}
             selected_channel={selected_channel}
@@ -198,10 +202,20 @@
         display: flex;
         flex-direction: row;
     }
+    #server-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    #server-info p {
+        margin-bottom: 10px;
+    }
     #server-channels {
         width: 280px;
         display: flex;
         flex-direction: column;
+        color: var(--text-gray);
     }
 
     .container {
@@ -210,5 +224,13 @@
         border-radius: 16px;
         border-top-left-radius: 0px;
         border-top-right-radius: 0px;
+    }
+
+    .separator {
+        /* border-top: 3px solid var(--panel-3); */
+        background-color: var(--panel-3);
+        height: 3px;
+        border-radius: 3px;
+        width: 80%;
     }
 </style>

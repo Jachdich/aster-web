@@ -89,6 +89,11 @@ input:focus {
   height: 100%;
 }
 
+.separator {
+  /* border-top: 3px solid var(--panel-3); */
+  background-color: var(--panel-3);
+}
+
 /*
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
