@@ -65,6 +65,10 @@ input, textarea, button {
     background-color: var(--panel-1);
 }
 
+button {
+  cursor: pointer;
+}
+
 button:hover {
   background-color: var(--panel-0);
 }

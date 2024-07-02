@@ -11,9 +11,11 @@
     <img id="logo" class="pixel-img" src="src/assets/aster_logo_wide.png" alt="aster_logo_wide.png">
     <div id="add-server-dialog" class="popup centre-window">
         <div class="input-container">
-            <p>settings or smth can go here, will probably put themes here actually.</p>
+            <p style="width: 100%">settings or smth can go here, will probably put themes here actually.</p>
         </div>
-
+        <div class="input-container" style="margin-top: auto">
+            <button id="cancel" on:click={cancel}>Close</button>
+        </div>
     </div>
 </div>
 
@@ -58,6 +60,7 @@
         justify-content: stretch;
         align-items: center;
         font-size: 15px;
+        width: 100%;
     }
 
     .input-container p {

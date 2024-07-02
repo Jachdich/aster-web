@@ -236,6 +236,14 @@
         color: var(--text-gray);
     }
 
+    #server-profile-button {
+        width: 80%;
+        margin: 0 auto;
+        margin-top: 10px;
+        font-size: 14px;
+        padding: 5px;
+    }
+
     .container {
         background-color: var(--panel-2);
         height: 100%;
