@@ -9,6 +9,7 @@
         ServerError,
         Forbidden,
     } from "./network";
+    import ProfileDialog from "./ProfileDialog.svelte";
 
     export let server: Server;
     let channels: Channel[];
@@ -21,6 +22,8 @@
         console.log("called");
     }
     let message_input: string = "";
+
+    let show_profile_dialog = false
 
     // this is a bit of a hack
     // so basically, svelte seems to add objects from bottom-to-top, sometimes.
@@ -131,6 +134,7 @@
         <div id="server-info">
             <p id="server-ip">{server.conn.ip}:{server.conn.port}</p>
             <p class="server-info-text">Members: {server.conn.known_peers.size}</p>
+            <button id="server-profile-button" on:click={() => (show_profile_dialog = true)}>Server Profile</button>
             <div class="separator" style="margin-top: 10px"/>
         </div>
         <ChannelList
@@ -160,6 +164,12 @@
             {/each}
         </div>
     </div>
+    {#if show_profile_dialog}
+        <ProfileDialog
+            on:dismiss={() => (show_profile_dialog = false)}
+            server={server}
+        />
+    {/if}
 </div>
 
 <style>

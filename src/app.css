@@ -98,6 +98,12 @@ input:focus {
   margin: 0 auto;
 }
 
+.pixel-img {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  image-rendering: -moz-crisp-edges;
+}
+
 /*
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;

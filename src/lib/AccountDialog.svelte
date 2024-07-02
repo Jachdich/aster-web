@@ -7,42 +7,25 @@
     }
 
     function ok(_: Event) {
-        dispatch("add_server", { ip: ip, port: parseInt(port) });
-        dispatch("dismiss");
+        // do the things that need to be thing
     }
-    function validate_port() {
-        port_input.value = port_input.value.replace(/[^0-9]/g, "");
-    }
-    let ip: string;
-    let port: string;
-    let port_input: HTMLInputElement;
 </script>
 
 <div id="bg-darken">
     <div id="add-server-dialog" class="popup centre-window">
         <div class="input-container">
-            <p style="font-size: 16px; margin-bottom: 10px; margin-left: auto; margin-right: auto; text-align: center">Add Server</p>
+            <p style="font-size: 16px; margin-bottom: 10px; margin-left: auto; margin-right: auto; text-align: center">Account</p>
         </div>
         <div class="input-container">
-            <p id="n_t_ip">IP</p>
-            <input id="n_ip" bind:value={ip} />
+            <p>Username</p>
+            <input/>
         </div>
-        <div class="input-container">
-            <p id="n_t_port">Port</p>
-            <input
-                id="n_port"
-                on:input={validate_port}
-                bind:this={port_input}
-                bind:value={port}
-            />
-        </div>
-        <div class="input-container">
-            <button id="n_cancel" style="margin-right: 5px" on:click={cancel}>Cancel</button>
-            <button id="n_ok" style="margin-left: 5px" on:click={ok}>Ok</button>
+        <div class="input-container" style="margin-top: auto">
+            <button id="cancel" style="margin-right: 5px" on:click={cancel}>Cancel</button>
+            <button id="ok" style="margin-left: 5px" on:click={ok}>Ok</button>
         </div>
     </div>
 </div>
-
 
 <style>
     #bg-darken {
@@ -57,9 +40,18 @@
     }
 
     #add-server-dialog {
+        color: var(--white-1);
+        background-color: var(--panel-2);
         min-width: 280px;
         min-height: 150px;
         border-bottom: 3px solid var(--panel-3);
+
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: center;
+
+        padding: 15px;
     }
 
     .input-container {

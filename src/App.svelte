@@ -8,9 +8,13 @@
     import AddServerDialog from "./lib/AddServerDialog.svelte";
     import { Icon } from 'svelte-icons-pack';
     import { FiPlus, FiUser } from "svelte-icons-pack/fi";
+    import AsterDialog from "./lib/AsterDialog.svelte";
+    import AccountDialog from "./lib/AccountDialog.svelte";
 
     let show: "Login" | "Loading" | "Main" = "Login";
     let show_add_server = false;
+    let show_aster_dialog = false;
+    let show_account_dialog = false;
     let error_msg = "";
     let servers: Server[] = [];
     let selected_server: Server | undefined = undefined;
@@ -116,10 +120,17 @@
         <div id="page">
             <div id="sidebar">
                 <div id="top-buttons">
+                    <button id="aster-button" on:click={() => (show_aster_dialog = true)}>
+                        <img 
+                            id="aster-logo" class="pixel-img" style="width: 32px;"
+                            src="src/assets/aster_logo_small_grey.png" 
+                            alt="aster_logo_small_grey.png"
+                        >
+                    </button>
                     <button id="add-server" on:click={() => (show_add_server = true)}>
                         <Icon src={FiPlus} size=25px/>
                     </button>
-                    <button id="settings">
+                    <button id="account" on:click={() => (show_account_dialog = true)}>
                         <!-- <img
                             src={profile_img}
                             alt="View profile"
@@ -149,6 +160,16 @@
             on:add_server={add_server}
         />
     {/if}
+    {#if show_aster_dialog}
+        <AsterDialog
+            on:dismiss={() => (show_aster_dialog = false)}
+        />
+    {/if}
+    {#if show_account_dialog}
+    <AccountDialog
+        on:dismiss={() => (show_account_dialog = false)}
+    />
+{/if}
 </main>
 
 <style>
@@ -176,7 +197,7 @@
         object-fit: cover;
     }
 
-    #add-server, #settings {
+    #add-server, #account, #aster-button {
         background-color: var(--panel-2);
         border-radius: 16px;
         border-style: none;
@@ -191,7 +212,15 @@
         color: var(--white-1);
     }
 
-    #add-server:hover, #settings:hover {
+    #aster-button {
+        background-color: var(--accent-1-light);
+    }
+
+    #aster-button:hover {
+        background-color: var(--accent-1-dark);
+    }
+
+    #add-server:hover, #account:hover {
         background-color: var(--panel-1);
     }
 
