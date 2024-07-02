@@ -42,6 +42,7 @@
         width: calc(100% - 20px);
         margin: 10px;
         padding: 10px;
+        padding-left: 13px;
         box-sizing: border-box;
     }
 
@@ -77,8 +78,10 @@
 
     button:global(.server-button[value="0"]) {
         border: none;
+        padding-left: 13px;
     }
     button:global(.server-button[value="1"]) {
         border-left: 3px solid var(--accent-1-light);
+        padding-left: 10px;
     }
 </style>

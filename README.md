@@ -2,6 +2,6 @@ this project is cool
 
 :D
 
-- elecarno
+-elecarno
 
 (I did the ui lol)
