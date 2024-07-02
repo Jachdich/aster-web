@@ -20,25 +20,24 @@
 <button class="channel-button" on:click={clicked} value="{init_selected ? '1' : '0'}" bind:this={button}>{channel.name}</button>
 
 <style>
-.channel-button {
-    box-sizing: border-box;
-    list-style-type: none;
-    border: none;
-    background-color: inherit;
-    color: var(--text-gray);
-    width: 96%;
-    text-align: left;
-    padding-left: 20px;
-    border-radius: 4px;
-    min-height: 30px;
-    font-size: 15px;
-}
-.channel-button:hover {
-    background-color: var(--panel-1);
-}
+    .channel-button {
+        box-sizing: border-box;
+        list-style-type: none;
+        border: none;
+        background-color: inherit;
+        color: var(--text-gray);
+        width: 96%;
+        text-align: left;
+        padding-left: 20px;
+        border-radius: 4px;
+        min-height: 30px;
+        font-size: 15px;
+    }
+    .channel-button:hover {
+        background-color: var(--panel-1);
+    }
 
-button:global(.channel-button[value="1"]) {
-    background-color: var(--panel-3);
-
-}
+    button:global(.channel-button[value="1"]) {
+        background-color: var(--panel-3);
+    }
 </style>

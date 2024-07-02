@@ -7,7 +7,6 @@
 
     function clicked() {
         dispatch("click", { server: server });
-        console.log(server.conn.port)
         button.setAttribute("value", "1");
     }
 
@@ -26,8 +25,9 @@
             />
             <p class="name">{server.conn.name}</p>
         </div>
-        <p id="server-tagline">(put a cool server tagline here)</p>
-        <p id="server-info">413 / 7 days</p>
+        <div class="separator" style="width: 90%; margin-top: 7px; margin-bottom: 7px"></div>
+        <p id="server-tagline">A cool Aster server</p>
+        <p id="server-info">[msgs] / 7 days</p>
         
     </button>
 </div>
@@ -59,12 +59,12 @@
         margin: 0;
         margin-left: 10px;
         font-size: 18px;
+        text-align: left;
     }
     .server-icon {
         box-sizing: content-box;
         width: 48px;
         height: 48px;
-        border: 3px solid var(--panel-3);
         border-radius: 16px;
     }
 

@@ -92,6 +92,10 @@ input:focus {
 .separator {
   /* border-top: 3px solid var(--panel-3); */
   background-color: var(--panel-3);
+  height: 3px;
+  border-radius: 3px;
+  width: 80%;
+  margin: 0 auto;
 }
 
 /*

@@ -129,8 +129,9 @@
 <div id="server-area">
     <div id="server-channels" class="container">
         <div id="server-info">
-            <p>{server.conn.ip}:{server.conn.port}</p>
-            <div class="separator"/>
+            <p id="server-ip">{server.conn.ip}:{server.conn.port}</p>
+            <p class="server-info-text">Members: {server.conn.known_peers.size}</p>
+            <div class="separator" style="margin-top: 10px"/>
         </div>
         <ChannelList
             {channels}
@@ -206,10 +207,17 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        align-items: center;
+        align-items: left;
     }
-    #server-info p {
-        margin-bottom: 10px;
+    #server-ip {
+        margin-bottom: 15px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .server-info-text {
+        font-size: 13px;
+        margin: 0;
+        margin-left: 10%;
     }
     #server-channels {
         width: 280px;
@@ -224,13 +232,5 @@
         border-radius: 16px;
         border-top-left-radius: 0px;
         border-top-right-radius: 0px;
-    }
-
-    .separator {
-        /* border-top: 3px solid var(--panel-3); */
-        background-color: var(--panel-3);
-        height: 3px;
-        border-radius: 3px;
-        width: 80%;
     }
 </style>
