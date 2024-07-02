@@ -22,10 +22,12 @@
 
 <style>
     .message {
-        color: #929292;
+        color: var(--text-gray);
         padding-left: 8px;
         display: flex;
         flex-direction: row;
+        align-items: stretch;
+        justify-content: stretch;
         margin-top: var(--spacing);
     }
 
@@ -35,6 +37,7 @@
         margin-right: 6px;
         font-size: 15px;
         margin-top: var(--uname-top);
+        min-width: 100px; /* might not keep */
     }
 
     .message-date {
@@ -42,6 +45,10 @@
         margin-left: 5px;
         font-size: 10px;
         margin-top: var(--date-top);
+        margin-left: auto;
+        margin-right: 10px;
+        min-width: 120px;
+        font-family: "Red Hat Mono", monospace;
     }
 
     .message-pfp {
@@ -56,7 +63,7 @@
 
     .message-body {
         margin: 0;
-        color: #d3d3d3;
+        color: var(--white-1);
         margin-left: 2px;
         margin-top: var(--body-top);
         white-space: pre-line;

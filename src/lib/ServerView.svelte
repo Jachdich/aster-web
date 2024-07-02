@@ -9,6 +9,7 @@
         ServerError,
         Forbidden,
     } from "./network";
+    import ProfileDialog from "./ProfileDialog.svelte";
 
     export let server: Server;
     let channels: Channel[];
@@ -21,6 +22,8 @@
         console.log("called");
     }
     let message_input: string = "";
+
+    let show_profile_dialog = false
 
     // this is a bit of a hack
     // so basically, svelte seems to add objects from bottom-to-top, sometimes.
@@ -128,6 +131,12 @@
 
 <div id="server-area">
     <div id="server-channels" class="container">
+        <div id="server-info">
+            <p id="server-ip">{server.conn.ip}:{server.conn.port}</p>
+            <p class="server-info-text">Members: {server.conn.known_peers.size}</p>
+            <button id="server-profile-button" on:click={() => (show_profile_dialog = true)}>Server Profile</button>
+            <div class="separator" style="margin-top: 10px"/>
+        </div>
         <ChannelList
             {channels}
             selected_channel={selected_channel}
@@ -155,21 +164,30 @@
             {/each}
         </div>
     </div>
+    {#if show_profile_dialog}
+        <ProfileDialog
+            on:dismiss={() => (show_profile_dialog = false)}
+            server={server}
+        />
+    {/if}
 </div>
 
 <style>
     #message-area {
-        background-color: #222222;
         display: flex;
         flex-direction: column;
         overflow: hidden;
         overflow-y: scroll;
+        margin-left: 10px;
+        margin-right: 10px;
+        border-radius: 16px;
+        border-top-left-radius: 0px;
+        border-top-right-radius: 0px;
     }
 
     #server-messages {
         box-sizing: border-box;
         width: 100%;
-        height: 100%;
         display: flex;
         margin-left: 13px;
         flex-direction: column-reverse;
@@ -177,39 +195,60 @@
 
     #message-input {
         width: auto;
-        height: 28px;
-        min-height: 28px;
+        min-height: 36px;
         margin: 16px;
-        background: #363636;
-        border-radius: 16px;
+        margin-bottom: 20px;
+        background: var(--panel-1);
+        border-radius: 36px;
         border-style: none;
         text-indent: 12px;
         color: #d3d3d3;
+        font-size: 15px;
     }
 
     #server-area {
-        position: absolute;
-        left: 12px;
-        top: 95px;
-        bottom: 12px;
-        right: 12px;
-        width: auto;
-        height: auto;
+        width: 100%;
+        margin-right: 18px;
+        margin-bottom: 25px;
         display: flex;
         flex-direction: row;
     }
-    #server-channels {
-        width: 220px;
-        height: 100%;
-        background: #232323;
-        border-radius: 16px;
+    #server-info {
         display: flex;
         flex-direction: column;
+        justify-content: center;
+        align-items: left;
+    }
+    #server-ip {
+        margin-bottom: 15px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .server-info-text {
+        font-size: 13px;
+        margin: 0;
+        margin-left: 10%;
+    }
+    #server-channels {
+        width: 280px;
+        display: flex;
+        flex-direction: column;
+        color: var(--text-gray);
+    }
+
+    #server-profile-button {
+        width: 80%;
+        margin: 0 auto;
+        margin-top: 10px;
+        font-size: 14px;
+        padding: 5px;
     }
 
     .container {
-        background: #232323;
-        /*border: 2px solid #444444;*/
+        background-color: var(--panel-2);
+        height: 100%;
         border-radius: 16px;
+        border-top-left-radius: 0px;
+        border-top-right-radius: 0px;
     }
 </style>
