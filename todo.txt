@@ -1,5 +1,6 @@
 bugs:
 	- messages wrap badly reee
+	- meta changes don't propagate to the UI
 features:
 	- load more messages when you scroll to the top
 	- allow newlines on the input
