@@ -191,6 +191,10 @@
         color: var(--white-1);
     }
 
+    #add-server:hover, #settings:hover {
+        background-color: var(--panel-1);
+    }
+
     #page {
         display: flex;
         flex-direction: row;

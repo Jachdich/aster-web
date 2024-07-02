@@ -18,27 +18,41 @@
     let port_input: HTMLInputElement;
 </script>
 
-<div id="add-server-dialog" class="popup centre-window">
-    <div class="input-container">
-        <p id="n_t_ip">IP</p>
-        <input id="n_ip" bind:value={ip} />
-    </div>
-    <div class="input-container">
-        <p id="n_t_port">Port</p>
-        <input
-            id="n_port"
-            on:input={validate_port}
-            bind:this={port_input}
-            bind:value={port}
-        />
-    </div>
-    <div class="input-container">
-        <button id="n_cancel" style="margin-right: 5px" on:click={cancel}>Cancel</button>
-        <button id="n_ok" style="margin-left: 5px" on:click={ok}>Ok</button>
+<div id="bg-darken">
+    <div id="add-server-dialog" class="popup centre-window">
+        <div class="input-container">
+            <p id="n_t_ip">IP</p>
+            <input id="n_ip" bind:value={ip} />
+        </div>
+        <div class="input-container">
+            <p id="n_t_port">Port</p>
+            <input
+                id="n_port"
+                on:input={validate_port}
+                bind:this={port_input}
+                bind:value={port}
+            />
+        </div>
+        <div class="input-container">
+            <button id="n_cancel" style="margin-right: 5px" on:click={cancel}>Cancel</button>
+            <button id="n_ok" style="margin-left: 5px" on:click={ok}>Ok</button>
+        </div>
     </div>
 </div>
 
+
 <style>
+    #bg-darken {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 2 !important;
+        display: grid;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
     #add-server-dialog {
         min-width: 280px;
         min-height: 130px;

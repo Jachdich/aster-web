@@ -45,6 +45,9 @@
         padding-left: 13px;
         box-sizing: border-box;
     }
+    .server-button:hover {
+        background-color: var(--panel-1);
+    }
 
     #title-block {
         display: flex;

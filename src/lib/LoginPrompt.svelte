@@ -42,8 +42,8 @@
         <input id="login-pword-input" type="password" placeholder="Enter Password" class="login-input" bind:value={password} required>
     </div>
     <div class="input-container">
-        <button class="login-button" style="margin-right: 4px; background-color: var(--accent-1-light);" on:click={register}>Register</button>
-        <button class="login-button" style="margin-left: 4px; background-color: var(--accent-1-light);" on:click={login}>Login</button>
+        <button class="login-button" style="margin-right: 4px;" on:click={register}>Register</button>
+        <button class="login-button" style="margin-left: 4px;" on:click={login}>Login</button>
     </div>
 </div>
 
@@ -76,6 +76,11 @@
     height: 40px;
     font-size: 15px;
     color: var(--text-dark);
+    background-color: var(--accent-1-light);
+}
+
+.login-button:hover {
+    background-color: var(--accent-1-dark);
 }
 
 .input-container {

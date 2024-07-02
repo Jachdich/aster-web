@@ -6,7 +6,7 @@
   --panel-3: #3c424f;
 
   --accent-1-light: #be8fd0;
-  --accent-1-dark: #be8fd0;
+  --accent-1-dark: #a776bb;
 
   --white-1: #d3d3d3;
 
@@ -63,6 +63,10 @@ input, textarea, button {
     border-radius: 6px;
     color: var(--white-1);
     background-color: var(--panel-1);
+}
+
+button:hover {
+  background-color: var(--panel-0);
 }
 
 body, html {

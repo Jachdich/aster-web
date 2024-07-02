@@ -33,6 +33,9 @@
     min-height: 30px;
     font-size: 15px;
 }
+.channel-button:hover {
+    background-color: var(--panel-1);
+}
 
 button:global(.channel-button[value="1"]) {
     background-color: var(--panel-3);
