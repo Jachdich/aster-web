@@ -3,7 +3,8 @@
     // export let username;
     // export let date;
     // export let img_src;
-    export let message;
+    import type { MessageInfo } from "./network";
+    export let message: MessageInfo;
     let spacing = 8;
     let uname_top = (24 - 20) / 2;
     let body_top = uname_top;
@@ -14,7 +15,7 @@
     class="message"
     style="--spacing: {spacing}px; --uname-top: {uname_top}px; --date-top: {date_top}px; --body-top: {body_top}px;"
 >
-    <img src="data:image/png;base64,{message.author.pfp}" class="message-pfp" />
+    <img src="data:image/png;base64,{message.author.pfp}" alt="{message.author.display_name}'s profile picture" class="message-pfp" />
     <div class="message-username">{message.author.display_name}</div>
     <div class="message-body">{message.content}</div>
     <div class="message-date">{message.date.toLocaleString()}</div>

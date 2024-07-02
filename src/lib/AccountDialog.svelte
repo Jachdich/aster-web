@@ -2,32 +2,157 @@
     import "../popup.css";
     import { createEventDispatcher } from "svelte";
     const dispatch = createEventDispatcher();
+
+    export let username: string;
+    export let pfp: string;
+    export let update_settings: (uname: string, pfp: string) => void;
+
+    let pfp_files: File[] = [];
+    $: {
+        if (pfp_files.length == 1) {
+            resize_file(pfp_files[0], 32).then((blob): Promise<void> => // TODO why is this a promise?
+                blobToBase64(blob).then((base64): void => {
+                    pfp = base64.substr(base64.indexOf(",") + 1);
+                }),
+            );
+        }
+    }
+
     function cancel(_: Event) {
         dispatch("dismiss");
     }
 
     function ok(_: Event) {
-        // do the things that need to be thing
+        dispatch("dismiss");
+        update_settings(username, pfp);
     }
+
+    const blobToBase64 = (blob: Blob): Promise<string> => {
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        return new Promise((resolve, reject) => {
+            reader.onloadend = () => {
+                if (typeof reader.result == "string") {
+                    resolve(reader.result);
+                } else {
+                    reject("wrong type/????");
+                }
+            };
+        });
+    };
+    const resize_file = async (
+        file: ImageBitmapSource,
+        size: number,
+    ): Promise<Blob> => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        if (ctx == null) {
+            return new Promise((_, err) => err("Cannot create 2d context"));
+        }
+
+        canvas.width = size;
+        canvas.height = size;
+
+        const bitmap = await createImageBitmap(file);
+        const { width, height } = bitmap;
+
+        const ratio = Math.max(size / width, size / height);
+
+        const x = (size - width * ratio) / 2;
+        const y = (size - height * ratio) / 2;
+
+        ctx.drawImage(
+            bitmap,
+            0,
+            0,
+            width,
+            height,
+            x,
+            y,
+            width * ratio,
+            height * ratio,
+        );
+
+        return new Promise((ok, err) => {
+            canvas.toBlob(
+                (blob) => {
+                    if (blob !== null) {
+                        ok(blob);
+                    } else {
+                        err("Could not convert canvas to blob");
+                    }
+                },
+                "image/png",
+                1,
+            );
+        });
+    };
 </script>
 
 <div id="bg-darken">
     <div id="add-server-dialog" class="popup centre-window">
         <div class="input-container">
-            <p style="font-size: 16px; margin-bottom: 10px; margin-left: auto; margin-right: auto; text-align: center">Account</p>
+            <p
+                style="font-size: 16px; margin-bottom: 10px; margin-left: auto; margin-right: auto; text-align: center"
+            >
+                Account
+            </p>
         </div>
         <div class="input-container">
             <p>Username</p>
-            <input/>
+            <input bind:value={username} />
+        </div>
+        <div class="input-container">
+            <p style="margin-right: 16px">Profile&nbspPicture</p>
+            <img
+                id="pfp-image"
+                alt="Profile"
+                src="data:image/png;base64,{pfp}"
+            />
+            <label>
+                <input
+                    type="file"
+                    accept="image/*"
+                    id="pfp-button"
+                    style="display: none"
+                    bind:files={pfp_files}
+                />
+                <span id="file-button">Change</span>
+            </label>
         </div>
         <div class="input-container" style="margin-top: auto">
-            <button id="cancel" style="margin-right: 5px" on:click={cancel}>Cancel</button>
+            <button id="cancel" style="margin-right: 5px" on:click={cancel}
+                >Cancel</button
+            >
             <button id="ok" style="margin-left: 5px" on:click={ok}>Ok</button>
         </div>
     </div>
 </div>
 
 <style>
+    #file-button {
+        border: 1px none;
+        border-radius: 6px;
+        color: var(--white-1);
+        background-color: var(--panel-1);
+        cursor: pointer;
+        padding: 6px;
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    #file-button:hover {
+        background-color: var(--panel-0);
+    }
+
+    #pfp-image {
+        width: 48px;
+        height: 48px;
+        border-radius: 48px;
+        margin-right: 16px;
+    }
+
     #bg-darken {
         width: 100%;
         height: 100%;
@@ -76,5 +201,4 @@
         width: 100%;
         height: 30px;
     }
-
 </style>
