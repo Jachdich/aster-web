@@ -25,7 +25,7 @@
         position: fixed;
         width: 360px;
         left: calc(50% - 165px);
-        top: 14%;
+        top: calc(50% - 320px);
     }
 
     #bg-darken {

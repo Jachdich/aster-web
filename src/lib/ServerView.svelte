@@ -188,6 +188,8 @@
     #server-messages {
         box-sizing: border-box;
         width: 100%;
+        float: right;
+        overflow: hidden;
         display: flex;
         margin-left: 13px;
         flex-direction: column-reverse;
@@ -207,11 +209,15 @@
     }
 
     #server-area {
-        width: 100%;
+        width: calc(100% - 218px);
+        max-width: calc(100% - 218px); /* 218px = width of server list + right margin*/
+        float: right;
+        overflow: hidden;
         margin-right: 18px;
         margin-bottom: 25px;
         display: flex;
         flex-direction: row;
+        justify-content: stretch;
     }
     #server-info {
         display: flex;
