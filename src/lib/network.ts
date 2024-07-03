@@ -143,7 +143,7 @@ export class Connection {
     public connect(auth: "Login" | "Register"): Promise<void | ConnectionError | ServerError> {
         return new Promise((resolve, _) => {
             try {
-                this.socket = new WebSocket("ws://" + this.ip + ":" + this.port);
+                this.socket = new WebSocket("wss://" + this.ip + ":" + this.port);
             } catch (e) {
                 resolve(new ConnectionError(e));
                 return;
