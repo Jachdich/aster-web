@@ -30,6 +30,11 @@
         align-items: stretch;
         justify-content: stretch;
         margin-top: var(--spacing);
+        border-radius: 8px;
+    }
+
+    .message:hover {
+        background-color: var(--panel-3);
     }
 
     .message-username {

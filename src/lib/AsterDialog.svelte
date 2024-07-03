@@ -1,18 +1,92 @@
 <script lang="ts">
     import "../popup.css";
     import { createEventDispatcher } from "svelte";
-    import aster_logo_wide from "../assets/aster_logo_wide.png";
+    import ColorPicker from 'svelte-awesome-color-picker';
+    import { aster_logo_wide } from "../lib/logos";
     const dispatch = createEventDispatcher();
+
+    let hex = "#000000"
+    let rgb = { "r": 0, "g": 0, "b": 0, "a": 1 }
+    let hsv = { "h": 0, "s": 0, "v": 0, "a": 1}
+
+    // theme colors
+    let bg
+    let panel1
+    let panel2
+    let panel3
+    let accent1_light
+    let accent1_dark
+    let white1
+    let text_dark
+    let text_gray
+
     function cancel(_: Event) {
         dispatch("dismiss");
     }
+    
 </script>
 
 <div id="bg-darken">
-    <img id="logo" class="pixel-img" src={aster_logo_wide} alt="aster_logo_wide.png">
+    <svg id="logo" class="pixel-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="currentColor">
+        <path stroke="var(--accent-1-light)" d={aster_logo_wide}/>
+    </svg>
     <div id="add-server-dialog" class="popup centre-window">
         <div class="input-container">
-            <p style="width: 100%">settings or smth can go here, will probably put themes here actually.</p>
+            <p style="font-size: 16px; margin-bottom: 10px; margin-left: auto; margin-right: auto; text-align: center">Theme Editor</p>
+        </div>
+        <div class="input-container">
+            <p>Background</p>
+            <div class="picker-dark">
+                <ColorPicker bind:bg label=""/>
+            </div>
+        </div>
+        <div class="input-container">
+            <p>Panel 1</p>
+            <div class="picker-dark">
+                <ColorPicker bind:panel1 label=""/>
+            </div>
+        </div>
+        <div class="input-container">
+            <p>Panel 2</p>
+            <div class="picker-dark">
+                <ColorPicker bind:panel2 label=""/>
+            </div>
+        </div>
+        <div class="input-container">
+            <p>Panel 3</p>
+            <div class="picker-dark">
+                <ColorPicker bind:panel3 label=""/>
+            </div>
+        </div>
+        <div class="input-container">
+            <p>Accent Light</p>
+            <div class="picker-dark">
+                <ColorPicker bind:accent1_light label=""/>
+            </div>
+        </div>
+        <div class="input-container">
+            <p>Accent Dark</p>
+            <div class="picker-dark">
+                <ColorPicker bind:accent1_dark label=""/>
+            </div>
+        </div>
+        <div class="input-container">
+            <p>Text White</p>
+            <div class="picker-dark">
+                <ColorPicker bind:white1 label=""/>
+            </div>
+        </div>
+        <div class="input-container">
+            <p>Text Gray</p>
+            <div class="picker-dark">
+                <ColorPicker bind:text_gray label=""/>
+            </div>
+        </div>
+        <div class="input-container">
+            <p>Text Dark</p>
+            <div class="picker-dark">
+                <ColorPicker bind:text_dark label=""/>
+            </div>
         </div>
         <div class="input-container" style="margin-top: auto">
             <button id="cancel" on:click={cancel}>Close</button>
@@ -21,6 +95,15 @@
 </div>
 
 <style>
+    .picker-dark {
+		--cp-bg-color: var(--panel-2);
+		--cp-border-color: var(--panel-3);
+		--cp-text-color: var(--white-1);
+		--cp-input-color: var(--panel-1);
+		--cp-button-hover-color: var(--panel-3);
+        margin-left: auto
+    }
+
     #logo {
         position: fixed;
         width: 360px;

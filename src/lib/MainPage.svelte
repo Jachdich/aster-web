@@ -13,7 +13,7 @@
     import { FiPlus, FiUser } from "svelte-icons-pack/fi";
     import AsterDialog from "./AsterDialog.svelte";
     import AccountDialog from "./AccountDialog.svelte";
-    import aster_logo_small_grey from "../assets/aster_logo_small_grey.png";
+    import {aster_logo_small} from "../lib/logos";
 
     let show_add_server = false;
     let show_aster_dialog = false;
@@ -82,17 +82,10 @@
 <div id="page">
     <div id="sidebar">
         <div id="top-buttons">
-            <button
-                id="aster-button"
-                on:click={() => (show_aster_dialog = true)}
-            >
-                <img
-                    id="aster-logo"
-                    class="pixel-img"
-                    style="width: 32px;"
-                    src={aster_logo_small_grey}
-                    alt="aster_logo_small_grey.png"
-                />
+            <button id="aster-button" on:click={() => (show_aster_dialog = true)}>
+                <svg id="logo" class="pixel-img" style="width: 32px; height: 32px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                    <path stroke="var(--panel-2)" style="width: 32px" d={aster_logo_small}/>
+                </svg>
             </button>
             <button id="add-server" on:click={() => (show_add_server = true)}>
                 <Icon src={FiPlus} size="25px" />
@@ -163,6 +156,7 @@
         justify-content: center;
         align-items: center;
         color: var(--white-1);
+        transition: background-color 0.4s ease;
     }
 
     #aster-button {
@@ -170,7 +164,15 @@
     }
 
     #aster-button:hover {
-        background-color: var(--accent-1-dark);
+        background-color: var(--panel-2);
+    }
+
+    #aster-button:hover path {
+        stroke: var(--accent-1-light);
+    }
+
+    #logo path{
+        transition: stroke 0.4s ease;
     }
 
     #add-server:hover,

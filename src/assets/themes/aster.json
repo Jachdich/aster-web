@@ -1,0 +1,15 @@
+{
+    "name": "Aster",
+    "desc": "The default theme based on the Aster flower itself.",
+    "data": {
+        "bg": "1e2329",
+        "panel1": "272e39",
+        "panel2": "31363F",
+        "panel3": "3c424f",
+        "accent1_light": "be8fd0",
+        "accent1_dark": "a776bb",
+        "white1": "d3d3d3",
+        "text_dark":"1b0a24",
+        "text_gray":"929292"
+    }
+}
