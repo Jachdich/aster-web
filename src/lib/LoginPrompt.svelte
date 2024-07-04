@@ -5,7 +5,7 @@
     let sync_ip: string = "cospox.com";
     let sync_port: string = "2345";
     let uname: string = "";
-    let password: string = "12asd";
+    let password: string = "";
     
     function validate_port() {
         let a = document.getElementById("login-sync-port-input") as HTMLInputElement;
@@ -51,6 +51,8 @@
             <button class="login-button" style="margin-right: 4px;" on:click={register}>Register</button>
             <button class="login-button" style="margin-left: 4px;" on:click={login}>Login</button>
         </div>
+        <h1>ATTENTION:<br>PASSWORDS NOW MATTER!</h1>
+        <p>The next time you log in, the password you use to log in with will be set as your password. Use this one in future.</p>
     </div>
 </div>
 
