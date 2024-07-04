@@ -71,11 +71,14 @@
         }
     }
 
-    function update_settings(uname: string, pfp: string) {
+    function update_settings(uname: string, password: string, pfp: string) {
         for (const s of servers) {
             s.conn.request({"command": "nick", "nick": uname}); // TODO handle results
+            s.conn.request({"command": "change_password", "new_password": password});
             s.conn.request({"command": "pfp", "data": pfp});
         }
+        // sync_server.request({"command": "nick", "nick": uname}); // TODO handle results
+        // sync_server.request({"command": "pfp", "data": pfp});
     }
 </script>
 
@@ -120,6 +123,7 @@
     <AccountDialog
         username={sync_server.username}
         pfp={sync_server.known_peers.get(sync_server.my_uuid)?.pfp}
+        password={sync_server.password}
         update_settings={update_settings}
         on:dismiss={() => (show_account_dialog = false)}
     />

@@ -4,17 +4,21 @@
     const dispatch = createEventDispatcher();
 
     export let username: string;
+    export let password: string;
     export let pfp: string;
-    export let update_settings: (uname: string, pfp: string) => void;
+    export let update_settings: (uname: string, password: string, pfp: string) => void;
 
-    let pfp_files: File[] = [];
+    let pfp_files: FileList = new FileList();
     $: {
-        if (pfp_files.length == 1) {
-            resize_file(pfp_files[0], 32).then((blob): Promise<void> => // TODO why is this a promise?
+        let item = pfp_files.item(0);
+        if (item !== null) {
+            resize_file(item, 32).then((blob): Promise<void> => // TODO why is this a promise?
                 blobToBase64(blob).then((base64): void => {
                     pfp = base64.substr(base64.indexOf(",") + 1);
                 }),
             );
+        } else {
+            // TODO show error??
         }
     }
 
@@ -24,7 +28,7 @@
 
     function ok(_: Event) {
         dispatch("dismiss");
-        update_settings(username, pfp);
+        update_settings(username, password, pfp);
     }
 
     const blobToBase64 = (blob: Blob): Promise<string> => {
@@ -102,6 +106,10 @@
         <div class="input-container">
             <p>Username</p>
             <input bind:value={username} />
+        </div>
+        <div class="input-container">
+            <p>Password</p>
+            <input type="password" bind:value={password} />
         </div>
         <div class="input-container">
             <p style="margin-right: 16px">Profile&nbspPicture</p>
