@@ -273,13 +273,15 @@ export class Connection {
         }
     }
 
-    public async get_history(channel_uuid: number): Promise<Array<MessageInfo> | ChannelNotFound | Forbidden | ServerError> {
+    public async get_history(channel_uuid: number, before_message: number | null): Promise<Array<MessageInfo> | ChannelNotFound | Forbidden | ServerError> {
         const channel = this.get_channel(channel_uuid);
         if (channel === undefined) {
             return new ChannelNotFound();
         }
-        if (channel.cached_messages.length < 100) {
-            const history = await this.request({ "command": "history", "channel": channel_uuid, "num": 100 });
+
+        // TODO calculate whether we actually already have the message range loaded
+        if (channel.cached_messages.length < 100 || before_message !== null) {
+            const history = await this.request({ "command": "history", "channel": channel_uuid, "num": 100, "before_message": before_message });
             if (history["status"] == Status.NotFound) {
                 return new ChannelNotFound();
             } else if (history["status"] == Status.Forbidden) {
@@ -296,7 +298,8 @@ export class Connection {
                     i++;
                 }
             }
-            channel.cached_messages = messages; // update cached - TODO: should this all be in the generic packet receiver function?
+            if (before_message === null)
+                channel.cached_messages = messages; // update cached - TODO: should this all be in the generic packet receiver function?
             return messages;
         } else {
             return channel.cached_messages;

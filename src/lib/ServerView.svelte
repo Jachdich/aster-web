@@ -10,6 +10,7 @@
         Forbidden,
     } from "./network";
     import ProfileDialog from "./ProfileDialog.svelte";
+    import type { UIEventHandler } from "svelte/elements";
 
     export let server: Server;
     let channels: Channel[];
@@ -48,7 +49,7 @@
     function switch_channel(channel: CustomEvent<Channel>) {
         const uuid = channel.detail.uuid;
         server.messages = [];
-        server.conn.get_history(uuid).then((msg) => {
+        server.conn.get_history(uuid, null).then((msg) => {
             if (msg instanceof ChannelNotFound) {
             } else if (msg instanceof Forbidden) {
             } else if (msg instanceof ServerError) {
@@ -125,8 +126,39 @@
         }
     }
 
+    async function message_scroll(event: UIEvent) {
+        let div = event.target as HTMLDivElement;
+        if (div.scrollTop == 0 && selected_channel !== undefined) {
+            const before_id = selected_channel.cached_messages[0].uuid;
+
+            // we've already started requesting history from this point. bail!
+            // (requesting duplicate history is __very bad__)
+            if (server.requesting_history_from.includes(before_id)) {
+                return;
+            }
+
+            server.requesting_history_from.push(before_id);
+            const res = await server.conn.get_history(selected_channel.uuid, before_id);
+            console.log(res);
+            if (res instanceof ChannelNotFound) {
+                // cannot happen hopefully
+            } else if (res instanceof Forbidden) {
+                // what
+            } else if (res instanceof ServerError) {
+                // hmm...
+            } else {
+                // selected_channel.cached_messages = [...res, ...selected_channel.cached_messages];
+                server.messages = [...res, ...server.messages];
+            }
+            server.requesting_history_from = server.requesting_history_from.filter(e => e !== before_id);
+        }
+    }
+
     let selected_channel: Channel | undefined;
     $: selected_channel = get_selected_channel(server);
+    $: {
+        console.log(server.messages);
+    }
 </script>
 
 <div id="server-area">
@@ -151,7 +183,7 @@
             on:keypress={send_message}
             bind:value={message_input}
         />
-        <div id="message-area">
+        <div id="message-area" on:scroll={message_scroll}>
             {#each server.messages as message, idx (message.uuid)}
                 <div
                     use:scroll_to_this={{
