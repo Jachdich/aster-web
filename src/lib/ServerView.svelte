@@ -23,7 +23,8 @@
     }
     let message_input: string = "";
 
-    let show_profile_dialog = false
+    let input_element: HTMLTextAreaElement;
+    let show_profile_dialog = false;
 
     // this is a bit of a hack
     // so basically, svelte seems to add objects from bottom-to-top, sometimes.
@@ -66,7 +67,7 @@
         if (server.selected_channel_uuid === null) {
             return;
         }
-        if (event.key === "Enter") {
+        if (event.key === "Enter" && !event.shiftKey) {
             if (message_input.trim().length == 0) {
                 return;
             }
@@ -93,7 +94,9 @@
                 message.channel_uuid != server.selected_channel_uuid)
         ) {
             new Notification(
-                `${server.conn.name} #${server.conn.get_channel(message.channel_uuid)?.name}`,
+                `${server.conn.name} #${
+                    server.conn.get_channel(message.channel_uuid)?.name
+                }`,
                 { body: `${message.author.display_name}: ${message.content}` },
             );
         }
@@ -125,6 +128,11 @@
         }
     }
 
+    function adjust_input_height(_: any) {
+        input_element.style.height = "auto";
+        input_element.style.height = 15 * input_element.scrollHeight + "px";
+    }
+
     let selected_channel: Channel | undefined;
     $: selected_channel = get_selected_channel(server);
 </script>
@@ -133,23 +141,31 @@
     <div id="server-channels" class="container">
         <div id="server-info">
             <p id="server-ip">{server.conn.ip}:{server.conn.port}</p>
-            <p class="server-info-text">Members: {server.conn.known_peers.size}</p>
-            <button id="server-profile-button" on:click={() => (show_profile_dialog = true)}>Server Profile</button>
-            <div class="separator" style="margin-top: 10px"/>
+            <p class="server-info-text">
+                Members: {server.conn.known_peers.size}
+            </p>
+            <button
+                id="server-profile-button"
+                on:click={() => (show_profile_dialog = true)}
+                >Server Profile</button
+            >
+            <div class="separator" style="margin-top: 10px" />
         </div>
         <ChannelList
             {channels}
-            selected_channel={selected_channel}
+            {selected_channel}
             on:switch_channel={switch_channel}
         />
     </div>
     <div id="server-messages" class="container">
-        <input
+        <textarea
             autofocus={true}
             id="message-input"
             placeholder=" Send a message"
             on:keypress={send_message}
+            on:input={adjust_input_height}
             bind:value={message_input}
+            bind:this={input_element}
         />
         <div id="message-area">
             {#each server.messages as message, idx (message.uuid)}
@@ -167,7 +183,7 @@
     {#if show_profile_dialog}
         <ProfileDialog
             on:dismiss={() => (show_profile_dialog = false)}
-            server={server}
+            {server}
         />
     {/if}
 </div>
@@ -197,20 +213,22 @@
 
     #message-input {
         width: auto;
-        min-height: 36px;
+        min-height: 22px;
         margin: 16px;
         margin-bottom: 20px;
         background: var(--panel-1);
         border-radius: 36px;
-        border-style: none;
-        text-indent: 12px;
+        border: 6px solid var(--panel-1);
+        border-left-width: 16px;
         color: #d3d3d3;
         font-size: 15px;
     }
 
     #server-area {
         width: calc(100% - 218px);
-        max-width: calc(100% - 218px); /* 218px = width of server list + right margin*/
+        max-width: calc(
+            100% - 218px
+        ); /* 218px = width of server list + right margin*/
         float: right;
         overflow: hidden;
         margin-right: 18px;
