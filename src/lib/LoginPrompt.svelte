@@ -25,12 +25,12 @@
     }
 </script>
 
-<div style="position: fixed; width: 100%; height: 100%;">
-    <svg id="logo" class="pixel-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="currentColor">
+<div id="login-window">
+    <svg id="logo" class="pixel-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 32" fill="currentColor">
         <path stroke="var(--accent-1-light)" d={aster_logo_wide}/>
     </svg>
       
-    <div id="login" class="centre-window">
+    <div id="login" >
         <div class="input-container">
             <p id="login-sync-ip-label">Sync&nbsp;Server&nbsp;IP&nbsp;</p>
             <input id="login-sync-ip-input" type="text" placeholder="Enter IP" class="login-input" bind:value={sync_ip} required>
@@ -59,24 +59,36 @@
 
 <style>
     #logo {
-        position: fixed;
         width: 360px;
-        left: calc(50% - 165px);
-        top: calc(50% - 320px);
+        padding-bottom: 16px;
+        margin: 0 auto;
+    }
+
+    #login-window {
+        padding: 10px;
+        border-radius: 6px;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        position: absolute;
+        width: 30%;
+        min-width: 410px;
+        max-width: 500px;
+        left: 50%;
+        right: 50%;
+        top: 50%;
+        display: flex;
+        flex-direction: column;
     }
 
     #login {
         color: var(--white-1);
         background-color: var(--panel-2);
-        width: 30%;
-        min-width: 410px;
-        max-width: 500px;
-
+        border-bottom: 3px solid var(--panel-3);
+        background-color: var(--panel-2);
         display: flex;
         flex-direction: column;
         align-items: stretch;
         justify-content: center;
-
         padding: 15px;
     }
 
