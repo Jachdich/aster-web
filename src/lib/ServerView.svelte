@@ -11,6 +11,7 @@
     } from "./network";
     import ProfileDialog from "./ProfileDialog.svelte";
     import type { UIEventHandler } from "svelte/elements";
+    import { tick } from "svelte";
 
     export let server: Server;
     let channels: Channel[];
@@ -24,27 +25,9 @@
     }
     let message_input: string = "";
 
-    let show_profile_dialog = false
-
-    // this is a bit of a hack
-    // so basically, svelte seems to add objects from bottom-to-top, sometimes.
-    // Therefore, we can't just wait for this to be called on the last element, and scroll it into view.
-    // Essentially it will be called on the last element first, which we have to take a note of, and then
-    // when it gets called on the first element (last), we can scroll the last element (first) into view.
-    // we also try to scroll the last (first) element into view, just in case it is actually added last instead of first.
-    let last_node: HTMLElement | undefined;
-    const scroll_to_this = (
-        node: HTMLElement,
-        { is_last, is_first }: { is_last: boolean; is_first: boolean },
-    ) => {
-        if (is_last) {
-            node.scrollIntoView();
-            last_node = node;
-        }
-        if (is_first) {
-            last_node?.scrollIntoView();
-        }
-    };
+    let show_profile_dialog = false;
+    let no_scroll = false;
+    let message_area: HTMLDivElement;
 
     function switch_channel(channel: CustomEvent<Channel>) {
         const uuid = channel.detail.uuid;
@@ -58,6 +41,9 @@
                     server.messages.push(m);
                 }
                 server.messages = server.messages;
+                tick().then(() => {
+                    message_area.scrollTop = message_area.scrollHeight - message_area.offsetHeight;
+                });
             }
         });
         server.selected_channel_uuid = uuid;
@@ -86,6 +72,11 @@
         if (message.channel_uuid == server.selected_channel_uuid) {
             server.messages.push(message);
             server.messages = server.messages;
+            if (!no_scroll) {
+                tick().then(() => {
+                    message_area.scrollTop = message_area.scrollHeight - message_area.offsetHeight;
+                });
+            }
         }
         if (
             can_notify &&
@@ -104,7 +95,7 @@
         if (channel_uuid == server.selected_channel_uuid) {
             // literally re-get the history. It's probably cached, anyway
             server.messages = [];
-            server.conn.get_history(channel_uuid).then((msg) => {
+            server.conn.get_history(channel_uuid, null).then((msg) => {
                 if (msg instanceof ChannelNotFound) {
                 } else if (msg instanceof Forbidden) {
                 } else if (msg instanceof ServerError) {
@@ -128,8 +119,16 @@
 
     async function message_scroll(event: UIEvent) {
         let div = event.target as HTMLDivElement;
-        if (div.scrollTop == 0 && selected_channel !== undefined) {
-            const before_id = selected_channel.cached_messages[0].uuid;
+
+        let scrolled_to_bottom = div.scrollHeight - div.offsetHeight == div.scrollTop;
+        if (scrolled_to_bottom) {
+            no_scroll = false;
+        }
+
+        let scrolled_to_top = div.scrollTop == 0;
+        if (scrolled_to_top && selected_channel !== undefined && server.messages.length > 0) {
+            const before_id = server.messages[0].uuid;
+            // console.log(before_id, server.requesting_history_from);
 
             // we've already started requesting history from this point. bail!
             // (requesting duplicate history is __very bad__)
@@ -137,9 +136,11 @@
                 return;
             }
 
+            no_scroll = true;
+            // top_scroll = div.children[0];
             server.requesting_history_from.push(before_id);
             const res = await server.conn.get_history(selected_channel.uuid, before_id);
-            console.log(res);
+            // console.log(res);
             if (res instanceof ChannelNotFound) {
                 // cannot happen hopefully
             } else if (res instanceof Forbidden) {
@@ -149,8 +150,11 @@
             } else {
                 // selected_channel.cached_messages = [...res, ...selected_channel.cached_messages];
                 server.messages = [...res, ...server.messages];
+                let init_height = message_area.scrollHeight;
+                await tick();
+                message_area.scrollTop = message_area.scrollHeight - init_height;
             }
-            server.requesting_history_from = server.requesting_history_from.filter(e => e !== before_id);
+            // server.requesting_history_from = server.requesting_history_from.filter(e => e !== before_id);
         }
     }
 
@@ -183,14 +187,9 @@
             on:keypress={send_message}
             bind:value={message_input}
         />
-        <div id="message-area" on:scroll={message_scroll}>
-            {#each server.messages as message, idx (message.uuid)}
-                <div
-                    use:scroll_to_this={{
-                        is_last: idx == server.messages.length - 1,
-                        is_first: idx == 0,
-                    }}
-                >
+        <div id="message-area" on:scroll={message_scroll} bind:this={message_area}>
+            {#each server.messages as message (message.uuid)}
+                <div>
                     <Message {message} />
                 </div>
             {/each}
