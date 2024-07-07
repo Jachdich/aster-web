@@ -2,15 +2,14 @@
     import Message from "./Message.svelte";
     import ChannelList from "./ChannelList.svelte";
     import type { Server } from "./server";
-    import { MessageInfo, can_notify } from "./network";
     import {
         Channel,
         ChannelNotFound,
         ServerError,
         Forbidden,
+        MessageInfo,
     } from "./network";
     import ProfileDialog from "./ProfileDialog.svelte";
-    import type { UIEventHandler } from "svelte/elements";
     import { tick } from "svelte";
 
     export let server: Server;
@@ -21,7 +20,7 @@
         server.conn.message_callback = on_message;
         server.conn.edit_callback = on_edit;
         channels = server.conn.list_channels();
-        console.log("called");
+        // console.log("called");
     }
     let message_input: string = "";
 
@@ -71,8 +70,6 @@
     }
 
     function on_message(message: MessageInfo) {
-        console.log("Got message from server " + server.conn.port.toString());
-        console.log(message);
         if (message.channel_uuid == server.selected_channel_uuid) {
             server.messages.push(message);
             server.messages = server.messages;
@@ -81,17 +78,6 @@
                     message_area.scrollTop = message_area.scrollHeight - message_area.offsetHeight;
                 });
             }
-        }
-        if (
-            can_notify &&
-            message.author.uuid != server.conn.my_uuid &&
-            (!document.hasFocus() ||
-                message.channel_uuid != server.selected_channel_uuid)
-        ) {
-            new Notification(
-                `${server.conn.name} #${server.conn.get_channel(message.channel_uuid)?.name}`,
-                { body: `${message.author.display_name}: ${message.content}` },
-            );
         }
     }
 
@@ -164,9 +150,9 @@
 
     let selected_channel: Channel | undefined;
     $: selected_channel = get_selected_channel(server);
-    $: {
-        console.log(server.messages);
-    }
+    // $: {
+    //     console.log(server.messages);
+    // }
 </script>
 
 <div id="server-area">

@@ -132,6 +132,7 @@ export class Connection {
     got_name: boolean = false;
     got_icon: boolean = false;
     message_callback: undefined | ((_: MessageInfo) => void) = undefined;
+    handle_notify: undefined | ((_: MessageInfo) => void) = undefined; // TEMP: kinda stupid
     edit_callback: undefined | ((_: number) => void) = undefined;
     constructor(ip: string, port: number, uname: string, pword: string) {
         this.ip = ip;
@@ -156,7 +157,7 @@ export class Connection {
             });
             this.socket.addEventListener("message", (event) => {
                 let obj = JSON.parse(event.data);
-                console.log("Responded", obj);
+                // console.log("Responded", obj);
                 let packet_idx = 0;
                 for (const packet of this.waiting_for) {
                     if (packet.command == obj["command"]) {
@@ -202,6 +203,9 @@ export class Connection {
                         if (info !== undefined) {
                             if (this.message_callback !== undefined) {
                                 this.message_callback(info);
+                            }
+                            if (this.handle_notify !== undefined) {
+                                this.handle_notify(info);
                             }
                             let channel_uuid = obj["channel_uuid"];
                             let channel = this.get_channel(channel_uuid);
@@ -285,7 +289,6 @@ export class Connection {
         }
 
         // TODO calculate whether we actually already have the message range loaded
-        console.log(channel.cached_messages.length, before_message !== undefined);
         if (channel.cached_messages.length < 100 || before_message !== undefined) {
             const history = await this.request({ "command": "history", "channel": channel_uuid, "num": 100, "before_message": before_message });
             if (history["status"] == Status.NotFound) {
@@ -313,7 +316,7 @@ export class Connection {
     }
 
     public request(data: any): Promise<any> {
-        console.log("Requesting", data);
+        // console.log("Requesting", data);
         return new Promise((resolve, reject) => {
             if (this.socket === undefined) {
                 reject("Not connected");

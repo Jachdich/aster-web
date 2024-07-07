@@ -67,9 +67,6 @@
             await sync_server.request({ command: "sync_get_servers" })
         )["servers"];
         for (const server of server_list) {
-            console.log(
-                "Connectiong to " + server["ip"] + ":" + server["port"],
-            );
             const connection = new Connection(
                 server["ip"],
                 server["port"],

@@ -25,7 +25,6 @@
 
     function switch_server(server: CustomEvent<Server>) {
         selected_server = server.detail;
-        console.log("selected", server.detail);
     }
 
     // TODO: get rid of the any in the signature
