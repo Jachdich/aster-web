@@ -32,11 +32,15 @@
     function switch_channel(channel: CustomEvent<Channel>) {
         const uuid = channel.detail.uuid;
         server.messages = [];
-        server.conn.get_history(uuid, null).then((msg) => {
+        server.conn.get_history(uuid, undefined).then((msg) => {
             if (msg instanceof ChannelNotFound) {
             } else if (msg instanceof Forbidden) {
             } else if (msg instanceof ServerError) {
             } else {
+                if (selected_channel?.uuid !== uuid) {
+                    // I guess the user changed the channel before the request could complete. just ignore it.
+                    return;
+                }
                 for (const m of msg) {
                     server.messages.push(m);
                 }
@@ -95,7 +99,7 @@
         if (channel_uuid == server.selected_channel_uuid) {
             // literally re-get the history. It's probably cached, anyway
             server.messages = [];
-            server.conn.get_history(channel_uuid, null).then((msg) => {
+            server.conn.get_history(channel_uuid, undefined).then((msg) => {
                 if (msg instanceof ChannelNotFound) {
                 } else if (msg instanceof Forbidden) {
                 } else if (msg instanceof ServerError) {

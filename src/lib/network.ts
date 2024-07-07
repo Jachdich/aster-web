@@ -124,7 +124,7 @@ export class Connection {
     port: number;
     username: string;
     password: string; // TODO is this a good idea?
-    private waiting_for: Map<string, any> = new Map();
+    private waiting_for: Array<{command: string, callback: any}> = [];
     cached_channels: Map<number, Channel> = new Map();
     logged_in: boolean = false;
     we_have_the_metadata_lads: boolean = false;
@@ -155,11 +155,16 @@ export class Connection {
                 this.socket?.send(JSON.stringify({ "command": auth.toLowerCase(), "uname": this.username, "passwd": this.password }));
             });
             this.socket.addEventListener("message", (event) => {
-                console.log(event.data);
                 let obj = JSON.parse(event.data);
-                if (this.waiting_for.has(obj["command"])) {
-                    this.waiting_for.get(obj["command"])(obj);
-                    this.waiting_for.delete(obj["command"]);
+                console.log("Responded", obj);
+                let packet_idx = 0;
+                for (const packet of this.waiting_for) {
+                    if (packet.command == obj["command"]) {
+                        packet.callback(obj);
+                        this.waiting_for.splice(packet_idx, 1);
+                        break;
+                    }
+                    packet_idx += 1;
                 }
 
                 if ((obj["command"] == "login" || obj["command"] == "register") && obj["status"] != Status.Ok) {
@@ -180,7 +185,7 @@ export class Connection {
                             if (peer !== undefined) {
                                 this.known_peers.set(peer_json["uuid"], peer);
                             } else {
-                                console.log("Peer json invalid froom " + this.ip + ":" + this.port);
+                                console.log("Peer json invalid from " + this.ip + ":" + this.port);
                             }
                         }
                         this.we_have_the_metadata_lads = true;
@@ -273,14 +278,15 @@ export class Connection {
         }
     }
 
-    public async get_history(channel_uuid: number, before_message: number | null): Promise<Array<MessageInfo> | ChannelNotFound | Forbidden | ServerError> {
+    public async get_history(channel_uuid: number, before_message: number | undefined): Promise<Array<MessageInfo> | ChannelNotFound | Forbidden | ServerError> {
         const channel = this.get_channel(channel_uuid);
         if (channel === undefined) {
             return new ChannelNotFound();
         }
 
         // TODO calculate whether we actually already have the message range loaded
-        if (channel.cached_messages.length < 100 || before_message !== null) {
+        console.log(channel.cached_messages.length, before_message !== undefined);
+        if (channel.cached_messages.length < 100 || before_message !== undefined) {
             const history = await this.request({ "command": "history", "channel": channel_uuid, "num": 100, "before_message": before_message });
             if (history["status"] == Status.NotFound) {
                 return new ChannelNotFound();
@@ -298,7 +304,7 @@ export class Connection {
                     i++;
                 }
             }
-            if (before_message === null)
+            if (before_message === undefined)
                 channel.cached_messages = messages; // update cached - TODO: should this all be in the generic packet receiver function?
             return messages;
         } else {
@@ -307,12 +313,13 @@ export class Connection {
     }
 
     public request(data: any): Promise<any> {
+        console.log("Requesting", data);
         return new Promise((resolve, reject) => {
             if (this.socket === undefined) {
                 reject("Not connected");
                 return;
             }
-            this.waiting_for.set(data["command"], (data: any) => resolve(data));
+            this.waiting_for.push({command: data["command"], callback: (data: any) => resolve(data)});
             this.socket.send(JSON.stringify(data));
         });
     }
@@ -327,7 +334,6 @@ export class Connection {
             const sync_server = new SyncServer(server.conn?.my_uuid, server.conn.ip, server.conn.port, index++, uname, pfp, name);
             serialised_servers.push(sync_server);
         }
-        console.log(servers);
 
         return (await this.request({ command: "sync_set_servers", servers: serialised_servers }))["status"];
     }
