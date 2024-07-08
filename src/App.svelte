@@ -73,32 +73,32 @@
                 sync_server.username,
                 sync_server.password,
             );
-            let result = await connection.connect("Login");
-
-            let name: string;
-            if (server["name"] != null) {
-                name = server["name"];
-            } else {
-                name = "<" + server["ip"] + ":" + server["port"] + ">";
-            }
-            if (result instanceof ServerError) {
-                if (
-                    result.request == "login" &&
-                    result.status == Status.NotFound
-                ) {
-                    error_msg = "Unknown username for server " + name;
-                } else if (
-                    result.request == "login" &&
-                    result.status == Status.Forbidden
-                ) {
-                    error_msg = "Incorrect password for server " + name;
+            connection.connect("Login").then((result) => {
+                let name: string;
+                if (server["name"] != null) {
+                    name = server["name"];
+                } else {
+                    name = "<" + server["ip"] + ":" + server["port"] + ">";
                 }
-            } else if (result instanceof ConnectionError) {
-                // for now, ignore it ig
-                // this probably just means the server is down...
-            }
-            servers.push(new Server(connection));
-            servers = servers;
+                if (result instanceof ServerError) {
+                    if (
+                        result.request == "login" &&
+                        result.status == Status.NotFound
+                    ) {
+                        error_msg = "Unknown username for server " + name;
+                    } else if (
+                        result.request == "login" &&
+                        result.status == Status.Forbidden
+                    ) {
+                        error_msg = "Incorrect password for server " + name;
+                    }
+                } else if (result instanceof ConnectionError) {
+                    // for now, ignore it ig
+                    // this probably just means the server is down...
+                }
+                servers.push(new Server(connection));
+                servers = servers;
+            });
         }
     }
 
