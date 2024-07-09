@@ -134,6 +134,7 @@ export class Connection {
     message_callback: undefined | ((_: MessageInfo) => void) = undefined;
     handle_notify: undefined | ((_: MessageInfo) => void) = undefined; // TEMP: kinda stupid
     edit_callback: undefined | ((_: number) => void) = undefined;
+    pinging: boolean = false;
     constructor(ip: string, port: number, uname: string, pword: string) {
         this.ip = ip;
         this.port = port;
@@ -141,15 +142,54 @@ export class Connection {
         this.password = pword;
     }
 
+    public async ping() {
+        // TODO: for some reason after reconnecting to a previously offline server, ping fails and it thinks it's offline again
+        // if we're supposed to be online...
+        if (this.socket !== undefined) {
+            // check if we *really* are
+            let request = this.request({"command": "ping"});
+            let timeout = new Promise((resolve) => setTimeout(() => resolve(undefined), 1 * 1000));
+            let result = await Promise.any([request, timeout]);
+            console.log(result, this.ip, this.port);
+            if (result === undefined) {
+                // ping failed - offline I guess
+                // ¯\_(ツ)_/¯ idk what to do
+                this.socket = undefined;
+                console.log("gone offline, womp womp", this.ip, this.port);
+            } else if (result["status"] == 200) {
+                // server online
+            }
+        } else {
+            let result = await this.connect("Login");
+            if (result instanceof ConnectionError) {
+                console.log("nope, still offline (ping)", result, this.ip, this.port);
+            } else if (result instanceof ServerError) {
+                // maybe try to register/
+                console.log("(in ping) Server error: ", result, this.ip, this.port);
+            } else {
+                // woohoo, we're online!!
+                console.log("Back online!! woohoo", this.ip, this.port);
+            }
+            // otherwise, try again
+        }
+    }
+
     public connect(auth: "Login" | "Register"): Promise<void | ConnectionError | ServerError> {
+        // bad idea: only enable pinging if we are certain it is a good idea
+        if (!this.pinging) {
+            setInterval(() => this.ping(), 10 * 1000); // try to ping the server every 10 seconds.
+            this.pinging = true;
+        }
         return new Promise((resolve, _) => {
             try {
                 this.socket = new WebSocket("wss://" + this.ip + ":" + this.port);
             } catch (e) {
+                this.socket = undefined;
                 resolve(new ConnectionError(e));
                 return;
             }
             this.socket.addEventListener("error", (e) => {
+                this.socket = undefined;
                 resolve(new ConnectionError(e));
             });
             this.socket.addEventListener("open", (_) => {
