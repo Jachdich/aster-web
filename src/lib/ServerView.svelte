@@ -84,16 +84,12 @@
     function on_edit(channel_uuid: number) {
         if (channel_uuid == server.selected_channel_uuid) {
             // literally re-get the history. It's probably cached, anyway
-            server.messages = [];
             server.conn.get_history(channel_uuid, undefined).then((msg) => {
                 if (msg instanceof ChannelNotFound) {
                 } else if (msg instanceof Forbidden) {
                 } else if (msg instanceof ServerError) {
                 } else {
-                    for (const m of msg) {
-                        server.messages.push(m);
-                    }
-                    server.messages = server.messages;
+                    server.messages = [...msg];
                 }
             });
         }

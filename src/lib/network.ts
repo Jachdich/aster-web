@@ -124,7 +124,7 @@ export class Connection {
     port: number;
     username: string;
     password: string; // TODO is this a good idea?
-    private waiting_for: Array<{command: string, callback: any}> = [];
+    private waiting_for: Array<{ command: string, callback: any }> = [];
     cached_channels: Map<number, Channel> = new Map();
     logged_in: boolean = false;
     we_have_the_metadata_lads: boolean = false;
@@ -214,20 +214,28 @@ export class Connection {
                     } else if (obj["command"] == "message_edited") {
                         const uuid = obj["message"] as number;
                         const content = obj["new_content"] as string;
-                        let done = false;
                         for (const channel of this.cached_channels) {
-                            for (const msg of channel[1].cached_messages) {
-                                if (msg.uuid === uuid) {
-                                    msg.content = content;
-                                    if (this.edit_callback !== undefined) {
-                                        this.edit_callback(channel[1].uuid);
-                                    }
-                                    done = true;
-                                    break;
+                            let index = channel[1].cached_messages.findIndex((msg) => msg.uuid === uuid);
+                            if (index !== -1) {
+                                let msg = channel[1].cached_messages[index];
+                                msg.content = content;
+                                if (this.edit_callback !== undefined) {
+                                    this.edit_callback(channel[1].uuid);
                                 }
-                                if (done) {
-                                    break;
+                                break;
+                            }
+                        }
+                    } else if (obj["command"] == "message_deleted") {
+                        const uuid = obj["message"] as number;
+                        for (const channel of this.cached_channels) {
+                            let index = channel[1].cached_messages.findIndex((msg) => msg.uuid === uuid);
+                            if (index !== -1) {
+                                channel[1].cached_messages.splice(index, 1);
+                                if (this.edit_callback !== undefined) {
+                                    // deleting is a kind of editing, right?
+                                    this.edit_callback(channel[1].uuid);
                                 }
+                                break;
                             }
                         }
                     } else if (obj["command"] == "API_version") {
@@ -322,7 +330,7 @@ export class Connection {
                 reject("Not connected");
                 return;
             }
-            this.waiting_for.push({command: data["command"], callback: (data: any) => resolve(data)});
+            this.waiting_for.push({ command: data["command"], callback: (data: any) => resolve(data) });
             this.socket.send(JSON.stringify(data));
         });
     }

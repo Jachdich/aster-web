@@ -2,12 +2,11 @@ bugs:
 	- messages wrap badly reee
 	- meta changes don't propagate to the UI
 features:
-	- load more messages when you scroll to the top
+	- handle offline servers better
 	- allow newlines on the input
 	- markdown
 	- save selected channels
 	- commands/shortcuts for everything
-	- change pfp/username/whatever
 	- nicknames for individual servers
 	- future: when editing/deleting, use arrows to navigate and select the message, then a command to edit/delete
 	- future: also right-click menu for edit/delete
@@ -22,6 +21,8 @@ in progress:
 	- editing mesages
 	- show "edited" indicator
 done:
+	- change pfp/username/whatever
+	- load more messages when you scroll to the top
 	- messages don't display newlines
 general features (move this lol):
 	- unreads
