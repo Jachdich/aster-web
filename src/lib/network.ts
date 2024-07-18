@@ -134,7 +134,7 @@ export class Connection {
     message_callback: undefined | ((_: MessageInfo) => void) = undefined;
     handle_notify: undefined | ((_: MessageInfo) => void) = undefined; // TEMP: kinda stupid
     edit_callback: undefined | ((_: number) => void) = undefined;
-    pinging: boolean = false;
+    pinging: number | undefined = undefined;
     constructor(ip: string, port: number, uname: string, pword: string) {
         this.ip = ip;
         this.port = port;
@@ -174,12 +174,14 @@ export class Connection {
         }
     }
 
-    public connect(auth: "Login" | "Register"): Promise<void | ConnectionError | ServerError> {
-        // bad idea: only enable pinging if we are certain it is a good idea
-        if (!this.pinging) {
-            setInterval(() => this.ping(), 10 * 1000); // try to ping the server every 10 seconds.
-            this.pinging = true;
+    public start_pinging() {
+        if (this.pinging === undefined) {
+            this.pinging = setInterval(() => this.ping(), 10 * 1000); // try to ping the server every 10 seconds.
         }
+    }
+
+    public connect(auth: "Login" | "Register"): Promise<void | ConnectionError | ServerError> {
+        this.start_pinging();
         return new Promise((resolve, _) => {
             try {
                 this.socket = new WebSocket("wss://" + this.ip + ":" + this.port);
@@ -197,7 +199,7 @@ export class Connection {
             });
             this.socket.addEventListener("message", (event) => {
                 let obj = JSON.parse(event.data);
-                // console.log("Responded", obj);
+                console.log("Responded", obj);
                 let packet_idx = 0;
                 for (const packet of this.waiting_for) {
                     if (packet.command == obj["command"]) {
@@ -364,13 +366,13 @@ export class Connection {
     }
 
     public request(data: any): Promise<any> {
-        // console.log("Requesting", data);
+        console.log("Requesting", data);
         return new Promise((resolve, reject) => {
             if (this.socket === undefined) {
                 reject("Not connected");
                 return;
             }
-            this.waiting_for.push({ command: data["command"], callback: (data: any) => resolve(data) });
+            this.waiting_for.push({ command: data["command"], callback: (data: any) => { console.log("got it !!!"); resolve(data) } });
             this.socket.send(JSON.stringify(data));
         });
     }
