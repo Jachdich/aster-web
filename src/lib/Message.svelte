@@ -9,6 +9,15 @@
     let uname_top = (24 - 20) / 2;
     let body_top = uname_top;
     let date_top = (24 - 10) / 2;
+
+    const url_regex = /(https?:\/\/[^\s]+)/g;
+    let image_url: string | undefined = undefined;
+    $: if (url_regex.test(message.content)) {
+        let matches = message.content.match(url_regex);
+        if (matches !== null) {
+            image_url = matches[0];
+        }
+    }
 </script>
 
 <div
@@ -20,6 +29,9 @@
     <div class="message-body">{message.content}</div>
     <div class="message-date">{message.date.toLocaleString()}</div>
 </div>
+{#if image_url !== undefined}
+    <img class="embed-image" src={image_url} on:error={(_) => image_url = undefined}>
+{/if}
 
 <style>
     .message {
@@ -74,5 +86,9 @@
         margin-left: 2px;
         margin-top: var(--body-top);
         white-space: pre-line;
+    }
+
+    .embed-image {
+        width: 50%;
     }
 </style>
