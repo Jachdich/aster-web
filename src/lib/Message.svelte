@@ -30,6 +30,9 @@
     $: parse_message_style(message.content);
 
     function parse_message_style(content: string) {
+        // TODO I think this function is called too many times
+        image_urls = [];
+        content_parts = [];
         let matches = content.matchAll(url_regex);
         let pos = 0;
         for (const match of matches) {
