@@ -109,6 +109,14 @@ input:focus {
   shape-rendering: crispEdges;
 }
 
+a:link {
+  color: #c0a0ff;
+}
+
+a:visited {
+  color: #c0a0ff;
+}
+
 /*
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;

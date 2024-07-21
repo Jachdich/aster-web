@@ -3,20 +3,52 @@
     // export let username;
     // export let date;
     // export let img_src;
+
+    
     import type { MessageInfo } from "./network";
     export let message: MessageInfo;
+
+    type Style = "link" | "none";
+    class StyledText {
+        style: Style;
+        text: string;
+        constructor(style: Style, text: string) {
+            this.style = style;
+            this.text = text;
+        }
+    }
+    
     let spacing = 8;
     let uname_top = (24 - 20) / 2;
     let body_top = uname_top;
     let date_top = (24 - 10) / 2;
 
-    const url_regex = /(https?:\/\/[^\s]+)/g;
-    let image_url: string | undefined = undefined;
-    $: if (url_regex.test(message.content)) {
-        let matches = message.content.match(url_regex);
-        if (matches !== null) {
-            image_url = matches[0];
+    const url_regex = /https?:\/\/[^\s]+/g;
+    let image_urls: string[] = [];
+    let content_parts: StyledText[] = [];
+
+    $: parse_message_style(message.content);
+
+    function parse_message_style(content: string) {
+        let matches = content.matchAll(url_regex);
+        let pos = 0;
+        for (const match of matches) {
+            if (match.index === undefined) {
+                console.log("why is match.index undefined?");
+            } else {
+                if (match.index != pos) {
+                    let prev = content.substring(pos, match.index);
+                    content_parts.push(new StyledText("none", prev));
+                }
+                pos = match.index + match[0].length;
+                content_parts.push(new StyledText("link", match[0]));
+                image_urls.push(match[0]);
+            }
         }
+        let prev = content.substring(pos);
+        content_parts.push(new StyledText("none", prev));
+        content_parts = content_parts;
+        image_urls = image_urls;
     }
 </script>
 
@@ -26,14 +58,33 @@
 >
     <img src="data:image/png;base64,{message.author.pfp}" alt="{message.author.display_name}'s profile picture" class="message-pfp" />
     <div class="message-username">{message.author.display_name}</div>
-    <div class="message-body">{message.content}</div>
+    <div class="message-body">
+        {#each content_parts as part}
+            {#if part.style === "link"}
+                <a href="{part.text}">{part.text}</a>
+            {:else}
+                {part.text}
+            {/if}
+        {/each}
+        <div class="image-container">
+        {#each image_urls as image_url}
+            <img class="embed-image" src={image_url} on:error={(_) => image_urls = image_urls.filter((url) => url != image_url)}>
+        {/each}
+        </div>
+    </div>
     <div class="message-date">{message.date.toLocaleString()}</div>
 </div>
-{#if image_url !== undefined}
-    <img class="embed-image" src={image_url} on:error={(_) => image_url = undefined}>
-{/if}
 
 <style>
+    .image-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .embed-image {
+        width: 60%;
+    }
+
     .message {
         color: var(--text-gray);
         padding-left: 8px;
@@ -88,7 +139,4 @@
         white-space: pre-line;
     }
 
-    .embed-image {
-        width: 50%;
-    }
 </style>
