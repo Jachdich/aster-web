@@ -1,6 +1,7 @@
 <script lang="ts">
     import LoginPrompt from "./lib/LoginPrompt.svelte";
     import Loading from "./lib/Loading.svelte";
+    import { Style } from "./lib/style";
     import {
         Connection,
         set_can_notify,

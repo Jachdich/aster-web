@@ -6,6 +6,7 @@
 
     
     import type { MessageInfo } from "./network";
+    import { style } from "./style";
     export let message: MessageInfo;
 
     type Style = "link" | "none";
@@ -18,10 +19,11 @@
         }
     }
     
-    let spacing = 8;
+    let spacing = style.message_spacing;
     let uname_top = (24 - 20) / 2;
     let body_top = uname_top;
     let date_top = (24 - 10) / 2;
+    let uname_width = style.justify_username ? 100 : 0;
 
     const url_regex = /https?:\/\/[^\s]+/g;
     let image_urls: string[] = [];
@@ -57,7 +59,7 @@
 
 <div
     class="message"
-    style="--spacing: {spacing}px; --uname-top: {uname_top}px; --date-top: {date_top}px; --body-top: {body_top}px;"
+    style="--spacing: {spacing}px; --uname-top: {uname_top}px; --date-top: {date_top}px; --body-top: {body_top}px; --uname-width: {uname_width}px;"
 >
     <img src="data:image/png;base64,{message.author.pfp}" alt="{message.author.display_name}'s profile picture" class="message-pfp" />
     <div class="message-username">{message.author.display_name}</div>
@@ -109,7 +111,7 @@
         margin-right: 6px;
         font-size: 15px;
         margin-top: var(--uname-top);
-        min-width: 100px; /* might not keep */
+        min-width: var(--uname-width);
     }
 
     .message-date {
