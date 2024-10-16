@@ -90,7 +90,7 @@
                 </svg>
             </button>
             <button id="add-server" on:click={() => (show_add_server = true)}>
-                <Icon src={FiPlus} size="25px" />
+                <Icon src={FiPlus} size="25px"/>
             </button>
             <button id="account" on:click={() => (show_account_dialog = true)}>
                 <!-- <img
@@ -148,7 +148,7 @@
     #account,
     #aster-button {
         background-color: var(--panel-2);
-        border-radius: 16px;
+        border-radius: var(--radius-2);
         border-style: none;
         height: 46px;
         width: 46px;

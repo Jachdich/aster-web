@@ -11,6 +11,8 @@
     } from "./network";
     import ProfileDialog from "./ProfileDialog.svelte";
     import { tick } from "svelte";
+    import { Icon } from "svelte-icons-pack";
+    import { FiHelpCircle } from "svelte-icons-pack/fi";
 
     export let server: Server;
     let channels: Channel[];
@@ -166,13 +168,18 @@
         />
     </div>
     <div id="server-messages" class="container">
-        <input
-            autofocus={true}
-            id="message-input"
-            placeholder=" Send a message"
-            on:keypress={send_message}
-            bind:value={message_input}
-        />
+        <div id="message-input-container">
+            <input
+                autofocus={true}
+                id="message-input"
+                placeholder=" Send a message"
+                on:keypress={send_message}
+                bind:value={message_input}
+            />
+            <button id="help-button">
+                <Icon src={FiHelpCircle} size="20px" />
+            </button>
+        </div>
         <div id="message-area" on:scroll={message_scroll} bind:this={message_area}>
             {#each server.messages as message (message.uuid)}
                 <div>
@@ -197,7 +204,7 @@
         overflow-y: scroll;
         margin-left: 10px;
         margin-right: 10px;
-        border-radius: 16px;
+        border-radius: var(--radius-2);
         border-top-left-radius: 0px;
         border-top-right-radius: 0px;
     }
@@ -212,17 +219,47 @@
         flex-direction: column-reverse;
     }
 
-    #message-input {
-        width: auto;
+    #message-input-container {
+        display: flex;
+        flex-direction: row;
+        width: calc(100% - 32px);
         min-height: 36px;
         margin: 16px;
         margin-bottom: 20px;
+    }
+
+    #message-input {
+        width: 100%;
+        /* min-height: 36px;
+        margin: 16px;
+        margin-bottom: 20px; */
         background: var(--panel-1);
-        border-radius: 36px;
+        border-radius: var(--radius-1);
         border-style: none;
         text-indent: 12px;
         color: #d3d3d3;
         font-size: 15px;
+    }
+
+    #help-button {
+        background-color: var(--panel-1);
+        border-radius: var(--radius-1);
+        border-style: none;
+        width: 36px;
+        height: 36px;
+        margin-left: 8px;
+        margin-top: 0;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        color: var(--text-gray);
+        transition: background-color 0.4s ease;
+    }
+
+    #help-button:hover {
+        background-color: var(--panel-3);
+        color: var(--white-1);
     }
 
     #server-area {
@@ -270,7 +307,7 @@
     .container {
         background-color: var(--panel-2);
         height: 100%;
-        border-radius: 16px;
+        border-radius: var(--radius-2);
         border-top-left-radius: 0px;
         border-top-right-radius: 0px;
     }

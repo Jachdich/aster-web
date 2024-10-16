@@ -109,7 +109,7 @@
         align-items: stretch;
         justify-content: stretch;
         margin-top: var(--spacing);
-        border-radius: 8px;
+        border-radius: var(--radius-3);
     }
 
     .message:hover {

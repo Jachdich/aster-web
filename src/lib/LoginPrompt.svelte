@@ -64,7 +64,7 @@
 
     #login-window {
         padding: 10px;
-        border-radius: 6px;
+        border-radius: var(--radius-3);
         -webkit-transform: translate(-50%, -50%);
         transform: translate(-50%, -50%);
         position: absolute;
@@ -88,6 +88,7 @@
         align-items: stretch;
         justify-content: center;
         padding: 15px;
+        border-radius: var(--radius-2);
     }
 
     .login-input {

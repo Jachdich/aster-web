@@ -3,7 +3,7 @@
     padding: 10px;
     border-bottom: 3px solid var(--panel-3);
     background-color: var(--panel-2);
-    border-radius: 6px;
+    border-radius: var(--radius-3);;
     position: absolute;
     width: max-content;
     left: 50%;

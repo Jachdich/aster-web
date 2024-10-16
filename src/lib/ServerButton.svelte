@@ -39,7 +39,7 @@
     }
     .server-button {
         background-color: var(--panel-2);
-        border-radius: 16px;
+        border-radius: var(--radius-2);
         width: calc(100% - 20px);
         margin: 10px;
         padding: 10px;
@@ -65,7 +65,7 @@
         box-sizing: content-box;
         width: 48px;
         height: 48px;
-        border-radius: 16px;
+        border-radius: var(--radius-2);
     }
 
     #server-tagline {

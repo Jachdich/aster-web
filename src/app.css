@@ -1,5 +1,6 @@
 /* variables */
 :root {
+  /* colours */
   --panel-0: #1e2329;
   --panel-1: #272e39;
   --panel-2: #31363F;
@@ -12,6 +13,15 @@
 
   --text-dark: #1b0a24;
   --text-gray: #929292;
+
+  /* radii & margins */
+  /* intended to function well together */
+  /* outer r = inner r + margin */
+  --radius-1: 36px;
+  --margin-1: 20px;
+  --radius-2: 16px;
+  --margin-2: 10px;
+  --radius-3:  6px;
 }
 
 /* fonts */
@@ -60,7 +70,7 @@
 /* styles */
 input, textarea, button {
     border: 1px none;
-    border-radius: 6px;
+    border-radius: var(--radius-3);
     color: var(--white-1);
     background-color: var(--panel-1);
 }
