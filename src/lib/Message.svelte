@@ -55,6 +55,14 @@
         content_parts = content_parts;
         image_urls = image_urls;
     }
+
+    function show_image(e: Event) {
+        if (e.target !== null) {
+            if (e.target instanceof HTMLElement) {
+                e.target.style.display="block";
+            }
+        }
+    }
 </script>
 
 <div
@@ -73,7 +81,7 @@
         {/each}
         <div class="image-container">
         {#each image_urls as image_url}
-            <img class="embed-image" src={image_url} on:error={(_) => image_urls = image_urls.filter((url) => url != image_url)}>
+            <img class="embed-image" src={image_url} style="display: none;" on:load={show_image} on:error={(_) => image_urls = image_urls.filter((url) => url != image_url)}>
         {/each}
         </div>
     </div>
