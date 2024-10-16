@@ -87,7 +87,10 @@
     }
 
     .embed-image {
-        width: 60%;
+        max-height: 512px;
+        max-width: 60%;
+        width: min-content;
+        object-fit: contain;
     }
 
     .message {
