@@ -16,6 +16,7 @@
     let error_msg = "";
     let sync_server: Connection | undefined = undefined;
     let servers: Server[] = [];
+    let show_changelog = false;
 
     function login(
         uname: string,
@@ -133,6 +134,10 @@
             <button on:click={dismiss_error} id="error-dismiss">Ok</button>
         </div>
     {/if}
+
+    <p id="version-number" on:click={show_changelog = true}>
+        ver. α-2.2.6
+    </p>
 </main>
 
 <style>
@@ -140,5 +145,17 @@
         width: 64px;
         margin: 0 auto;
         display: block;
+    }
+
+    #version-number {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        margin: 0px;
+        margin-left: 18px;
+        margin-bottom: 8px;
+        font-size: 14px;
+        color: var(--text-gray);
+        cursor: pointer;
     }
 </style>

@@ -6,7 +6,21 @@
     let sync_port: string = "2345";
     let uname: string = "";
     let password: string = "";
-    
+
+    let splash_strings = [
+        "Aster? Hardly even know 'er!", 
+        "Just hope it doesn't get rewritten again.",
+        "Brought to you by disperate and shifting developers over far too many years.",
+        "\'Aster\' was originally short for Asteroid, but we realised the flower is much prettier.",
+        "There are over 600 species of aster!",
+        "Elecarno says hi.",
+        "The font used in Aster is Atkinson Hyperlegible.",
+        "I ran out of splash text ideas.",
+        "Click me!",
+        "There exists an unused vertical version of the full text Aster logo."
+    ];
+    let previousString = ""
+
     function validate_port() {
         let a = document.getElementById("login-sync-port-input") as HTMLInputElement;
         a.value = a.value.replace(/[^0-9]/g, '');
@@ -23,6 +37,16 @@
     function register() {
         authenticate(uname, password, sync_ip, parseInt(sync_port), "Register")
     }
+
+    function getRandomString() {
+        let newString;
+        do {
+        newString = splash_strings[Math.floor(Math.random() * splash_strings.length)];
+        } while (newString === previousString); // Keep picking if it's the same as before
+        previousString = newString; // Update the previous string
+        return newString;
+    }
+    let random_splash = getRandomString();
 </script>
 
 <div id="login-window">
@@ -52,13 +76,46 @@
             <button class="login-button" style="margin-left: 4px;" on:click={login}>Login</button>
         </div>
     </div>
+
+    <div id="splash-text">
+        <p on:click={() => random_splash = getRandomString()} style="cursor: pointer;">
+            {random_splash}
+        </p>
+    </div>
 </div>
 
-
 <style>
+    /* @keyframes color_shifting {
+        0%   { color: #be8fd0; }
+        25%  { color: #a776bb; }
+        50%  { color: #be8fd0; }
+        75%  { color: #a776bb; }
+        100% { color: #be8fd0; }
+    } */
+
+    #splash-text {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100px;
+        font-size: 18px;
+        text-align: center;
+        /* font-weight: bold; */
+        /* animation: color_shifting 5s infinite; */
+        transition: 0.5s ease;
+        -webkit-user-select: none; /* Safari */
+        -ms-user-select: none; /* IE 10 and IE 11 */
+        user-select: none; /* Standard syntax */
+    }
+
+    #splash-text:hover {
+        font-size: 18.5px;
+    }
+
     #logo {
         width: 360px;
-        padding-bottom: 16px;
+        padding-bottom: 32px;
         margin: 0 auto;
     }
 
