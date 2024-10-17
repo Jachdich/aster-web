@@ -5,6 +5,7 @@
         ConnectionError,
         Status,
     } from "./network";
+    import { onMount } from "svelte";
     import { Server } from "./server";
     import ServerView from "./ServerView.svelte";
     import ServerList from "./ServerList.svelte";
@@ -18,6 +19,7 @@
     let show_add_server = false;
     let show_aster_dialog = false;
     let show_account_dialog = false;
+    export let show_sidebar = true;
     export let servers: Server[];
     let selected_server: Server | undefined = undefined;
     export let sync_server: Connection;
@@ -79,33 +81,50 @@
         // sync_server.request({"command": "nick", "nick": uname}); // TODO handle results
         // sync_server.request({"command": "pfp", "data": pfp});
     }
+
+    function handleKeydown(event) {
+        if (event.shiftKey && event.key === "F1") {
+            show_sidebar = !show_sidebar;
+        }
+    }
+
+    onMount(() => {
+        window.addEventListener('keydown', handleKeydown);
+        return () => {
+            window.removeEventListener('keydown', handleKeydown);
+        };
+    });
 </script>
 
 <div id="page">
-    <div id="sidebar">
-        <div id="top-buttons">
-            <button id="aster-button" on:click={() => (show_aster_dialog = true)}>
-                <svg id="logo" class="pixel-img" style="width: 32px; height: 32px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-                    <path stroke="var(--panel-2)" style="width: 32px" d={aster_logo_small}/>
-                </svg>
-            </button>
-            <button id="add-server" on:click={() => (show_add_server = true)}>
-                <Icon src={FiPlus} size="25px"/>
-            </button>
-            <button id="account" on:click={() => (show_account_dialog = true)}>
-                <!-- <img
-                    src={profile_img}
-                    alt="View profile"
-                    class="pfp"
-                    id="pfp_button"
-                /> -->
-                <Icon src={FiUser} size="25px" />
-            </button>
+    {#if show_sidebar}
+        <div id="sidebar">
+            <div id="top-buttons">
+                <button id="aster-button" on:click={() => (show_aster_dialog = true)}>
+                    <svg id="logo" class="pixel-img" style="width: 32px; height: 32px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                        <path stroke="var(--panel-2)" style="width: 32px" d={aster_logo_small}/>
+                    </svg>
+                </button>
+                <button id="add-server" on:click={() => (show_add_server = true)}>
+                    <Icon src={FiPlus} size="25px"/>
+                </button>
+                <button id="account" on:click={() => (show_account_dialog = true)}>
+                    <!-- <img
+                        src={profile_img}
+                        alt="View profile"
+                        class="pfp"
+                        id="pfp_button"
+                    /> -->
+                    <Icon src={FiUser} size="25px" />
+                </button>
+            </div>
+            <ServerList {servers} on:switch_server={switch_server} />
         </div>
-        <ServerList {servers} on:switch_server={switch_server} />
-    </div>
+    {:else}
+        <span id="channel-edge-separator"></span>
+    {/if}
     {#if selected_server !== undefined}
-        <ServerView server={selected_server} />
+        <ServerView server={selected_server} sidebar_shown={show_sidebar}/>
     {/if}
 </div>
 
@@ -142,6 +161,11 @@
         justify-content: center;
         margin-top: 20px;
         margin-bottom: 20px;
+    }
+
+    #channel-edge-separator {
+        height: 100%;
+        min-width: 18px
     }
 
     #add-server,

@@ -103,22 +103,14 @@
                 Account
             </p>
         </div>
-        <div class="input-container">
-            <p>Username</p>
-            <input bind:value={username} />
-        </div>
-        <div class="input-container">
-            <p>Password</p>
-            <input type="password" bind:value={password} />
-        </div>
-        <div class="input-container">
-            <p style="margin-right: 16px">Profile&nbspPicture</p>
+        <div class="input-container" style="margin: 0 auto; margin-bottom: 16px;">
+            <!-- <p style="margin-right: 16px">Profile&nbspPicture</p>-->
             <img
                 id="pfp-image"
                 alt="Profile"
                 src="data:image/png;base64,{pfp}"
             />
-            <label>
+            <label style="margin-left: auto">
                 <input
                     type="file"
                     accept="image/*"
@@ -128,6 +120,14 @@
                 />
                 <span id="file-button">Change</span>
             </label>
+        </div>
+        <div class="input-container" style="margin-bottom: 8px;">
+            <p>Username</p>
+            <input bind:value={username} />
+        </div>
+        <div class="input-container" style="margin-bottom: 16px;">
+            <p>Password</p>
+            <input type="password" bind:value={password} />
         </div>
         <div class="input-container" style="margin-top: auto">
             <button id="cancel" style="margin-right: 5px" on:click={cancel}

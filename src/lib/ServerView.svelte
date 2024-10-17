@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { onMount } from "svelte";
     import Message from "./Message.svelte";
     import ChannelList from "./ChannelList.svelte";
     import type { Server } from "./server";
@@ -13,6 +14,7 @@
     import { tick } from "svelte";
     import { Icon } from "svelte-icons-pack";
     import { FiHelpCircle } from "svelte-icons-pack/fi";
+    import Keybinds from "./Keybinds.svelte";
 
     export let server: Server;
     let channels: Channel[];
@@ -27,6 +29,9 @@
     let message_input: string = "";
 
     let show_profile_dialog = false;
+    let show_channels = true;
+    export let sidebar_shown;
+    let show_keybinds = false;
     let no_scroll = false;
     let message_area: HTMLDivElement;
 
@@ -151,22 +156,43 @@
     // $: {
     //     console.log(server.messages);
     // }
+
+    function handleKeydown(event) {
+        if (event.shiftKey && event.key === 'F2') {
+            show_channels = !show_channels;
+        }
+    }
+
+    onMount(() => {
+        window.addEventListener('keydown', handleKeydown);
+        return () => {
+            window.removeEventListener('keydown', handleKeydown);
+        };
+    });
 </script>
 
 <div id="server-area">
-    <div id="server-channels" class="container">
-        <div id="server-info">
-            <p id="server-ip">{server.conn.ip}:{server.conn.port}</p>
-            <p class="server-info-text">Members: {server.conn.known_peers.size}</p>
-            <button id="server-profile-button" on:click={() => (show_profile_dialog = true)}>Server Profile</button>
-            <div class="separator" style="margin-top: 10px"/>
+    {#if show_channels}
+        <div id="server-channels" class="container">
+            <div id="server-info">
+                <p id="server-ip">{server.conn.ip}:{server.conn.port}</p>
+                <p class="server-info-text">Members: {server.conn.known_peers.size}</p>
+                <button id="server-profile-button" on:click={() => (show_profile_dialog = true)}>Server Profile</button>
+                <div class="separator" style="margin-top: 10px"/>
+            </div>
+            <ChannelList
+                {channels}
+                selected_channel={selected_channel}
+                on:switch_channel={switch_channel}
+            />
         </div>
-        <ChannelList
-            {channels}
-            selected_channel={selected_channel}
-            on:switch_channel={switch_channel}
-        />
-    </div>
+        <span id="channel-messages-separator"></span>
+    {:else}
+        {#if sidebar_shown && show_channels}
+            <span id="messages-edge-separator"></span>
+        {/if}
+    {/if}
+
     <div id="server-messages" class="container">
         <div id="message-input-container">
             <input
@@ -176,7 +202,7 @@
                 on:keypress={send_message}
                 bind:value={message_input}
             />
-            <button id="help-button">
+            <button id="help-button" on:click={() => (show_keybinds = true)}>
                 <Icon src={FiHelpCircle} size="20px" />
             </button>
         </div>
@@ -194,6 +220,11 @@
             server={server}
         />
     {/if}
+    {#if show_keybinds}
+        <Keybinds
+        on:dismiss={() => (show_keybinds = false)}
+        />
+    {/if}
 </div>
 
 <style>
@@ -209,13 +240,23 @@
         border-top-right-radius: 0px;
     }
 
+    #channel-messages-separator {
+        height: 100%;
+        min-width: 13px;
+    }
+    
+    #messages-edge-separator {
+        height: 100%;
+        min-width: 18px;
+    }
+
     #server-messages {
         box-sizing: border-box;
         width: 100%;
         float: right;
         overflow: hidden;
         display: flex;
-        margin-left: 13px;
+        /* margin-left: 13px; */
         flex-direction: column-reverse;
     }
 
@@ -263,11 +304,13 @@
     }
 
     #server-area {
-        width: calc(100% - 218px);
-        max-width: calc(100% - 218px); /* 218px = width of server list + right margin*/
+        width: 100%;
+        /* max-width: calc(100% - 218px); */
+        /* 218px = width of server list + right margin*/
         float: right;
         overflow: hidden;
         margin-right: 18px;
+        /* margin-left: 18px; */
         margin-bottom: 25px;
         display: flex;
         flex-direction: row;
