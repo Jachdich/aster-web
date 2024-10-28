@@ -1,6 +1,9 @@
 # Changelog
 
 **2024.10.17: α-2.2.6**
+ - Fix bug in pfp change button, it works now
+
+**2024.10.17: α-2.2.6**
  - Add splash text to login screen.
  - Add version number.
  - Add changelog to README.

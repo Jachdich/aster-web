@@ -136,7 +136,7 @@
     {/if}
 
     <p id="version-number" on:click={show_changelog = true}>
-        ver. α-2.2.6
+        ver. α-2.2.7
     </p>
 </main>
 

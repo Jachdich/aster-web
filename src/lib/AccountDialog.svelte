@@ -8,17 +8,19 @@
     export let pfp: string;
     export let update_settings: (uname: string, password: string, pfp: string) => void;
 
-    let pfp_files: File[] = [];
+    let pfp_files: FileList | undefined = undefined;
     $: {
-        let item = pfp_files.at(0);
-        if (item !== undefined) {
-            resize_file(item, 32).then((blob): Promise<void> => // TODO why is this a promise?
-                blobToBase64(blob).then((base64): void => {
-                    pfp = base64.substr(base64.indexOf(",") + 1);
-                }),
-            );
-        } else {
-            // TODO show error??
+        if (pfp_files !== undefined) {
+            let item = pfp_files.item(0);
+            if (item !== null) {
+                resize_file(item, 32).then((blob): Promise<void> => // TODO why is this a promise?
+                    blobToBase64(blob).then((base64): void => {
+                        pfp = base64.substr(base64.indexOf(",") + 1);
+                    }),
+                );
+            } else {
+                // TODO show error??
+            }
         }
     }
 

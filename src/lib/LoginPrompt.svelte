@@ -17,7 +17,7 @@
         "The font used in Aster is Atkinson Hyperlegible.",
         "I ran out of splash text ideas.",
         "Click me!",
-        "There exists an unused vertical version of the full text Aster logo."
+        "There exists an unused vertical version of the full text Aster logo.",
     ];
     let previousString = ""
 
