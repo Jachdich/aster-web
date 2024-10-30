@@ -3,7 +3,6 @@
     // export let username;
     // export let date;
     // export let img_src;
-
     
     import type { MessageInfo } from "./network";
     import { style } from "./style";

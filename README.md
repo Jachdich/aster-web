@@ -1,7 +1,9 @@
-# Changelog
+**2024.10.30: α-2.2.8**
+ - Add changelog dialog.
+ - Adjust position of version number.
 
-**2024.10.17: α-2.2.6**
- - Fix bug in pfp change button, it works now
+**2024.10.28: α-2.2.7**
+ - Fix functionality in pfp change button.
 
 **2024.10.17: α-2.2.6**
  - Add splash text to login screen.
@@ -183,7 +185,7 @@
 **2022.01.21: α-0.1.2**
  - Dynamic messages.
 
-**2022.01.21: α-0.1.1`**
+**2022.01.21: α-0.1.1**
  - Message test.
  - Basic styling.
 

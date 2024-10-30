@@ -9,7 +9,7 @@
 </script>
 
 <div id="bg-darken">
-    <div id="add-server-dialog" class="popup centre-window">
+    <div id="keybinds-dialog" class="popup centre-window">
         <div class="input-container">
             <p style="font-size: 16px; margin-bottom: 10px; margin-left: auto; margin-right: auto; text-align: center">Keybinds</p>
         </div>
@@ -53,7 +53,7 @@
         background-color: rgba(0, 0, 0, 0.5);
     }
 
-    #add-server-dialog {
+    #keybinds-dialog {
         min-width: 280px;
         min-height: 150px;
         border-bottom: 3px solid var(--panel-3);

@@ -11,6 +11,7 @@
     } from "./lib/network";
     import { Server } from "./lib/server";
     import MainPage from "./lib/MainPage.svelte";
+    import Changelog from "./lib/Changelog.svelte";
 
     let show: "Login" | "Loading" | "Main" = "Login";
     let error_msg = "";
@@ -135,9 +136,13 @@
         </div>
     {/if}
 
-    <p id="version-number" on:click={show_changelog = true}>
-        ver. α-2.2.7
-    </p>
+    {#if show_changelog}
+        <Changelog on:dismiss={() => (show_changelog = false)}/>
+    {/if}
+
+    <a id="version-number" on:click={() => (show_changelog = true)}>
+        ver. α-2.2.8
+    </a>
 </main>
 
 <style>
@@ -153,7 +158,7 @@
         left: 0;
         margin: 0px;
         margin-left: 18px;
-        margin-bottom: 8px;
+        margin-bottom: 5px;
         font-size: 14px;
         color: var(--text-gray);
         cursor: pointer;

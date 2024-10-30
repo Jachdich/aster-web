@@ -20,6 +20,7 @@
     "vite": "^5.3.1"
   },
   "dependencies": {
+    "snarkdown": "^2.0.0",
     "svelte-icons-pack": "^3.1.3"
   }
 }
