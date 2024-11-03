@@ -4,9 +4,9 @@
     // export let date;
     // export let img_src;
     
-    import type { ServerMessageInfo } from "./network";
+    import type { MessageInfo } from "./network";
     import { style } from "./style";
-    export let message: ServerMessageInfo;
+    export let message: MessageInfo;
 
     type Style = "link" | "none";
     class StyledText {

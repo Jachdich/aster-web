@@ -1,7 +1,5 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import ServerMessage from "./ServerMessage.svelte";
-    import PanelChannelList from "./PanelChannelList.svelte";
     import type { Server } from "./server";
     import {
         Channel,
@@ -10,15 +8,18 @@
         Forbidden,
         MessageInfo,
     } from "./network";
-    import DialogServerProfile from "./DialogServerProfile.svelte";
     import { tick } from "svelte";
     import { Icon } from "svelte-icons-pack";
     import { FiHelpCircle } from "svelte-icons-pack/fi";
+
+    import DialogServerProfile from "./DialogServerProfile.svelte";
     import DialogKeybinds from "./DialogKeybinds.svelte";
+    import ServerMessage from "./ServerMessage.svelte";
+    import PanelChannelList from "./PanelChannelList.svelte";
 
     export let server: Server;
     let channels: Channel[];
-    // TODO this gets called twice when switching channels (should be called 0 times???) for some reason
+    // TODO: this gets called twice when switching channels (should be called 0 times???) for some reason
     // not critical but performance issue
     $: {
         server.conn.message_callback = on_message;
@@ -76,7 +77,7 @@
         }
     }
 
-    function on_message(message: ServerMessageInfo) {
+    function on_message(message: MessageInfo) {
         if (message.channel_uuid == server.selected_channel_uuid) {
             server.messages.push(message);
             server.messages = server.messages;
@@ -202,6 +203,14 @@
                 on:keypress={send_message}
                 bind:value={message_input}
             />
+            <!-- <div id="toggle-container">
+                <button id="sidebar-button" on:click={() => (show_sidebar = !show_sidebar)}>
+                    <Icon src={FiHelpCircle} size="20px" />
+                </button>
+                <button id="channel-list-button" on:click={() => (show_channels = !show_channels)}>
+                    <Icon src={FiHelpCircle} size="20px" />
+                </button>
+            </div> -->
             <button id="help-button" on:click={() => (show_keybinds = true)}>
                 <Icon src={FiHelpCircle} size="20px" />
             </button>
@@ -248,6 +257,12 @@
     #messages-edge-separator {
         height: 100%;
         min-width: 18px;
+    }
+
+    #toggle-container {
+        display: flex;
+        flex-direction: row;
+        margin-left: 8px;
     }
 
     #server-messages {

@@ -1,7 +1,9 @@
 <script lang="ts">
     // TODO: unify this and PanelChannelList? idk how though
+    // No don't cause now they're both independently toggleable - elecarno
     import type { Server } from "./server";
     import { createEventDispatcher } from 'svelte';
+    
     import ServerListButton from "./ServerListButton.svelte";
 
     // ugly hack: basically so we can store an extra `button` attribute on each channel. One day I'll fix this...

@@ -1,6 +1,4 @@
 <script lang="ts">
-    import PageLogin from "./lib/PageLogin.svelte";
-    import Loading from "./lib/Loading.svelte";
     import { Style } from "./lib/style";
     import {
         Connection,
@@ -10,6 +8,9 @@
         Status,
     } from "./lib/network";
     import { Server } from "./lib/server";
+    
+    import PageLogin from "./lib/PageLogin.svelte";
+    import PageLoading from "./lib/PageLoading.svelte";
     import PageMain from "./lib/PageMain.svelte";
     import DialogChangelog from "./lib/DialogChangelog.svelte";
 
@@ -118,7 +119,7 @@
     {#if show == "Login"}
         <PageLogin authenticate={login} />
     {:else if show == "Loading"}
-        <Loading />
+        <PageLoading />
     {:else if show == "Main" && sync_server !== undefined}
         <PageMain {sync_server} {servers} {show_error} />
     {:else if show == "Main" && sync_server === undefined}

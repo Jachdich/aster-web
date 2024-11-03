@@ -7,14 +7,15 @@
     } from "./network";
     import { onMount } from "svelte";
     import { Server } from "./server";
-    import PanelServerView from "./PanelServerView.svelte";
-    import PanelServerList from "./PanelServerList.svelte";
-    import DialogAddServer from "./DialogAddServer.svelte";
     import { Icon } from "svelte-icons-pack";
     import { FiPlus, FiUser } from "svelte-icons-pack/fi";
-    import DialogAster from "./DialogTheme.svelte";
-    import DialogAccount from "./DialogAccount.svelte";
     import {aster_logo_small} from "./logos";
+
+    import DialogAster from "./DialogTheme.svelte";
+    import DialogAddServer from "./DialogAddServer.svelte";
+    import DialogAccount from "./DialogAccount.svelte";
+    import PanelServerView from "./PanelServerView.svelte";
+    import PanelServerList from "./PanelServerList.svelte";
 
     let show_add_server = false;
     let show_aster_dialog = false;
