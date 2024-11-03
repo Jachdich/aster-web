@@ -7,14 +7,14 @@
     } from "./network";
     import { onMount } from "svelte";
     import { Server } from "./server";
-    import ServerView from "./ServerView.svelte";
-    import ServerList from "./ServerList.svelte";
-    import AddServerDialog from "./AddServerDialog.svelte";
+    import PanelServerView from "./PanelServerView.svelte";
+    import PanelServerList from "./PanelServerList.svelte";
+    import DialogAddServer from "./DialogAddServer.svelte";
     import { Icon } from "svelte-icons-pack";
     import { FiPlus, FiUser } from "svelte-icons-pack/fi";
-    import AsterDialog from "./AsterDialog.svelte";
-    import AccountDialog from "./AccountDialog.svelte";
-    import {aster_logo_small} from "../lib/logos";
+    import DialogAster from "./DialogTheme.svelte";
+    import DialogAccount from "./DialogAccount.svelte";
+    import {aster_logo_small} from "./logos";
 
     let show_add_server = false;
     let show_aster_dialog = false;
@@ -118,27 +118,27 @@
                     <Icon src={FiUser} size="25px" />
                 </button>
             </div>
-            <ServerList {servers} on:switch_server={switch_server} />
+            <PanelServerList {servers} on:switch_server={switch_server} />
         </div>
     {:else}
         <span id="channel-edge-separator"></span>
     {/if}
     {#if selected_server !== undefined}
-        <ServerView server={selected_server} sidebar_shown={show_sidebar}/>
+        <PanelServerView server={selected_server} sidebar_shown={show_sidebar}/>
     {/if}
 </div>
 
 {#if show_add_server}
-    <AddServerDialog
+    <DialogAddServer
         on:dismiss={() => (show_add_server = false)}
         on:add_server={add_server}
     />
 {/if}
 {#if show_aster_dialog}
-    <AsterDialog on:dismiss={() => (show_aster_dialog = false)} />
+    <DialogAster on:dismiss={() => (show_aster_dialog = false)} />
 {/if}
 {#if show_account_dialog}
-    <AccountDialog
+    <DialogAccount
         username={sync_server.username}
         pfp={sync_server.known_peers.get(sync_server.my_uuid)?.pfp}
         password={sync_server.password}

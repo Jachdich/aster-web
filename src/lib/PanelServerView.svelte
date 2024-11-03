@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import Message from "./Message.svelte";
-    import ChannelList from "./ChannelList.svelte";
+    import ServerMessage from "./ServerMessage.svelte";
+    import PanelChannelList from "./PanelChannelList.svelte";
     import type { Server } from "./server";
     import {
         Channel,
@@ -10,11 +10,11 @@
         Forbidden,
         MessageInfo,
     } from "./network";
-    import ProfileDialog from "./ProfileDialog.svelte";
+    import DialogServerProfile from "./DialogServerProfile.svelte";
     import { tick } from "svelte";
     import { Icon } from "svelte-icons-pack";
     import { FiHelpCircle } from "svelte-icons-pack/fi";
-    import Keybinds from "./Keybinds.svelte";
+    import DialogKeybinds from "./DialogKeybinds.svelte";
 
     export let server: Server;
     let channels: Channel[];
@@ -76,7 +76,7 @@
         }
     }
 
-    function on_message(message: MessageInfo) {
+    function on_message(message: ServerMessageInfo) {
         if (message.channel_uuid == server.selected_channel_uuid) {
             server.messages.push(message);
             server.messages = server.messages;
@@ -180,7 +180,7 @@
                 <button id="server-profile-button" on:click={() => (show_profile_dialog = true)}>Server Profile</button>
                 <div class="separator" style="margin-top: 10px"/>
             </div>
-            <ChannelList
+            <PanelChannelList
                 {channels}
                 selected_channel={selected_channel}
                 on:switch_channel={switch_channel}
@@ -209,19 +209,19 @@
         <div id="message-area" on:scroll={message_scroll} bind:this={message_area}>
             {#each server.messages as message (message.uuid)}
                 <div>
-                    <Message {message} />
+                    <ServerMessage {message} />
                 </div>
             {/each}
         </div>
     </div>
     {#if show_profile_dialog}
-        <ProfileDialog
+        <DialogServerProfile
             on:dismiss={() => (show_profile_dialog = false)}
             server={server}
         />
     {/if}
     {#if show_keybinds}
-        <Keybinds
+        <DialogKeybinds
         on:dismiss={() => (show_keybinds = false)}
         />
     {/if}

@@ -2,7 +2,7 @@
     import "../popup.css";
     import { createEventDispatcher } from "svelte";
     import ColorPicker from 'svelte-awesome-color-picker';
-    import { aster_logo_wide } from "../lib/logos";
+    import { aster_logo_wide } from "./logos";
     const dispatch = createEventDispatcher();
 
     let hex = "#000000"

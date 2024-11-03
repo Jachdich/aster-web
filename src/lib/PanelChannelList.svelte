@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Channel } from "./network";
     import { createEventDispatcher } from "svelte";
-    import ChannelButton from "./ChannelButton.svelte";
+    import ChannelListButton from "./ChannelListButton.svelte";
 
     // ugly hack: basically so we can store an extra `button` attribute on each channel. One day I'll fix this...
     export let channels: Array<any>;
@@ -23,7 +23,7 @@
 
 <ul id="channel-list">
     {#each channels as channel (channel)}
-        <ChannelButton
+        <ChannelListButton
             {channel}
             init_selected={channel.uuid === selected_channel?.uuid}
             on:click={(event) => switch_channel(event, channel)}

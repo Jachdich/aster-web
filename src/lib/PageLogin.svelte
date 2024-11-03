@@ -1,6 +1,6 @@
 <script lang="ts">
     import "../popup.css";
-    import { aster_logo_wide } from "../lib/logos";
+    import { aster_logo_wide } from "./logos";
 
     let sync_ip: string = "cospox.com";
     let sync_port: string = "2345";

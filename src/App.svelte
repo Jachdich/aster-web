@@ -1,5 +1,5 @@
 <script lang="ts">
-    import LoginPrompt from "./lib/LoginPrompt.svelte";
+    import PageLogin from "./lib/PageLogin.svelte";
     import Loading from "./lib/Loading.svelte";
     import { Style } from "./lib/style";
     import {
@@ -10,8 +10,8 @@
         Status,
     } from "./lib/network";
     import { Server } from "./lib/server";
-    import MainPage from "./lib/MainPage.svelte";
-    import Changelog from "./lib/Changelog.svelte";
+    import PageMain from "./lib/PageMain.svelte";
+    import DialogChangelog from "./lib/DialogChangelog.svelte";
 
     let show: "Login" | "Loading" | "Main" = "Login";
     let error_msg = "";
@@ -116,11 +116,11 @@
 
 <main>
     {#if show == "Login"}
-        <LoginPrompt authenticate={login} />
+        <PageLogin authenticate={login} />
     {:else if show == "Loading"}
         <Loading />
     {:else if show == "Main" && sync_server !== undefined}
-        <MainPage {sync_server} {servers} {show_error} />
+        <PageMain {sync_server} {servers} {show_error} />
     {:else if show == "Main" && sync_server === undefined}
         <div>
             Major catestrophic error !!!! the sync server is undefined yet the
@@ -137,11 +137,11 @@
     {/if}
 
     {#if show_changelog}
-        <Changelog on:dismiss={() => (show_changelog = false)}/>
+        <DialogChangelog on:dismiss={() => (show_changelog = false)}/>
     {/if}
 
     <a id="version-number" on:click={() => (show_changelog = true)}>
-        ver. α-2.2.8
+        ver. α-2.2.9
     </a>
 </main>
 

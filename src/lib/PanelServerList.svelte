@@ -1,8 +1,8 @@
 <script lang="ts">
-    // TODO: unify this and ChannelList? idk how though
+    // TODO: unify this and PanelChannelList? idk how though
     import type { Server } from "./server";
     import { createEventDispatcher } from 'svelte';
-    import ServerButton from "./ServerButton.svelte";
+    import ServerListButton from "./ServerListButton.svelte";
 
     // ugly hack: basically so we can store an extra `button` attribute on each channel. One day I'll fix this...
     export let servers: Array<any>;
@@ -24,7 +24,7 @@
 
 <div id="server-list">
     {#each servers as server (server)}
-        <ServerButton server={server} on:click={(event) => switch_server(event, server)} bind:this={server.button} />
+        <ServerListButton server={server} on:click={(event) => switch_server(event, server)} bind:this={server.button} />
     {/each}
 </div>
 

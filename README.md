@@ -1,3 +1,6 @@
+**2024.11.03: α-2.2.9**
+ - //
+
 **2024.10.30: α-2.2.8**
  - Add changelog dialog.
  - Adjust position of version number.
