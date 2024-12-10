@@ -155,13 +155,31 @@
         width: 200px;
     }
 
-    #top-buttons {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        margin-top: 20px;
-        margin-bottom: 20px;
+    @media (width >= 1024px) {
+        #top-buttons {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+    }
+
+    @media (width < 1024px) {
+        #top-buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        #add-server,
+        #aster-button {
+            margin-bottom: 5px;
+        }
     }
 
     #channel-edge-separator {
