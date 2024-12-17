@@ -149,10 +149,20 @@
 {/if}
 
 <style>
-    #sidebar {
-        height: 100%;
-        min-width: 200px;
-        width: 200px;
+    @media (width >= 1024px) {
+        #sidebar {
+            height: 100%;
+            min-width: 200px;
+            width: 200px;
+        }
+    }
+
+    @media (width < 1024px) {
+        #sidebar {
+            height: 100%;
+            min-width: 70px;
+            width: 70px;
+        }
     }
 
     @media (width >= 1024px) {
@@ -163,6 +173,12 @@
             justify-content: center;
             margin-top: 20px;
             margin-bottom: 20px;
+        }
+
+        #add-server,
+        #aster-button,
+        #account {
+            margin-left: 6px;
         }
     }
 
@@ -179,6 +195,11 @@
         #add-server,
         #aster-button {
             margin-bottom: 5px;
+            margin-left: 0px;
+        }
+        
+        #account {
+            margin-left: 0px;
         }
     }
 
@@ -195,7 +216,6 @@
         border-style: none;
         height: 46px;
         width: 46px;
-        margin-left: 6px;
         margin-top: 0;
         display: flex;
         flex-direction: row;
