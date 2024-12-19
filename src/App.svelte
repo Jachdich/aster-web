@@ -19,7 +19,7 @@
     let sync_server: Connection | undefined = undefined;
     let servers: Server[] = [];
     let show_changelog = false;
-
+    
     function login(
         uname: string,
         password: string,

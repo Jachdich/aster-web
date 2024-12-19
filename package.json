@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "snarkdown": "^2.0.0",
-    "svelte-icons-pack": "^3.1.3"
+    "svelte-icons-pack": "^3.1.3",
+    "svelte-media-queries": "^1.6.2"
   }
 }

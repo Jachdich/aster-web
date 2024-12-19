@@ -17,6 +17,8 @@
     import ServerMessage from "./ServerMessage.svelte";
     import PanelChannelList from "./PanelChannelList.svelte";
 
+    export let show_messages = true;
+
     export let server: Server;
     let channels: Channel[];
     // TODO: this gets called twice when switching channels (should be called 0 times???) for some reason
@@ -194,35 +196,34 @@
         {/if}
     {/if}
 
-    <div id="server-messages" class="container">
-        <div id="message-input-container">
-            <input
-                autofocus={true}
-                id="message-input"
-                placeholder=" Send a message"
-                on:keypress={send_message}
-                bind:value={message_input}
-            />
-            <!-- <div id="toggle-container">
-                <button id="sidebar-button" on:click={() => (show_sidebar = !show_sidebar)}>
-                    <Icon src={FiHelpCircle} size="20px" />
-                </button>
-                <button id="channel-list-button" on:click={() => (show_channels = !show_channels)}>
-                    <Icon src={FiHelpCircle} size="20px" />
-                </button>
-            </div> -->
-            <button id="help-button" on:click={() => (show_keybinds = true)}>
-                <Icon src={FiHelpCircle} size="20px" />
-            </button>
-        </div>
-        <div id="message-area" on:scroll={message_scroll} bind:this={message_area}>
-            {#each server.messages as message (message.uuid)}
-                <div>
-                    <ServerMessage {message} />
+    {#if show_messages}
+        <div id="server-messages" class="container">
+            <div id="message-input-container">
+                <input
+                    autofocus={true}
+                    id="message-input"
+                    placeholder=" Send a message"
+                    on:keypress={send_message}
+                    bind:value={message_input}
+                />
+                <div id="toggle-container">
+                    <button id="channel-list-button" on:click={() => (show_channels = !show_channels)}>
+                        <Icon src={FiHelpCircle} size="20px" />
+                    </button>
                 </div>
-            {/each}
+                <button id="help-button" on:click={() => (show_keybinds = true)}>
+                    <Icon src={FiHelpCircle} size="20px" />
+                </button>
+            </div>
+            <div id="message-area" on:scroll={message_scroll} bind:this={message_area}>
+                {#each server.messages as message (message.uuid)}
+                    <div>
+                        <ServerMessage {message} />
+                    </div>
+                {/each}
+            </div>
         </div>
-    </div>
+    {/if}
     {#if show_profile_dialog}
         <DialogServerProfile
             on:dismiss={() => (show_profile_dialog = false)}
