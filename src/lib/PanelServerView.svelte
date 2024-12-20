@@ -17,6 +17,12 @@
     import ServerMessage from "./ServerMessage.svelte";
     import PanelChannelList from "./PanelChannelList.svelte";
 
+    // need to figure out how to make this code apply throughout the app so it can just be referenced instead of duplicated
+    let innerWidth = 0
+    let innerHeight = 0
+    
+    $: is_mobile_width = innerWidth <= 1024 // using this for now to align with the media query css styles
+
     export let server: Server;
     let channels: Channel[];
     // TODO: this gets called twice when switching channels (should be called 0 times???) for some reason
@@ -31,7 +37,9 @@
 
     let show_profile_dialog = false;
     let show_channels = true;
-    export let sidebar_shown;
+    let show_messages = false;
+    export let show_messages_call;
+    export let show_sidebar;
     let show_keybinds = false;
     let no_scroll = false;
     let message_area: HTMLDivElement;
@@ -55,6 +63,11 @@
                 tick().then(() => {
                     message_area.scrollTop = message_area.scrollHeight - message_area.offsetHeight;
                 });
+
+                show_messages = true
+                if (is_mobile_width) {
+                    show_channels = false
+                }
             }
         });
         server.selected_channel_uuid = uuid;
@@ -172,6 +185,8 @@
     });
 </script>
 
+<svelte:window bind:innerWidth bind:innerHeight />
+
 <div id="server-area">
     {#if show_channels}
         <div id="server-channels" class="container">
@@ -189,40 +204,46 @@
         </div>
         <span id="channel-messages-separator"></span>
     {:else}
-        {#if sidebar_shown && show_channels}
+        {#if show_sidebar && show_channels}
             <span id="messages-edge-separator"></span>
         {/if}
     {/if}
 
-    <div id="server-messages" class="container">
-        <div id="message-input-container">
-            <input
-                autofocus={true}
-                id="message-input"
-                placeholder=" Send a message"
-                on:keypress={send_message}
-                bind:value={message_input}
-            />
-            <div id="toggle-container">
-                <button id="sidebar-button" on:click={() => (show_sidebar = !show_sidebar)}>
-                    <Icon src={FiHelpCircle} size="20px" />
-                </button>
-                <button id="channel-list-button" on:click={() => (show_channels = !show_channels)}>
+    {#if show_messages_call || show_messages}
+        <div id="server-messages" class="container">
+            <div id="message-input-container">
+                {#if is_mobile_width}
+                <div id="toggle-container">
+                    <button id="channel-list-button" on:click={() => {
+                            show_channels = !show_channels; 
+                            if (is_mobile_width) {
+                                show_messages = !show_messages;
+                            }
+                        }}>
+                        <Icon src={FiHelpCircle} size="20px" />
+                    </button>
+                </div>
+                {/if}
+                <input
+                    autofocus={true}
+                    id="message-input"
+                    placeholder=" Send a message"
+                    on:keypress={send_message}
+                    bind:value={message_input}
+                />
+                <button id="help-button" on:click={() => (show_keybinds = true)}>
                     <Icon src={FiHelpCircle} size="20px" />
                 </button>
             </div>
-            <button id="help-button" on:click={() => (show_keybinds = true)}>
-                <Icon src={FiHelpCircle} size="20px" />
-            </button>
+            <div id="message-area" on:scroll={message_scroll} bind:this={message_area}>
+                {#each server.messages as message (message.uuid)}
+                    <div>
+                        <ServerMessage {message} />
+                    </div>
+                {/each}
+            </div>
         </div>
-        <div id="message-area" on:scroll={message_scroll} bind:this={message_area}>
-            {#each server.messages as message (message.uuid)}
-                <div>
-                    <ServerMessage {message} />
-                </div>
-            {/each}
-        </div>
-    </div>
+    {/if}
     {#if show_profile_dialog}
         <DialogServerProfile
             on:dismiss={() => (show_profile_dialog = false)}

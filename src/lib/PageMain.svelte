@@ -17,10 +17,17 @@
     import PanelServerView from "./PanelServerView.svelte";
     import PanelServerList from "./PanelServerList.svelte";
 
+    let innerWidth = 0
+    let innerHeight = 0
+    
+    // $: is_portrait = innerWidth*1.33 <= innerHeight // can be used to detect portrait
+    $: is_mobile_width = innerWidth <= 1024 // using this for now to align with the media query css styles
+
     let show_add_server = false;
     let show_aster_dialog = false;
     let show_account_dialog = false;
     export let show_sidebar = true;
+    export let show_messages = true;
     export let servers: Server[];
     let selected_server: Server | undefined = undefined;
     export let sync_server: Connection;
@@ -28,6 +35,10 @@
 
     function switch_server(server: CustomEvent<Server>) {
         selected_server = server.detail;
+        if (is_mobile_width) {
+            show_sidebar = false
+            show_messages = false
+        }
     }
 
     // TODO: get rid of the any in the signature
@@ -95,7 +106,13 @@
             window.removeEventListener('keydown', handleKeydown);
         };
     });
+
+    // export function check_mobile_width() {
+    //     if (is_mobile_width) { return true } else { return false }
+    // }
 </script>
+
+<svelte:window bind:innerWidth bind:innerHeight />
 
 <div id="page">
     {#if show_sidebar}
@@ -119,13 +136,13 @@
                     <Icon src={FiUser} size="25px" />
                 </button>
             </div>
-            <PanelServerList {servers} on:switch_server={switch_server} />
+            <PanelServerList {servers} on:switch_server={switch_server}/>
         </div>
     {:else}
         <span id="channel-edge-separator"></span>
     {/if}
     {#if selected_server !== undefined}
-        <PanelServerView server={selected_server} sidebar_shown={show_sidebar}/>
+        <PanelServerView server={selected_server} sidebar_shown={show_sidebar} show_messages={show_messages}/>
     {/if}
 </div>
 
@@ -149,19 +166,58 @@
 {/if}
 
 <style>
-    #sidebar {
-        height: 100%;
-        min-width: 200px;
-        width: 200px;
+    @media (width >= 1024px) {
+        #sidebar {
+            height: 100%;
+            min-width: 200px;
+            width: 200px;
+        }
     }
 
-    #top-buttons {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        margin-top: 20px;
-        margin-bottom: 20px;
+    @media (width < 1024px) {
+        #sidebar {
+            height: 100%;
+            min-width: 70px;
+            width: 70px;
+        }
+    }
+
+    @media (width >= 1024px) {
+        #top-buttons {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        #add-server,
+        #aster-button,
+        #account {
+            margin-left: 6px;
+        }
+    }
+
+    @media (width < 1024px) {
+        #top-buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        #add-server,
+        #aster-button {
+            margin-bottom: 5px;
+            margin-left: 0px;
+        }
+        
+        #account {
+            margin-left: 0px;
+        }
     }
 
     #channel-edge-separator {
@@ -177,7 +233,6 @@
         border-style: none;
         height: 46px;
         width: 46px;
-        margin-left: 6px;
         margin-top: 0;
         display: flex;
         flex-direction: row;
