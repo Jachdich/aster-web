@@ -203,14 +203,14 @@
                 on:keypress={send_message}
                 bind:value={message_input}
             />
-            <!-- <div id="toggle-container">
+            <div id="toggle-container">
                 <button id="sidebar-button" on:click={() => (show_sidebar = !show_sidebar)}>
                     <Icon src={FiHelpCircle} size="20px" />
                 </button>
                 <button id="channel-list-button" on:click={() => (show_channels = !show_channels)}>
                     <Icon src={FiHelpCircle} size="20px" />
                 </button>
-            </div> -->
+            </div>
             <button id="help-button" on:click={() => (show_keybinds = true)}>
                 <Icon src={FiHelpCircle} size="20px" />
             </button>
