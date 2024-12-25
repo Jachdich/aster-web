@@ -185,7 +185,7 @@
     });
 </script>
 
-<svelte:window bind:innerWidth bind:innerHeight />
+<svelte:window bind:innerWidth bind:innerHeight/>
 
 <div id="server-area">
     {#if show_channels}

@@ -36,7 +36,7 @@
     function switch_server(server: CustomEvent<Server>) {
         selected_server = server.detail;
         if (is_mobile_width) {
-            show_sidebar = false
+            // show_sidebar = false
             show_messages = false
         }
     }

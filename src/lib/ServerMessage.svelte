@@ -4,6 +4,13 @@
     // export let date;
     // export let img_src;
     
+    // this really shouldn't exist on every single message but help me god its 23:12 and I am running
+    // out of time so deal with it
+    let innerWidth = 0
+    let innerHeight = 0
+    
+    $: is_mobile_width = innerWidth <= 1024 // using this for now to align with the media query css styles
+
     import type { MessageInfo } from "./network";
     import { style } from "./style";
     export let message: MessageInfo;
@@ -64,13 +71,20 @@
     }
 </script>
 
+<svelte:window bind:innerWidth bind:innerHeight />
+
 <div
     class="message"
     style="--spacing: {spacing}px; --uname-top: {uname_top}px; --date-top: {date_top}px; --body-top: {body_top}px; --uname-width: {uname_width}px;"
 >
     <img src="data:image/png;base64,{message.author.pfp}" alt="{message.author.display_name}'s profile picture" class="message-pfp" />
-    <div class="message-username">{message.author.display_name}</div>
+    {#if !is_mobile_width}
+        <div class="message-username">{message.author.display_name}</div>
+    {/if}
     <div class="message-body">
+        {#if is_mobile_width}
+            <p class="message-username-mobile">{message.author.display_name}</p>
+        {/if}
         {#each content_parts as part}
             {#if part.style === "link"}
                 <a href="{part.text}">{part.text}</a>
@@ -83,8 +97,13 @@
             <img class="embed-image" src={image_url} style="display: none;" on:load={show_image} on:error={(_) => image_urls = image_urls.filter((url) => url != image_url)}>
         {/each}
         </div>
+        {#if is_mobile_width}
+            <div class="message-date-mobile">{message.date.toLocaleString()}</div>
+        {/if}
     </div>
-    <div class="message-date">{message.date.toLocaleString()}</div>
+    {#if !is_mobile_width}
+        <div class="message-date">{message.date.toLocaleString()}</div>
+    {/if}
 </div>
 
 <style>
@@ -123,6 +142,15 @@
         margin-top: var(--uname-top);
         min-width: var(--uname-width);
     }
+    
+    .message-username-mobile {
+        color: var(--text-gray);
+        margin: 0;
+        margin-left: 10px;
+        /* margin-right: 6px; */
+        font-size: 15px;
+        margin-top: var(--uname-top);
+    }
 
     .message-date {
         margin: 0;
@@ -133,6 +161,15 @@
         margin-right: 15px;
         min-width: 130px;
         text-align: right;
+        font-family: "Red Hat Mono", monospace;
+    }
+
+    .message-date-mobile {
+        color: var(--text-gray);
+        margin: 0;
+        font-size: 10px;
+        margin-top: var(--date-top);
+        /* margin-left: 10px; */
         font-family: "Red Hat Mono", monospace;
     }
 
