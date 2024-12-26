@@ -18,6 +18,8 @@
         "I ran out of splash text ideas.",
         "Click me!",
         "There exists an unused vertical version of the full text Aster logo.",
+        "Aster is a thought experiment.",
+        "Aster cannot operate within the fourth dinension.",
     ];
     let previousString = ""
 
