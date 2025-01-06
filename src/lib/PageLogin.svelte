@@ -14,12 +14,15 @@
         "\'Aster\' was originally short for Asteroid, but we realised the flower is much prettier.",
         "There are over 600 species of aster!",
         "Elecarno says hi.",
+        "KingJellyfish says hi.",
         "The font used in Aster is Atkinson Hyperlegible.",
         "I ran out of splash text ideas.",
         "Click me!",
         "There exists an unused vertical version of the full text Aster logo.",
         "Aster is a thought experiment.",
         "Aster cannot operate within the fourth dinension.",
+        "Aster time is UTC-24.",
+        "It's the firts of the month!",
     ];
     let previousString = ""
 
