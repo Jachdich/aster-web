@@ -22,9 +22,13 @@
         "Aster is a thought experiment.",
         "Aster cannot operate within the fourth dinension.",
         "Aster time is UTC-24.",
-        "It's the firts of the month!",
     ];
-    let previousString = ""
+
+    if (new Date().getDate() !== 1) {
+        splash_strings.push("It's the firts of the month!");
+    }
+    
+    let previous_string = ""
 
     function validate_port() {
         let a = document.getElementById("login-sync-port-input") as HTMLInputElement;
@@ -43,15 +47,15 @@
         authenticate(uname, password, sync_ip, parseInt(sync_port), "Register")
     }
 
-    function getRandomString() {
-        let newString;
+    function get_random_string() {
+        let new_string;
         do {
-        newString = splash_strings[Math.floor(Math.random() * splash_strings.length)];
-        } while (newString === previousString); // Keep picking if it's the same as before
-        previousString = newString; // Update the previous string
-        return newString;
+            new_string = splash_strings[Math.floor(Math.random() * splash_strings.length)];
+        } while (new_string === previous_string); // Keep picking if it's the same as before
+        previous_string = new_string; // Update the previous string
+        return new_string;
     }
-    let random_splash = getRandomString();
+    let random_splash = get_random_string();
 </script>
 
 <div id="login-window">
@@ -83,7 +87,7 @@
     </div>
 
     <div id="splash-text">
-        <p on:click={() => random_splash = getRandomString()} style="cursor: pointer;">
+        <p on:click={() => random_splash = get_random_string()} style="cursor: pointer;">
             {random_splash}
         </p>
     </div>
