@@ -20,7 +20,7 @@
         "Click me!",
         "There exists an unused vertical version of the full text Aster logo.",
         "Aster is a thought experiment.",
-        "Aster cannot operate within the fourth dinension.",
+        "Aster cannot operate within the fourth dimension.",
         "Aster time is UTC-24.",
     ];
 
