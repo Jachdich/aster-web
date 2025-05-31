@@ -142,7 +142,7 @@
     {/if}
 
     <a id="version-number" on:click={() => (show_changelog = true)}>
-        ver. α-2.2.9
+        ver. α-2.2.10
     </a>
 </main>
 

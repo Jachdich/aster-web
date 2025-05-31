@@ -63,9 +63,9 @@
   font-style: italic;
 }
 
-* {
-  font-family: "Atkinson Hyperlegible", sans-serif;;
-}
+/* * {
+  font-family: "Atkinson Hyperlegible", sans-serif;
+} */
 
 /* styles */
 input, textarea, button {
@@ -87,11 +87,20 @@ body, html {
     height: 100%;
     margin: 0;
     padding: 0;
+    font-family: "Atkinson Hyperlegible", sans-serif;
 }
 
 body {
     background-color: var(--panel-0);
     color: var(--white-1);
+}
+
+code {
+  font-family: "Red Hat Mono", monospace;
+  font-size: 14px;
+  background-color: var(--panel-1);
+  padding: 5px;
+  border-radius: 5px;
 }
 
 input:focus {

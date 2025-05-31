@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { parse } from "svelte/compiler";
+
     // export let content;
     // export let username;
     // export let date;
@@ -13,6 +15,7 @@
 
     import type { MessageInfo } from "./network";
     import { style } from "./style";
+    import snarkdown from "snarkdown";
     export let message: MessageInfo;
 
     type Style = "link" | "none";
@@ -87,9 +90,9 @@
         {/if}
         {#each content_parts as part}
             {#if part.style === "link"}
-                <a href="{part.text}">{part.text}</a>
+                <br><a href="{part.text}">embed</a>
             {:else}
-                {part.text}
+                {@html snarkdown(part.text)}
             {/if}
         {/each}
         <div class="image-container">
@@ -190,5 +193,4 @@
         margin-top: var(--body-top);
         white-space: pre-line;
     }
-
 </style>

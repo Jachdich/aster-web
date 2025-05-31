@@ -22,6 +22,9 @@
         "Aster is a thought experiment.",
         "Aster cannot operate within the fourth dimension.",
         "Aster time is UTC-24.",
+        "The Latex-Typst wars will rage for all eternity.",
+        "Markdown is love Markdown is life.",
+        "We have no idea what to do for the mobile app."
     ];
 
     if (new Date().getDate() !== 1) {
