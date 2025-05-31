@@ -24,7 +24,8 @@
         "Aster time is UTC-24.",
         "The Latex-Typst wars will rage for all eternity.",
         "Markdown is love Markdown is life.",
-        "We have no idea what to do for the mobile app."
+        "We have no idea what to do for the mobile app.",
+        "KingJellyfish will write a new markdown parser for Aster in approximately 7 years."
     ];
 
     if (new Date().getDate() !== 1) {
