@@ -92,7 +92,9 @@
             {#if part.style === "link"}
                 <br><a href="{part.text}">embed</a>
             {:else}
-                {@html snarkdown(part.text)}
+                <!-- {part.text} -->
+                <!-- TODO: THIS SHIT NEEDS TO BE SANITSED (STOP HTML BEING INPUTTED DIRECTLY INTO THE CHAT) -->
+                {@html snarkdown(part.text)} 
             {/if}
         {/each}
         <div class="image-container">
@@ -192,5 +194,6 @@
         margin-left: 2px;
         margin-top: var(--body-top);
         white-space: pre-line;
+        max-width: 100%;
     }
 </style>

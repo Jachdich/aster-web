@@ -77,7 +77,7 @@
         if (server.selected_channel_uuid === null) {
             return;
         }
-        if (event.key === "Enter") {
+        if (event.key === "Enter" && !event.shiftKey) {
             if (message_input.trim().length == 0) {
                 return;
             }
@@ -224,10 +224,14 @@
                     </button>
                 </div>
                 {/if}
-                <input
+                <!-- auto resize solution #1: oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"' -->
+                <textarea
                     autofocus={true}
                     id="message-input"
                     placeholder=" Send a message"
+                    maxlength="5000"
+                    oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'
+                    rows="1"
                     on:keypress={send_message}
                     bind:value={message_input}
                 />
@@ -300,7 +304,7 @@
         display: flex;
         flex-direction: row;
         width: calc(100% - 32px);
-        min-height: 36px;
+        /* min-height: 48px; */
         margin: 16px;
         margin-bottom: 20px;
     }
@@ -311,11 +315,15 @@
         margin: 16px;
         margin-bottom: 20px; */
         background: var(--panel-1);
-        border-radius: var(--radius-1);
+        border-radius: var(--radius-2);
         border-style: none;
-        text-indent: 12px;
+        /* text-indent: 12px; */
         color: #d3d3d3;
         font-size: 15px;
+        padding-left: 24px;
+        padding-right: 24px;
+        padding-top: 12px;
+        max-height: 128px;
     }
 
     #help-button {

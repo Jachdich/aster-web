@@ -3,7 +3,7 @@ bugs:
 	- meta changes don't propagate to the UI
 features:
 	- handle offline servers better
-	- allow newlines on the input
+	- allow newlines on the input (basic implementation done -elecarno)
 	- markdown
 	- save selected channels
 	- commands/shortcuts for everything
