@@ -61,7 +61,7 @@
                 }
                 server.messages = server.messages;
                 tick().then(() => {
-                    message_area.scrollTop = message_area.scrollHeight - message_area.offsetHeight;
+                    message_area.scrollTop = message_area.scrollHeight;
                 });
 
                 show_messages = true
@@ -78,6 +78,7 @@
             return;
         }
         if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault();
             if (message_input.trim().length == 0) {
                 return;
             }
@@ -92,12 +93,15 @@
 
     function on_message(message: MessageInfo) {
         if (message.channel_uuid == server.selected_channel_uuid) {
+            const is_at_bottom =
+                Math.abs(message_area.scrollHeight - message_area.offsetHeight - message_area.scrollTop) < 5;
+
             server.messages.push(message);
             server.messages = server.messages;
-            if (!no_scroll) {
+
+            if (is_at_bottom && !no_scroll) {
                 tick().then(() => {
-                    // console.log("scroll or smth")
-                    message_area.scrollTop = message_area.scrollHeight - message_area.offsetHeight;
+                    message_area.scrollTop = message_area.scrollHeight;
                 });
             }
         }
@@ -128,12 +132,12 @@
     async function message_scroll(event: UIEvent) {
         let div = event.target as HTMLDivElement;
 
-        let scrolled_to_bottom = div.scrollHeight - div.offsetHeight == div.scrollTop;
+        let scrolled_to_bottom = div.scrollTop === 0;
         if (scrolled_to_bottom) {
             no_scroll = false;
         }
 
-        let scrolled_to_top = div.scrollTop == 0;
+        let scrolled_to_top = div.scrollTop + div.scrollHeight - div.clientHeight === 0
         if (scrolled_to_top && selected_channel !== undefined && server.messages.length > 0) {
             const before_id = server.messages[0].uuid;
             // console.log(before_id, server.requesting_history_from);
@@ -179,12 +183,14 @@
     }
 
     let message_textarea = document.getElementById("message-input")
+    let message_textarea_default_height = 32 // in pixels
     function autoResizeInput() {
-        if (!message_input) return;
-        message_textarea.style.height = 'auto';
-        const newHeight = Math.min(message_textarea.scrollHeight, 128);
-        message_textarea.style.height = `${newHeight}px`;
+        if (!message_textarea) return;
+
+        message_textarea.style.height = "auto";
+        message_textarea.style.height = Math.max(message_textarea.scrollHeight, message_textarea_default_height) + "px";
     }
+
 
     onMount(() => {
         window.addEventListener('keydown', handleKeydown);
@@ -221,7 +227,12 @@
     {#if show_messages_call || show_messages}
         <div id="server-messages" class="container">
             <div id="message-area" on:scroll={message_scroll} bind:this={message_area}>
-                {#each server.messages as message (message.uuid)}
+                <!-- {#each server.messages as message (message.uuid)}
+                    <div>
+                        <ServerMessage {message} />
+                    </div>
+                {/each} -->
+                {#each [...server.messages].reverse() as message (message.uuid)}
                     <div>
                         <ServerMessage {message} />
                     </div>
@@ -251,6 +262,7 @@
                     on:input={autoResizeInput}
                     on:keypress={send_message}
                     bind:value={message_input}
+                    style="height: {message_textarea_default_height}px;"
                 />
                 <!-- <button id="help-button" on:click={() => (show_keybinds = true)}>
                     <Icon src={FiHelpCircle} size="20px" />
@@ -274,7 +286,7 @@
 <style>
     #message-area {
         display: flex;
-        flex-direction: column;
+        flex-direction: column-reverse;
         overflow: hidden;
         overflow-y: scroll;
         margin-left: 10px;
@@ -315,7 +327,7 @@
         display: flex;
         flex-direction: row;
         width: calc(100% - 32px);
-        /* min-height: 36px; */
+        /* min-height: 42px; */
         margin: 16px;
         margin-bottom: 20px;
     }
@@ -334,8 +346,7 @@
         padding-left: 24px;
         padding-right: 24px;
         padding-top: 12px;
-        /* max-height: 128px; */
-        /* min-height: 24px; */
+        max-height: 128px;
     }
 
     #help-button {
