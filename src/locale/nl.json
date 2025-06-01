@@ -1,6 +1,8 @@
 {
-    "PageLogin.sync_server_ip": "Sync Server IP",
+    "PageLogin.sync_server_ip": "Sync Server IP ",
+    "PageLogin.sync_server_ip_inputplaceholder": "Voer IP in",
     "PageLogin.sync_server_port": "Sync Server Port",
+    "PageLogin.sync_server_port_inputplaceholder": "Voer port in",
     "PageLogin.username": "Gebruikersnaam",
     "PageLogin.username_inputplaceholder": "Voer gebruikersnaam in",
     "PageLogin.password": "Watchword",

@@ -1,3 +1,5 @@
+Developed by **Jachdich** and **elecarno**
+
 **2025.05.31: α-2.3.0**
  - Markdown parsing in messages.
  - Multiline message support.

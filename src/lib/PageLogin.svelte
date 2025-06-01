@@ -71,11 +71,11 @@
     <div id="login" >
         <div class="input-container">
             <p id="login-sync-ip-label">{$t('PageLogin.sync_server_ip')}</p>
-            <input id="login-sync-ip-input" type="text" placeholder="Enter IP" class="login-input" bind:value={sync_ip} required>
+            <input id="login-sync-ip-input" type="text" placeholder="{$t('PageLogin.sync_server_ip_inputplaceholder')}" class="login-input" bind:value={sync_ip} required>
         </div>
         <div class="input-container">
             <p id="login-sync-port-label">{$t('PageLogin.sync_server_port')}</p>
-            <input id="login-sync-port-input" type="text" placeholder="Enter port" class="login-input" on:input={validate_port} bind:value={sync_port} required>
+            <input id="login-sync-port-input" type="text" placeholder="{$t('PageLogin.sync_server_port_inputplaceholder')}" class="login-input" on:input={validate_port} bind:value={sync_port} required>
         </div>
         <div class="input-container">
             <p id="login-uname-label">{$t('PageLogin.username')}</p>

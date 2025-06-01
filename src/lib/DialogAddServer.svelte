@@ -1,6 +1,7 @@
 <script lang="ts">
     import "../popup.css";
     import { createEventDispatcher } from "svelte";
+    import { t } from "svelte-i18n";
     const dispatch = createEventDispatcher();
     function cancel(_: Event) {
         dispatch("dismiss");
@@ -21,14 +22,14 @@
 <div id="bg-darken">
     <div id="add-server-dialog" class="popup centre-window">
         <div class="input-container">
-            <p style="font-size: 16px; margin-bottom: 10px; margin-left: auto; margin-right: auto; text-align: center">Add Server</p>
+            <p style="font-size: 16px; margin-bottom: 10px; margin-left: auto; margin-right: auto; text-align: center">{$t('DialogAddServer.title')}</p>
         </div>
         <div class="input-container">
-            <p id="n_t_ip">IP</p>
+            <p id="n_t_ip">{$t('DialogAddServer.ip')}</p>
             <input id="n_ip" bind:value={ip} />
         </div>
         <div class="input-container">
-            <p id="n_t_port">Port</p>
+            <p id="n_t_port">{$t('DialogAddServer.port')}</p>
             <input
                 id="n_port"
                 on:input={validate_port}
@@ -37,8 +38,8 @@
             />
         </div>
         <div class="input-container">
-            <button id="n_cancel" style="margin-right: 5px" on:click={cancel}>Cancel</button>
-            <button id="n_ok" style="margin-left: 5px" on:click={ok}>Ok</button>
+            <button id="n_cancel" style="margin-right: 5px" on:click={cancel}>{$t('dialog.cancel')}</button>
+            <button id="n_ok" style="margin-left: 5px" on:click={ok}>{$t('dialog.accept')}</button>
         </div>
     </div>
 </div>

@@ -1,6 +1,8 @@
 {
     "PageLogin.sync_server_ip": "Sync Server IP ",
+    "PageLogin.sync_server_ip_inputplaceholder": "Enter IP",
     "PageLogin.sync_server_port": "Sync Server Port",
+    "PageLogin.sync_server_port_inputplaceholder": "Enter Port",
     "PageLogin.username": "Username",
     "PageLogin.username_inputplaceholder": "Enter Username",
     "PageLogin.password": "Password",
@@ -14,6 +16,10 @@
     "dialog.change": "Change",
 
     "DialogAccount.title": "Account",
+
+    "DialogAddServer.title": "Add Server",
+    "DialogAddServer.ip": "IP",
+    "DialogAddServer.port": "Port",
 
     "DialogTheme.colour.background": "Background",
     "DialogTheme.colour.panel1": "Panel 1",
