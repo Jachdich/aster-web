@@ -21,6 +21,13 @@
     let sync_server: Connection | undefined = undefined;
     let servers: Server[] = [];
     let show_changelog = false;
+
+    import { i18nReady } from './i18n';
+    let locale_ready = false;
+
+    i18nReady.then(() => {
+        locale_ready = true;
+    });
     
     onMount(() => {
         const handler = (e) => e.preventDefault();
@@ -127,36 +134,40 @@
 </script>
 
 <main>
-    {#if show == "Login"}
-        <PageLogin authenticate={login} />
-    {:else if show == "Loading"}
+    {#if locale_ready}
+        {#if show == "Login"}
+            <PageLogin authenticate={login} />
+        {:else if show == "Loading"}
+            <PageLoading/>
+        {:else if show == "Main" && sync_server !== undefined}
+            <PageMain {sync_server} {servers} {show_error} />
+        {:else if show == "Main" && sync_server === undefined}
+            <div>
+                Major catestrophic error !!! the sync server is undefined yet the
+                page has already been switched to Main (this should only happen once
+                the sync server is not undefined anymore).
+            </div>
+        {/if}
+
+        {#if error_msg != ""}
+            <div id="error" class="popup centre-window">
+                <div style="margin-bottom: 5px;">{error_msg}</div>
+                <button on:click={dismiss_error} id="error-dismiss">Ok</button>
+            </div>
+        {/if}
+
+        {#if show_changelog}
+            <DialogChangelog on:dismiss={() => (show_changelog = false)}/>
+        {/if}
+
+        <a id="version-number" on:click={() => (show_changelog = true)}>
+            ver. α-2.3.0
+        </a>
+
+        <ContextMenu/>
+    {:else}
         <PageLoading />
-    {:else if show == "Main" && sync_server !== undefined}
-        <PageMain {sync_server} {servers} {show_error} />
-    {:else if show == "Main" && sync_server === undefined}
-        <div>
-            Major catestrophic error !!!! the sync server is undefined yet the
-            page has already been switched to Main (this should only happen once
-            the sync server is not undefined anymore).
-        </div>
     {/if}
-
-    {#if error_msg != ""}
-        <div id="error" class="popup centre-window">
-            <div style="margin-bottom: 5px;">{error_msg}</div>
-            <button on:click={dismiss_error} id="error-dismiss">Ok</button>
-        </div>
-    {/if}
-
-    {#if show_changelog}
-        <DialogChangelog on:dismiss={() => (show_changelog = false)}/>
-    {/if}
-
-    <a id="version-number" on:click={() => (show_changelog = true)}>
-        ver. α-2.3.0
-    </a>
-
-    <ContextMenu/>
 </main>
 
 <style>

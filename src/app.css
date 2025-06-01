@@ -75,7 +75,7 @@ input, textarea, button {
     background-color: var(--panel-1);
 }
 
-button {
+button, select {
   cursor: pointer;
 }
 

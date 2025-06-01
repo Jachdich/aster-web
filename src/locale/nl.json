@@ -1,0 +1,28 @@
+{
+    "PageLogin.sync_server_ip": "Sync Server IP",
+    "PageLogin.sync_server_port": "Sync Server Port",
+    "PageLogin.username": "Gebruikersnaam",
+    "PageLogin.username_inputplaceholder": "Voer gebruikersnaam in",
+    "PageLogin.password": "Watchword",
+    "PageLogin.password_inputplaceholder": "Voer wachtwoord in",
+    "PageLogin.register": "Inschrijven",
+    "PageLogin.login": "Inloggen",
+
+    "dialog.cancel": "Annuleren",
+    "dialog.accept": "Accepteren",
+    "dialog.continue": "Doorgaan",
+    "dialog.change": "Veranderen",
+
+    "DialogAccount.title": "Account",
+
+    "DialogTheme.colour.background": "Background",
+    "DialogTheme.colour.panel1": "Panel 1",
+    "DialogTheme.colour.panel2": "Panel 2",
+    "DialogTheme.colour.panel3": "Panel 3",
+    "DialogTheme.colour.accent_light": "Accent Light",
+    "DialogTheme.colour.accent_dark": "Accent Dark",
+    "DialogTheme.colour.text_white": "Text White",
+    "DialogTheme.colour.text_gray": "Text Gray",
+    "DialogTheme.colour.text_dark": "Text Dark",
+    "DialogTheme.language": "Taal"
+}

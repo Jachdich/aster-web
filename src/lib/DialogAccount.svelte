@@ -2,6 +2,7 @@
     import "../popup.css";
     import { createEventDispatcher } from "svelte";
     const dispatch = createEventDispatcher();
+    import { t } from "svelte-i18n";
 
     export let username: string;
     export let password: string;
@@ -102,7 +103,7 @@
             <p
                 style="font-size: 16px; margin-bottom: 10px; margin-left: auto; margin-right: auto; text-align: center"
             >
-                Account
+                {$t('DialogAccount.title')}
             </p>
         </div>
         <div class="input-container" style="margin: 0 auto; margin-bottom: 16px;">
@@ -120,22 +121,22 @@
                     style="display: none"
                     bind:files={pfp_files}
                 />
-                <span id="file-button">Change</span>
+                <span id="file-button">{$t('dialog.change')}</span>
             </label>
         </div>
         <div class="input-container" style="margin-bottom: 8px;">
-            <p>Username</p>
+            <p>{$t('PageLogin.username')}</p>
             <input bind:value={username} />
         </div>
         <div class="input-container" style="margin-bottom: 16px;">
-            <p>Password</p>
+            <p>{$t('PageLogin.password')}</p>
             <input type="password" bind:value={password} />
         </div>
         <div class="input-container" style="margin-top: auto">
             <button id="cancel" style="margin-right: 5px" on:click={cancel}
-                >Cancel</button
+                >{$t('dialog.cancel')}</button
             >
-            <button id="ok" style="margin-left: 5px" on:click={ok}>Ok</button>
+            <button id="ok" style="margin-left: 5px" on:click={ok}>{$t('dialog.accept')}</button>
         </div>
     </div>
 </div>

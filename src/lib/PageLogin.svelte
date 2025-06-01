@@ -1,6 +1,7 @@
 <script lang="ts">
     import "../popup.css";
     import { aster_logo_wide } from "./logos";
+    import { t } from 'svelte-i18n'
 
     let sync_ip: string = "cospox.com";
     let sync_port: string = "2345";
@@ -69,24 +70,24 @@
       
     <div id="login" >
         <div class="input-container">
-            <p id="login-sync-ip-label">Sync&nbsp;Server&nbsp;IP&nbsp;</p>
+            <p id="login-sync-ip-label">{$t('PageLogin.sync_server_ip')}</p>
             <input id="login-sync-ip-input" type="text" placeholder="Enter IP" class="login-input" bind:value={sync_ip} required>
         </div>
         <div class="input-container">
-            <p id="login-sync-port-label">Sync&nbsp;Server&nbsp;Port</p>
+            <p id="login-sync-port-label">{$t('PageLogin.sync_server_port')}</p>
             <input id="login-sync-port-input" type="text" placeholder="Enter port" class="login-input" on:input={validate_port} bind:value={sync_port} required>
         </div>
         <div class="input-container">
-            <p id="login-uname-label">Username</p>
-            <input id="login-uname-input" type="text" placeholder="Enter Username" class="login-input" bind:value={uname} required>
+            <p id="login-uname-label">{$t('PageLogin.username')}</p>
+            <input id="login-uname-input" type="text" placeholder="{$t('PageLogin.username_inputplaceholder')}" class="login-input" bind:value={uname} required>
         </div>
         <div class="input-container">
-            <p id="login-pword-label">Password</p>
-            <input id="login-pword-input" type="password" placeholder="Enter Password" class="login-input" bind:value={password} required>
+            <p id="login-pword-label">{$t('PageLogin.password')}</p>
+            <input id="login-pword-input" type="password" placeholder="{$t('PageLogin.password_inputplaceholder')}" class="login-input" bind:value={password} required>
         </div>
         <div class="input-container">
-            <button class="login-button" style="margin-right: 4px;" on:click={register}>Register</button>
-            <button class="login-button" style="margin-left: 4px;" on:click={login}>Login</button>
+            <button class="login-button" style="margin-right: 4px;" on:click={register}>{$t('PageLogin.register')}</button>
+            <button class="login-button" style="margin-left: 4px;" on:click={login}>{$t('PageLogin.login')}</button>
         </div>
     </div>
 

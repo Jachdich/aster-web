@@ -4,6 +4,7 @@
     import ColorPicker from 'svelte-awesome-color-picker';
     import { aster_logo_wide } from "./logos";
     const dispatch = createEventDispatcher();
+    import { t } from "svelte-i18n";
 
     let hex = "#000000"
     let rgb = { "r": 0, "g": 0, "b": 0, "a": 1 }
@@ -24,6 +25,12 @@
         dispatch("dismiss");
     }
     
+    import { locale } from 'svelte-i18n';
+
+    function handleLanguageChange(event) {
+        locale.set(event.target.value);
+    }
+
 </script>
 
 <div id="bg-darken">
@@ -35,57 +42,68 @@
             <p style="font-size: 16px; margin-bottom: 10px; margin-left: auto; margin-right: auto; text-align: center">Theme Editor</p>
         </div>
         <div class="input-container">
-            <p>Background</p>
+            <p>{$t('DialogTheme.colour.background')}</p>
             <div class="picker-dark">
                 <ColorPicker bind:bg label=""/>
             </div>
         </div>
         <div class="input-container">
-            <p>Panel 1</p>
+            <p>{$t('DialogTheme.colour.panel1')}</p>
             <div class="picker-dark">
                 <ColorPicker bind:panel1 label=""/>
             </div>
         </div>
         <div class="input-container">
-            <p>Panel 2</p>
+            <p>{$t('DialogTheme.colour.panel2')}</p>
             <div class="picker-dark">
                 <ColorPicker bind:panel2 label=""/>
             </div>
         </div>
         <div class="input-container">
-            <p>Panel 3</p>
+            <p>{$t('DialogTheme.colour.panel3')}</p>
             <div class="picker-dark">
                 <ColorPicker bind:panel3 label=""/>
             </div>
         </div>
         <div class="input-container">
-            <p>Accent Light</p>
+            <p>{$t('DialogTheme.colour.accent_light')}</p>
             <div class="picker-dark">
                 <ColorPicker bind:accent1_light label=""/>
             </div>
         </div>
         <div class="input-container">
-            <p>Accent Dark</p>
+            <p>{$t('DialogTheme.colour.accent_dark')}</p>
             <div class="picker-dark">
                 <ColorPicker bind:accent1_dark label=""/>
             </div>
         </div>
         <div class="input-container">
-            <p>Text White</p>
+            <p>{$t('DialogTheme.colour.text_white')}</p>
             <div class="picker-dark">
                 <ColorPicker bind:white1 label=""/>
             </div>
         </div>
         <div class="input-container">
-            <p>Text Gray</p>
+            <p>{$t('DialogTheme.colour.text_gray')}</p>
             <div class="picker-dark">
                 <ColorPicker bind:text_gray label=""/>
             </div>
         </div>
         <div class="input-container">
-            <p>Text Dark</p>
+            <p>{$t('DialogTheme.colour.text_dark')}</p>
             <div class="picker-dark">
                 <ColorPicker bind:text_dark label=""/>
+            </div>
+        </div>
+        <div class="input-container">
+            <p>{$t('DialogTheme.language')}</p>
+            <div class="picker-dark">
+                <select id="lang-select" on:change={handleLanguageChange}>
+                    <option value="en">English</option>
+                    <option value="nl">Nederlands</option>
+                    <option value="es">Español</option>
+                    <option value="de">Deutsch</option>
+                  </select>                  
             </div>
         </div>
         <div class="input-container" style="margin-top: auto">
@@ -160,6 +178,14 @@
     .input-container button {
         width: 100%;
         height: 30px;
+    }
+
+    #lang-select {
+        background-color: var(--panel-1);
+        border-radius: var(--radius-3);
+        color: var(--white-1);
+        border: none;
+        padding: 4px;
     }
 
 </style>
