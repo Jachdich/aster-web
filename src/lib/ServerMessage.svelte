@@ -99,12 +99,12 @@
                 <!-- this solution is buggy and doesn't really work -->
                 {#if image_urls.length != 0}
                     <!-- I removed the <br> but it still renders somehow..? tf? Not complaining cause it *works* but like what?-->
-                    <a href="{part.text}">embed</a>
+                    <a href="{part.text}">image link</a>
                 {:else}
                     <a href="{part.text}">{part.text}</a>
                 {/if}
             {:else}
-                <!-- uhh its only sort of sanitised? -->
+                <!-- svelte-markdown tries to render HTML as its own thing, so we can fully sanitize by using a custom renderer -->
                 <SvelteMarkdown 
                     source={part.text}
                     renderers={{
