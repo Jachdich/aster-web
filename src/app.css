@@ -95,13 +95,13 @@ body {
     color: var(--white-1);
 }
 
-code {
+/* code {
   font-family: "Red Hat Mono", monospace;
   font-size: 14px;
   background-color: var(--panel-1);
   padding: 5px;
   border-radius: 5px;
-}
+} */
 
 input:focus {
     outline: none;

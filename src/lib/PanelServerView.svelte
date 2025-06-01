@@ -96,6 +96,7 @@
             server.messages = server.messages;
             if (!no_scroll) {
                 tick().then(() => {
+                    // console.log("scroll or smth")
                     message_area.scrollTop = message_area.scrollHeight - message_area.offsetHeight;
                 });
             }
@@ -177,6 +178,14 @@
         }
     }
 
+    let message_textarea = document.getElementById("message-input")
+    function autoResizeInput() {
+        if (!message_input) return;
+        message_textarea.style.height = 'auto';
+        const newHeight = Math.min(message_textarea.scrollHeight, 128);
+        message_textarea.style.height = `${newHeight}px`;
+    }
+
     onMount(() => {
         window.addEventListener('keydown', handleKeydown);
         return () => {
@@ -211,6 +220,13 @@
 
     {#if show_messages_call || show_messages}
         <div id="server-messages" class="container">
+            <div id="message-area" on:scroll={message_scroll} bind:this={message_area}>
+                {#each server.messages as message (message.uuid)}
+                    <div>
+                        <ServerMessage {message} />
+                    </div>
+                {/each}
+            </div>
             <div id="message-input-container">
                 {#if is_mobile_width}
                 <div id="toggle-container">
@@ -230,21 +246,15 @@
                     id="message-input"
                     placeholder=" Send a message"
                     maxlength="5000"
-                    oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'
                     rows="1"
+                    bind:this={message_textarea}
+                    on:input={autoResizeInput}
                     on:keypress={send_message}
                     bind:value={message_input}
                 />
-                <button id="help-button" on:click={() => (show_keybinds = true)}>
+                <!-- <button id="help-button" on:click={() => (show_keybinds = true)}>
                     <Icon src={FiHelpCircle} size="20px" />
-                </button>
-            </div>
-            <div id="message-area" on:scroll={message_scroll} bind:this={message_area}>
-                {#each server.messages as message (message.uuid)}
-                    <div>
-                        <ServerMessage {message} />
-                    </div>
-                {/each}
+                </button> -->
             </div>
         </div>
     {/if}
@@ -269,9 +279,10 @@
         overflow-y: scroll;
         margin-left: 10px;
         margin-right: 10px;
-        border-radius: var(--radius-2);
+        /* border-radius: var(--radius-2); */
         border-top-left-radius: 0px;
         border-top-right-radius: 0px;
+        height: calc(100% - 48px);
     }
 
     #channel-messages-separator {
@@ -297,14 +308,14 @@
         overflow: hidden;
         display: flex;
         /* margin-left: 13px; */
-        flex-direction: column-reverse;
+        flex-direction: column;
     }
 
     #message-input-container {
         display: flex;
         flex-direction: row;
         width: calc(100% - 32px);
-        /* min-height: 48px; */
+        /* min-height: 36px; */
         margin: 16px;
         margin-bottom: 20px;
     }
@@ -323,7 +334,8 @@
         padding-left: 24px;
         padding-right: 24px;
         padding-top: 12px;
-        max-height: 128px;
+        /* max-height: 128px; */
+        /* min-height: 24px; */
     }
 
     #help-button {

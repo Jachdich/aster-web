@@ -15,7 +15,13 @@
 
     import type { MessageInfo } from "./network";
     import { style } from "./style";
-    import snarkdown from "snarkdown";
+    // import snarkdown from "snarkdown";
+    import SvelteMarkdown from "svelte-markdown";
+    import mdParagraph from "./markdown/mdParagraph.svelte";
+    import mdHTML from "./markdown/mdHTML.svelte";
+    import mdHeader from "./markdown/mdHeader.svelte";
+    import mdCode from "./markdown/mdCode.svelte";
+    import mdCodeSpan from "./markdown/mdCodeSpan.svelte";
     export let message: MessageInfo;
 
     type Style = "link" | "none";
@@ -90,11 +96,25 @@
         {/if}
         {#each content_parts as part}
             {#if part.style === "link"}
-                <br><a href="{part.text}">embed</a>
+                <!-- this solution is buggy and doesn't really work -->
+                {#if image_urls.length != 0}
+                    <!-- I removed the <br> but it still renders somehow..? tf? Not complaining cause it *works* but like what?-->
+                    <a href="{part.text}">embed</a>
+                {:else}
+                    <a href="{part.text}">{part.text}</a>
+                {/if}
             {:else}
-                <!-- {part.text} -->
-                <!-- TODO: THIS SHIT NEEDS TO BE SANITSED (STOP HTML BEING INPUTTED DIRECTLY INTO THE CHAT) -->
-                {@html snarkdown(part.text)} 
+                <!-- uhh its only sort of sanitised? -->
+                <SvelteMarkdown 
+                    source={part.text}
+                    renderers={{
+                        paragraph: mdParagraph, 
+                        html: mdHTML,
+                        heading: mdHeader,
+                        code: mdCode,
+                        codespan: mdCodeSpan
+                    }}
+                />
             {/if}
         {/each}
         <div class="image-container">
@@ -195,5 +215,9 @@
         margin-top: var(--body-top);
         white-space: pre-line;
         max-width: 100%;
+    }
+
+    .message-body h1 {
+        margin: 0;
     }
 </style>
