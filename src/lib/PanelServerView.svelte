@@ -18,35 +18,61 @@
     import PanelChannelList from "./PanelChannelList.svelte";
     import { showContextMenu }  from './contextMenuStore';
 
-    const conMenu = [
+    // CONTEXT MENUS
+    const channels_conMenu = [
         {
-            name: 'rename',
-            onClick: rename,
-            displayText: 'Rename',
-            class: 'fa-solid fa-pen'
+            name: 'hide',
+            onClick: con_hide_channels,
+            displayText: 'Hide Channel List',
+            class: 'fa-solid fa-eye-slash',
+            shortcut: 'Shift+F2'
         },
+        // {
+        //     name: 'hr',
+        // },
+    ];
+
+    function con_hide_channels(){
+        show_channels = !show_channels
+    }
+
+    const message_textarea_conMenu = [
+        {
+            name: 'copy',
+            onClick: con_copy,
+            displayText: 'Copy',
+            class: 'fa-solid fa-copy',
+            shortcut: 'Ctrl+C'
+        },
+        // {
+        //     name: 'paste',
+        //     onClick: con_paste,
+        //     displayText: 'Paste',
+        //     class: 'fa-solid fa-paste',
+        //     shortcut: 'Ctrl+V'
+        // },
         {
             name: 'hr',
         },
         {
-            name: 'delete',
-            onClick: delte,
-            displayText: 'Delete',
-            class: 'fa-solid fa-trash'
-        }
+            name: 'help',
+            onClick: con_help,
+            displayText: 'Help',
+            class: 'fa-solid fa-question',
+            shortcut: ''
+        },
     ];
 
-    function handleRightClick(event, menu) {
-        console.log("context menu")
-        showContextMenu(event, menu);
+    function con_help(){
+        show_keybinds = true
     }
+    function con_copy() {
+        const selectedText = window.getSelection().toString();
+        if (!selectedText) return; // nothing to copy
 
-    function rename(){
-        console.log("rename")
+        navigator.clipboard.writeText(selectedText)
     }
-    function delte(){
-        console.log("delete")
-    }
+    // CONTEXT MENUS ^^
 
     // need to figure out how to make this code apply throughout the app so it can just be referenced instead of duplicated
     let innerWidth = 0
@@ -233,9 +259,9 @@
 
 <svelte:window bind:innerWidth bind:innerHeight/>
 
-<div id="server-area" on:contextmenu={(e) => showContextMenu(e, conMenu)} role="region">
+<div id="server-area">
     {#if show_channels}
-        <div id="server-channels" class="container">
+        <div id="server-channels" class="container" on:contextmenu={(e) => showContextMenu(e, channels_conMenu)} role="region">
             <div id="server-info">
                 <p id="server-ip">{server.conn.ip}:{server.conn.port}</p>
                 <p class="server-info-text">Members: {server.conn.known_peers.size}</p>
@@ -294,6 +320,7 @@
                     on:keypress={send_message}
                     bind:value={message_input}
                     style="height: {message_textarea_default_height}px;"
+                    on:contextmenu={(e) => showContextMenu(e, message_textarea_conMenu)} 
                 />
                 <!-- <button id="help-button" on:click={() => (show_keybinds = true)}>
                     <Icon src={FiHelpCircle} size="20px" />

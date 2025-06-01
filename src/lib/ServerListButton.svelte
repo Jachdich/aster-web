@@ -25,9 +25,10 @@
             />
             <p class="name">{server.conn.name}</p>
         </div>
-        <div class="separator" style="width: 90%; margin-top: 7px; margin-bottom: 7px"></div>
+        <!-- Temporarily removing these aspects until they're actually implemented -->
+        <!-- <div class="separator" style="width: 90%; margin-top: 7px; margin-bottom: 7px"></div>
         <p id="server-tagline">A cool Aster server</p>
-        <p id="server-info">[msgs] / 7 days</p>
+        <p id="server-info">[msgs] / 7 days</p> -->
         
     </button>
 </div>

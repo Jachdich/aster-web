@@ -8,6 +8,7 @@
         Status,
     } from "./lib/network";
     import { Server } from "./lib/server";
+    import { onMount, onDestroy } from 'svelte';
     
     import PageLogin from "./lib/PageLogin.svelte";
     import PageLoading from "./lib/PageLoading.svelte";
@@ -21,6 +22,15 @@
     let servers: Server[] = [];
     let show_changelog = false;
     
+    onMount(() => {
+        const handler = (e) => e.preventDefault();
+        window.addEventListener('contextmenu', handler);
+
+        return () => {
+        window.removeEventListener('contextmenu', handler);
+        };
+    });
+
     function login(
         uname: string,
         password: string,
@@ -143,7 +153,7 @@
     {/if}
 
     <a id="version-number" on:click={() => (show_changelog = true)}>
-        ver. α-2.2.10
+        ver. α-2.3.0
     </a>
 
     <ContextMenu/>

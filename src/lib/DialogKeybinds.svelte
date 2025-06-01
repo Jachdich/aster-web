@@ -31,7 +31,7 @@
             <p style="margin-left: auto; width: 50%; text-align: right; margin: 0">Edit Message</p>
         </div>
         <div class="keybind">
-            <p style="margin-right: auto; width: 50%; margin: 0">LMB (Double)</p>
+            <p style="margin-right: auto; width: 50%; margin: 0">Alt + LMB</p>
             <p style="margin-left: auto; width: 50%; text-align: right; margin: 0">Reply to Message</p>
         </div>
         <div class="input-container">

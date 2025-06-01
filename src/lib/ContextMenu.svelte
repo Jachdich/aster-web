@@ -54,13 +54,14 @@
     .navbar{
         display: inline-flex;
         border: 1px var(--panel-3) solid;
-        width: 170px;
+        width: 250px;
         background-color: var(--panel-2);
         border-radius: var(--radius-2);
         overflow: hidden;
         flex-direction: column;
         padding-top: 5px;
         padding-bottom: 5px;
+        padding-right: 5px;
         filter: drop-shadow(0px 5px 7px var(--panel-1));
     }
     .navbar ul{
@@ -73,7 +74,7 @@
     }
     ul li button{
         /* font-size: 1rem; */
-        color: var(--text-gray);
+        color: var(--white-1);
         width: 100%;
         height: 28px;
         text-align: left;
@@ -106,6 +107,10 @@
         border-bottom: 1px solid var(--text-gray);
         margin: 5px 0px;
     }
+    .shortcut {
+        color: var(--text-gray);
+        float: right;
+    }
 </style>
 
 <!-- <div class="content" bind:this={content}>Right click somewhere!</div> -->
@@ -120,7 +125,7 @@
                 {:else}
                     <li>
                         <button on:click={() => { hideMenu(); item.onClick?.(); }}>
-                            <i class={item.class}></i> {item.displayText}
+                            <i class={item.class}></i> {item.displayText} <span class="shortcut">{item.shortcut}</span>
                         </button>
                     </li>
                 {/if}

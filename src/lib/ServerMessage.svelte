@@ -33,6 +33,34 @@
             this.text = text;
         }
     }
+
+    import { showContextMenu }  from './contextMenuStore';
+
+    // CONTEXT MENUS
+    const message_conMenu = [
+        {
+            name: 'copy',
+            onClick: con_copy,
+            displayText: 'Copy',
+            class: 'fa-solid fa-copy',
+            shortcut: ''
+        },
+        {
+            name: 'reply',
+            onClick: con_reply,
+            displayText: 'Reply',
+            class: 'fa-solid fa-reply',
+            shortcut: 'Alt+LMB'
+        },
+    ];
+
+    function con_copy() {
+        navigator.clipboard.writeText(message.content)
+    }
+    function con_reply(){
+        // james this is for you probably lol
+    }
+    // CONTEXT MENUS ^^
     
     let spacing = style.message_spacing;
     let uname_top = (24 - 20) / 2;
@@ -85,6 +113,7 @@
 <div
     class="message"
     style="--spacing: {spacing}px; --uname-top: {uname_top}px; --date-top: {date_top}px; --body-top: {body_top}px; --uname-width: {uname_width}px;"
+    on:contextmenu={(e) => showContextMenu(e, message_conMenu)} role="region"
 >
     <img src="data:image/png;base64,{message.author.pfp}" alt="{message.author.display_name}'s profile picture" class="message-pfp" />
     {#if !is_mobile_width}

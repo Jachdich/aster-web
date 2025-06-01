@@ -1,12 +1,12 @@
-**2025.05.31: α-2.2.10**
-- Markdown parsing in messages.
-- Multiline message support.
-- Minituarised image links
-- Added more splash texts.
+**2025.05.31: α-2.3.0**
+ - Markdown parsing in messages.
+ - Multiline message support.
+ - Minituarised image links
+ - Added more splash texts.
 
 **2024.11.03: α-2.2.9**
-- Beginnings of a mobile-friendly UI.
-- Added more splash texts.
+ - Beginnings of a mobile-friendly UI.
+ - Added more splash texts.
 
 **2024.10.30: α-2.2.8**
  - Add changelog dialog.
