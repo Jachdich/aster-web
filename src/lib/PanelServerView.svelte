@@ -16,6 +16,37 @@
     import DialogKeybinds from "./DialogKeybinds.svelte";
     import ServerMessage from "./ServerMessage.svelte";
     import PanelChannelList from "./PanelChannelList.svelte";
+    import { showContextMenu }  from './contextMenuStore';
+
+    const conMenu = [
+        {
+            name: 'rename',
+            onClick: rename,
+            displayText: 'Rename',
+            class: 'fa-solid fa-pen'
+        },
+        {
+            name: 'hr',
+        },
+        {
+            name: 'delete',
+            onClick: delte,
+            displayText: 'Delete',
+            class: 'fa-solid fa-trash'
+        }
+    ];
+
+    function handleRightClick(event, menu) {
+        console.log("context menu")
+        showContextMenu(event, menu);
+    }
+
+    function rename(){
+        console.log("rename")
+    }
+    function delte(){
+        console.log("delete")
+    }
 
     // need to figure out how to make this code apply throughout the app so it can just be referenced instead of duplicated
     let innerWidth = 0
@@ -202,7 +233,7 @@
 
 <svelte:window bind:innerWidth bind:innerHeight/>
 
-<div id="server-area">
+<div id="server-area" on:contextmenu={(e) => showContextMenu(e, conMenu)} role="region">
     {#if show_channels}
         <div id="server-channels" class="container">
             <div id="server-info">

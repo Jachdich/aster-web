@@ -13,6 +13,7 @@
     import PageLoading from "./lib/PageLoading.svelte";
     import PageMain from "./lib/PageMain.svelte";
     import DialogChangelog from "./lib/DialogChangelog.svelte";
+    import ContextMenu from "./lib/ContextMenu.svelte";
 
     let show: "Login" | "Loading" | "Main" = "Login";
     let error_msg = "";
@@ -144,6 +145,8 @@
     <a id="version-number" on:click={() => (show_changelog = true)}>
         ver. α-2.2.10
     </a>
+
+    <ContextMenu/>
 </main>
 
 <style>
