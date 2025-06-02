@@ -1,17 +1,7 @@
 {
-    "PageLogin.sync_server_ip": "Sync Server IP ",
-    "PageLogin.sync_server_ip_inputplaceholder": "Enter IP",
-    "PageLogin.sync_server_port": "Sync Server Port",
-    "PageLogin.sync_server_port_inputplaceholder": "Enter Port",
-    "PageLogin.username": "Username",
-    "PageLogin.username_inputplaceholder": "Enter Username",
-    "PageLogin.password": "Password",
-    "PageLogin.password_inputplaceholder": "Enter Password",
-    "PageLogin.register": "Register",
-    "PageLogin.login": "Login",
-
     "dialog.cancel": "Cancel",
     "dialog.accept": "Accept",
+    "dialog.close": "Close",
     "dialog.continue": "Continue",
     "dialog.change": "Change",
 
@@ -20,6 +10,17 @@
     "DialogAddServer.title": "Add Server",
     "DialogAddServer.ip": "IP",
     "DialogAddServer.port": "Port",
+
+    "DialogKeybinds.title": "Keybinds",
+    "DialogKeybinds.toggle_sidebar": "Toggle Sidebar",
+    "DialogKeybinds.toggle_channels": "Toggle Channel List",
+    "DialogKeybinds.message_delete": "Delete Message",
+    "DialogKeybinds.message_edit": "Edit Message",
+    "DialogKeybinds.message_reply": "Reply to Message",
+
+    "DialogServerProfile.title": "Server Profile",
+    "DialogServerProfile.nickname": "Nickname",
+    "DialogServerProfile.avatar": "Avatar",
 
     "DialogTheme.colour.background": "Background",
     "DialogTheme.colour.panel1": "Panel 1",
@@ -30,5 +31,28 @@
     "DialogTheme.colour.text_white": "Text White",
     "DialogTheme.colour.text_gray": "Text Gray",
     "DialogTheme.colour.text_dark": "Text Dark",
-    "DialogTheme.language": "Language"
+    "DialogTheme.language": "Language",
+
+    "PageLogin.sync_server_ip": "Sync Server IP ",
+    "PageLogin.sync_server_ip_input.placeholder": "Enter IP",
+    "PageLogin.sync_server_port": "Sync Server Port",
+    "PageLogin.sync_server_port_input.placeholder": "Enter Port",
+    "PageLogin.username": "Username",
+    "PageLogin.username_input.placeholder": "Enter Username",
+    "PageLogin.password": "Password",
+    "PageLogin.password_input.placeholder": "Enter Password",
+    "PageLogin.register": "Register",
+    "PageLogin.login": "Login",
+
+    "PageMain.conMenu_sidebar.hide_sidebar": "Hide Sidebar",
+    "PageMain.conMenu_sidebar.add_server": "Add Server",
+
+    "PanelServerView.conMenu_channels.hide_channels": "Hide Channel List",
+    "PanelServerView.conMenu_msgtextarea.copy": "Copy",
+    "PanelServerView.conMenu_msgtextarea.help": "Help",
+    "PanelServerView.server_info.members": "Members",
+    "PanelServerView.msgtextarea.placeholder": "Send a message",
+
+    "ServerMessage.conMenu_message.copy": "Copy",
+    "ServerMessage.conMenu_message.reply": "Reply"
 }

@@ -17,21 +17,23 @@
     import PanelServerView from "./PanelServerView.svelte";
     import PanelServerList from "./PanelServerList.svelte";
 
+    import { t } from "svelte-i18n";
+
     import { showContextMenu }  from './contextMenuStore';
 
     // CONTEXT MENUS
-    const sidebar_conMenu = [
+    const conMenu_sidebar = [
         {
             name: 'hide',
             onClick: con_hide_sidebar,
-            displayText: 'Hide Sidebar',
+            displayText: $t('PageMain.conMenu_sidebar.hide_sidebar'),
             class: 'fa-solid fa-eye-slash',
             shortcut: 'Shift+F1'
         },
         {
             name: 'add_server',
             onClick: con_add_server,
-            displayText: 'Add Server',
+            displayText: $t('PageMain.conMenu_sidebar.add_server'),
             class: 'fa-solid fa-plus',
             shortcut: ''
         },
@@ -147,7 +149,7 @@
 
 <div id="page">
     {#if show_sidebar}
-        <div id="sidebar"on:contextmenu={(e) => showContextMenu(e, sidebar_conMenu)} role="region">
+        <div id="sidebar"on:contextmenu={(e) => showContextMenu(e, conMenu_sidebar)} role="region">
             <div id="top-buttons">
                 <button id="aster-button" on:click={() => (show_aster_dialog = true)}>
                     <svg id="logo" class="pixel-img" style="width: 32px; height: 32px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">

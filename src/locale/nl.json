@@ -1,21 +1,26 @@
 {
-    "PageLogin.sync_server_ip": "Sync Server IP ",
-    "PageLogin.sync_server_ip_inputplaceholder": "Voer IP in",
-    "PageLogin.sync_server_port": "Sync Server Port",
-    "PageLogin.sync_server_port_inputplaceholder": "Voer port in",
-    "PageLogin.username": "Gebruikersnaam",
-    "PageLogin.username_inputplaceholder": "Voer gebruikersnaam in",
-    "PageLogin.password": "Watchword",
-    "PageLogin.password_inputplaceholder": "Voer wachtwoord in",
-    "PageLogin.register": "Inschrijven",
-    "PageLogin.login": "Inloggen",
-
     "dialog.cancel": "Annuleren",
     "dialog.accept": "Accepteren",
+    "dialog.close": "Sluiten",
     "dialog.continue": "Doorgaan",
     "dialog.change": "Veranderen",
 
     "DialogAccount.title": "Account",
+
+    "DialogAddServer.title": "Add Server",
+    "DialogAddServer.ip": "IP",
+    "DialogAddServer.port": "Port",
+
+    "DialogKeybinds.title": "Keybinds",
+    "DialogKeybinds.toggle_sidebar": "Toggle Sidebar",
+    "DialogKeybinds.toggle_channels": "Toggle Channel List",
+    "DialogKeybinds.message_delete": "Delete Message",
+    "DialogKeybinds.message_edit": "Edit Message",
+    "DialogKeybinds.message_reply": "Reply to Message",
+
+    "DialogServerProfile.title": "Server Profile",
+    "DialogServerProfile.nickname": "Nickname",
+    "DialogServerProfile.avatar": "Avatar",
 
     "DialogTheme.colour.background": "Background",
     "DialogTheme.colour.panel1": "Panel 1",
@@ -26,5 +31,28 @@
     "DialogTheme.colour.text_white": "Text White",
     "DialogTheme.colour.text_gray": "Text Gray",
     "DialogTheme.colour.text_dark": "Text Dark",
-    "DialogTheme.language": "Taal"
+    "DialogTheme.language": "Taal",
+
+    "PageLogin.sync_server_ip": "Sync Server IP ",
+    "PageLogin.sync_server_ip_input.placeholder": "Voer IP in",
+    "PageLogin.sync_server_port": "Sync Server Port",
+    "PageLogin.sync_server_port_input.placeholder": "Voer port in",
+    "PageLogin.username": "Gebruikersnaam",
+    "PageLogin.username_input.placeholder": "Voer gebruikersnaam in",
+    "PageLogin.password": "Watchword",
+    "PageLogin.password_inputplaceholder": "Voer wachtwoord in",
+    "PageLogin.register": "Inschrijven",
+    "PageLogin.login": "Inloggen",
+
+    "PageMain.conMenu_sidebar.hide_sidebar": "Hide Sidebar",
+    "PageMain.conMenu_sidebar.add_server": "Add Server",
+
+    "PanelServerView.conMenu_channels.hide_channels": "Hide Channel List",
+    "PanelServerView.conMenu_msgtextarea.copy": "Copy",
+    "PanelServerView.conMenu_msgtextarea.help": "Help",
+    "PanelServerView.server_info.members": "Members",
+    "PanelServerView.msgtextarea.placeholder": "Send a message",
+
+    "ServerMessage.conMenu_message.copy": "Copy",
+    "ServerMessage.conMenu_message.reply": "Reply"
 }

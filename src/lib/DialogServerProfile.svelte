@@ -2,6 +2,7 @@
     import "../popup.css";
     import { createEventDispatcher } from "svelte";
     import { Server } from "./server";
+    import { t } from "svelte-i18n";
     export let server: Server;
 
     const dispatch = createEventDispatcher();
@@ -17,19 +18,19 @@
 <div id="bg-darken">
     <div id="add-server-dialog" class="popup centre-window">
         <div class="input-container">
-            <p style="font-size: 16px; margin-bottom: 10px; margin-left: auto; margin-right: auto; text-align: center; width: 100%">{server.conn.name} - Server Profile</p>
+            <p style="font-size: 16px; margin-bottom: 10px; margin-left: auto; margin-right: auto; text-align: center; width: 100%">{server.conn.name} - {$t('DialogServerProfile.title')}</p>
         </div>
         <div class="input-container">
-            <p>Nickname</p>
+            <p>{$t('DialogServerProfile.nickname')}</p>
             <input/>
         </div>
         <div class="input-container">
-            <p>Avatar</p>
+            <p>{$t('DialogServerProfile.avatar')}</p>
             <input/>
         </div>
         <div class="input-container" style="margin-top: auto">
-            <button id="cancel" style="margin-right: 5px" on:click={cancel}>Cancel</button>
-            <button id="ok" style="margin-left: 5px" on:click={ok}>Ok</button>
+            <button id="cancel" style="margin-right: 5px" on:click={cancel}>{$t('dialog.cancel')}</button>
+            <button id="ok" style="margin-left: 5px" on:click={ok}>{$t('dialog.accept')}</button>
         </div>
     </div>
 </div>

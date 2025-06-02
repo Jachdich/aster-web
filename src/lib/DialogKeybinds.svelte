@@ -1,6 +1,7 @@
 <script lang="ts">
     import "../popup.css";
     import { createEventDispatcher } from "svelte";
+    import { t } from "svelte-i18n";
     const dispatch = createEventDispatcher();
     function close(_: Event) {
         dispatch("dismiss");
@@ -11,31 +12,31 @@
 <div id="bg-darken">
     <div id="keybinds-dialog" class="popup centre-window">
         <div class="input-container">
-            <p style="font-size: 16px; margin-bottom: 10px; margin-left: auto; margin-right: auto; text-align: center">Keybinds</p>
+            <p style="font-size: 16px; margin-bottom: 10px; margin-left: auto; margin-right: auto; text-align: center">{$t('DialogKeybinds.title')}</p>
         </div>
         <div class="keybind">
             <p style="margin-right: auto; width: 50%; margin: 0">Shift + F1</p>
-            <p style="margin-left: auto; width: 50%; text-align: right; margin: 0">Toggle Sidebar</p>
+            <p style="margin-left: auto; width: 50%; text-align: right; margin: 0">{$t('DialogKeybinds.toggle_sidebar')}</p>
         </div>
         <div class="keybind">
             <p style="margin-right: auto; width: 50%; margin: 0">Shift + F2</p>
-            <p style="margin-left: auto; width: 50%; text-align: right; margin: 0">Toggle Server Info</p>
+            <p style="margin-left: auto; width: 50%; text-align: right; margin: 0">{$t('DialogKeybinds.toggle_channels')}</p>
         </div>
         <div style="margin: 0 auto; width: 95%; height: 3px; background-color: var(--panel-3); margin-bottom: 16px; border-radius: 1.5px"></div>
         <div class="keybind">
             <p style="margin-right: auto; width: 50%; margin: 0">Shift + LMB</p>
-            <p style="margin-left: auto; width: 50%; text-align: right; margin: 0">Delete Message</p>
+            <p style="margin-left: auto; width: 50%; text-align: right; margin: 0">{$t('DialogKeybinds.message_delete')}</p>
         </div>
         <div class="keybind">
             <p style="margin-right: auto; width: 50%; margin: 0">Ctrl + LMB</p>
-            <p style="margin-left: auto; width: 50%; text-align: right; margin: 0">Edit Message</p>
+            <p style="margin-left: auto; width: 50%; text-align: right; margin: 0">{$t('DialogKeybinds.message_edit')}</p>
         </div>
         <div class="keybind">
             <p style="margin-right: auto; width: 50%; margin: 0">Alt + LMB</p>
-            <p style="margin-left: auto; width: 50%; text-align: right; margin: 0">Reply to Message</p>
+            <p style="margin-left: auto; width: 50%; text-align: right; margin: 0">{$t('DialogKeybinds.message_reply')}</p>
         </div>
         <div class="input-container">
-            <button id="n_cancel" on:click={close}>Close</button>
+            <button id="n_cancel" on:click={close}>{$t('dialog.close')}</button>
         </div>
     </div>
 </div>

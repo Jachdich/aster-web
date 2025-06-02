@@ -34,21 +34,22 @@
         }
     }
 
+    import { t } from "svelte-i18n";
     import { showContextMenu }  from './contextMenuStore';
 
     // CONTEXT MENUS
-    const message_conMenu = [
+    const conMenu_message = [
         {
             name: 'copy',
             onClick: con_copy,
-            displayText: 'Copy',
+            displayText: $t('ServerMessage.conMenu_message.copy'),
             class: 'fa-solid fa-copy',
             shortcut: ''
         },
         {
             name: 'reply',
             onClick: con_reply,
-            displayText: 'Reply',
+            displayText: $t('ServerMessage.conMenu_message.reply'),
             class: 'fa-solid fa-reply',
             shortcut: 'Alt+LMB'
         },
@@ -113,7 +114,7 @@
 <div
     class="message"
     style="--spacing: {spacing}px; --uname-top: {uname_top}px; --date-top: {date_top}px; --body-top: {body_top}px; --uname-width: {uname_width}px;"
-    on:contextmenu={(e) => showContextMenu(e, message_conMenu)} role="region"
+    on:contextmenu={(e) => showContextMenu(e, conMenu_message)} role="region"
 >
     <img src="data:image/png;base64,{message.author.pfp}" alt="{message.author.display_name}'s profile picture" class="message-pfp" />
     {#if !is_mobile_width}

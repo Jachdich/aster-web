@@ -12,6 +12,8 @@
     import { Icon } from "svelte-icons-pack";
     import { FiHelpCircle } from "svelte-icons-pack/fi";
 
+    import { t } from "svelte-i18n";
+
     import DialogServerProfile from "./DialogServerProfile.svelte";
     import DialogKeybinds from "./DialogKeybinds.svelte";
     import ServerMessage from "./ServerMessage.svelte";
@@ -19,11 +21,11 @@
     import { showContextMenu }  from './contextMenuStore';
 
     // CONTEXT MENUS
-    const channels_conMenu = [
+    const conMenu_channels = [
         {
             name: 'hide',
             onClick: con_hide_channels,
-            displayText: 'Hide Channel List',
+            displayText: $t('PanelServerView.conMenu_channels.hide_channels'),
             class: 'fa-solid fa-eye-slash',
             shortcut: 'Shift+F2'
         },
@@ -36,11 +38,11 @@
         show_channels = !show_channels
     }
 
-    const message_textarea_conMenu = [
+    const conMenu_msgtextarea = [
         {
             name: 'copy',
             onClick: con_copy,
-            displayText: 'Copy',
+            displayText: $t('PanelServerView.conMenu_msgtextarea.copy'),
             class: 'fa-solid fa-copy',
             shortcut: 'Ctrl+C'
         },
@@ -57,7 +59,7 @@
         {
             name: 'help',
             onClick: con_help,
-            displayText: 'Help',
+            displayText: $t('PanelServerView.conMenu_msgtextarea.help'),
             class: 'fa-solid fa-question',
             shortcut: ''
         },
@@ -261,11 +263,11 @@
 
 <div id="server-area">
     {#if show_channels}
-        <div id="server-channels" class="container" on:contextmenu={(e) => showContextMenu(e, channels_conMenu)} role="region">
+        <div id="server-channels" class="container" on:contextmenu={(e) => showContextMenu(e, conMenu_channels)} role="region">
             <div id="server-info">
                 <p id="server-ip">{server.conn.ip}:{server.conn.port}</p>
-                <p class="server-info-text">Members: {server.conn.known_peers.size}</p>
-                <button id="server-profile-button" on:click={() => (show_profile_dialog = true)}>Server Profile</button>
+                <p class="server-info-text">{$t('PanelServerView.server_info.members')}: {server.conn.known_peers.size}</p>
+                <button id="server-profile-button" on:click={() => (show_profile_dialog = true)}>{$t('DialogServerProfile.title')}</button>
                 <div class="separator" style="margin-top: 10px"/>
             </div>
             <PanelChannelList
@@ -312,7 +314,7 @@
                 <textarea
                     autofocus={true}
                     id="message-input"
-                    placeholder=" Send a message"
+                    placeholder={$t('PanelServerView.msgtextarea.placeholder')}
                     maxlength="5000"
                     rows="1"
                     bind:this={message_textarea}
@@ -320,7 +322,7 @@
                     on:keypress={send_message}
                     bind:value={message_input}
                     style="height: {message_textarea_default_height}px;"
-                    on:contextmenu={(e) => showContextMenu(e, message_textarea_conMenu)} 
+                    on:contextmenu={(e) => showContextMenu(e, conMenu_msgtextarea)} 
                 />
                 <!-- <button id="help-button" on:click={() => (show_keybinds = true)}>
                     <Icon src={FiHelpCircle} size="20px" />

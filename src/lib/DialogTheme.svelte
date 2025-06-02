@@ -107,7 +107,7 @@
             </div>
         </div>
         <div class="input-container" style="margin-top: auto">
-            <button id="cancel" on:click={cancel}>Close</button>
+            <button id="cancel" on:click={cancel}>{$t('dialog.close')}</button>
         </div>
     </div>
 </div>
