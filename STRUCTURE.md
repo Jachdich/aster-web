@@ -12,4 +12,5 @@ App
  │       ├─ DialogKeybinds
  │       ├─ ServerMessage
  │       └─ PanelChannelList
- └─ DialogChangelog
+ ├─ DialogChangelog
+ └─ Context Menu
