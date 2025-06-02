@@ -9,6 +9,7 @@ const STORAGE_KEY = 'app-locale';
 register('en', () => import('./locale/en.json'));
 register('nl', () => import('./locale/nl.json'));
 register('da', () => import('./locale/da.json'));
+register('de', () => import('./locale/de.json'));
 
 // attempt to get saved locale setting
 function getStartingLocale() {

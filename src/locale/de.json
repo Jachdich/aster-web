@@ -1,0 +1,59 @@
+{
+    "dialog.cancel": "Abbrechen",
+    "dialog.accept": "Akzeptieren",
+    "dialog.close": "Schließen",
+    "dialog.continue": "Weiter",
+    "dialog.change": "Ändern",
+
+    "DialogAccount.title": "Konto",
+
+    "DialogAddServer.title": "Server hinzufügen",
+    "DialogAddServer.ip": "IP",
+    "DialogAddServer.port": "Port",
+
+    "DialogKeybinds.title": "Tastenkombinationen",
+    "DialogKeybinds.toggle_sidebar": "Seitenleiste umschalten",
+    "DialogKeybinds.toggle_channels": "Kanalliste umschalten",
+    "DialogKeybinds.message_delete": "Nachricht löschen",
+    "DialogKeybinds.message_edit": "Nachricht bearbeiten",
+    "DialogKeybinds.message_reply": "Auf Nachricht antworten",
+
+    "DialogServerProfile.title": "Serverprofil",
+    "DialogServerProfile.nickname": "Spitzname",
+    "DialogServerProfile.avatar": "Avatar",
+
+    "DialogTheme.colour.background": "Hintergrund",
+    "DialogTheme.colour.panel1": "Panel 1",
+    "DialogTheme.colour.panel2": "Panel 2",
+    "DialogTheme.colour.panel3": "Panel 3",
+    "DialogTheme.colour.accent_light": "Heller Akzent",
+    "DialogTheme.colour.accent_dark": "Dunkler Akzent",
+    "DialogTheme.colour.text_white": "Weißer Text",
+    "DialogTheme.colour.text_gray": "Grauer Text",
+    "DialogTheme.colour.text_dark": "Dunkler Text",
+    "DialogTheme.language": "Sprache",
+
+    "PageLogin.sync_server_ip": "Sync-Server-IP",
+    "PageLogin.sync_server_ip_input.placeholder": "IP eingeben",
+    "PageLogin.sync_server_port": "Sync-Server-Port",
+    "PageLogin.sync_server_port_input.placeholder": "Port eingeben",
+    "PageLogin.username": "Benutzername",
+    "PageLogin.username_input.placeholder": "Benutzername eingeben",
+    "PageLogin.password": "Passwort",
+    "PageLogin.password_input.placeholder": "Passwort eingeben",
+    "PageLogin.register": "Registrieren",
+    "PageLogin.login": "Anmelden",
+
+    "PageMain.conMenu_sidebar.hide_sidebar": "Seitenleiste ausblenden",
+    "PageMain.conMenu_sidebar.add_server": "Server hinzufügen",
+
+    "PanelServerView.conMenu_channels.hide_channels": "Kanalliste ausblenden",
+    "PanelServerView.conMenu_msgtextarea.copy": "Kopieren",
+    "PanelServerView.conMenu_msgtextarea.help": "Hilfe",
+    "PanelServerView.server_info.members": "Mitglieder",
+    "PanelServerView.msgtextarea.placeholder": "Nachricht senden",
+
+    "ServerMessage.conMenu_message.copy": "Kopieren",
+    "ServerMessage.conMenu_message.reply": "Antworten",
+    "ServerMessage.image_link": "Bildlink"
+}

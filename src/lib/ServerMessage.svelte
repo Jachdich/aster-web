@@ -35,9 +35,10 @@
     }
 
     import { t } from "svelte-i18n";
-    import { showContextMenu }  from './contextMenuStore';
 
-    // CONTEXT MENUS
+    // # CONTEXT MENUS ---------------------------------------------------------
+    import { showContextMenu }  from './contextMenuStore';
+    
     const conMenu_message = [
         {
             name: 'copy',

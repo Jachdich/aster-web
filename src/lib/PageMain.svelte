@@ -99,7 +99,8 @@
     // TODO: get rid of the any in the signature
     async function add_server(info: CustomEvent<any>) {
         if (sync_server === undefined) {
-            // TODO: this shouldn't really be needed, and maybe we should throw an error instead?
+            // TODO: this shouldn't really be needed, 
+            // and maybe we should throw an error instead?
             return;
         }
         let ip: string = info.detail.ip;
@@ -154,17 +155,29 @@
 
 <div id="page">
     {#if show_sidebar}
-        <div id="sidebar"on:contextmenu={(e) => showContextMenu(e, conMenu_sidebar)} role="region">
+        <div id="sidebar"
+            on:contextmenu={(e) => showContextMenu(e, conMenu_sidebar)} 
+            role="region">
             <div id="top-buttons">
-                <button id="aster-button" on:click={() => (show_aster_dialog = true)}>
-                    <svg id="logo" class="pixel-img" style="width: 32px; height: 32px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-                        <path stroke="var(--panel-2)" style="width: 32px" d={aster_logo_small}/>
+                <button id="aster-button"
+                        on:click={() => (show_aster_dialog = true)}>
+                    <svg id="logo" 
+                         class="pixel-img" 
+                         style="width: 32px; height: 32px" 
+                         xmlns="http://www.w3.org/2000/svg" 
+                         viewBox="0 0 16 16" 
+                         fill="currentColor">
+                        <path stroke="var(--panel-2)" 
+                              style="width: 32px" 
+                              d={aster_logo_small}/>
                     </svg>
                 </button>
-                <button id="add-server" on:click={() => (show_add_server = true)}>
+                <button id="add-server" 
+                        on:click={() => (show_add_server = true)}>
                     <Icon src={FiPlus} size="25px"/>
                 </button>
-                <button id="account" on:click={() => (show_account_dialog = true)}>
+                <button id="account" 
+                        on:click={() => (show_account_dialog = true)}>
                     <!-- <img
                         src={profile_img}
                         alt="View profile"
@@ -180,7 +193,9 @@
         <span id="channel-edge-separator"></span>
     {/if}
     {#if selected_server !== undefined}
-        <PanelServerView server={selected_server} sidebar_shown={show_sidebar} show_messages={show_messages}/>
+        <PanelServerView server={selected_server} 
+                         sidebar_shown={show_sidebar} 
+                         show_messages={show_messages}/>
     {/if}
 </div>
 

@@ -11,7 +11,9 @@
     let password: string = "";
 
     function validate_port() {
-        let a = document.getElementById("login-sync-port-input") as HTMLInputElement;
+        let a = document.getElementById(
+            "login-sync-port-input"
+        ) as HTMLInputElement;
         a.value = a.value.replace(/[^0-9]/g, '');
         if (a.value != "" && Number.parseInt(a.value) > 65535) {
             a.value = "65535";
@@ -64,9 +66,11 @@
     function get_random_string() {
         let new_string;
         do {
-            new_string = splash_strings[Math.floor(Math.random() * splash_strings.length)];
-        } while (new_string === previous_string); // Keep picking if it's the same as before
-        previous_string = new_string; // Update the previous string
+            new_string = splash_strings[
+                Math.floor(Math.random() * splash_strings.length)
+            ];
+        } while (new_string === previous_string);
+        previous_string = new_string;
         return new_string;
     }
     let random_splash = get_random_string();

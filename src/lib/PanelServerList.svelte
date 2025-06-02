@@ -6,7 +6,8 @@
     
     import ServerListButton from "./ServerListButton.svelte";
 
-    // ugly hack: basically so we can store an extra `button` attribute on each channel. One day I'll fix this...
+    // ugly hack: basically so we can store an extra `button`
+    // attribute on each channel. One day I'll fix this...
     export let servers: Array<any>;
     const dispatch = createEventDispatcher();
     let selected_server: Server | null = null;
@@ -26,7 +27,10 @@
 
 <div id="server-list">
     {#each servers as server (server)}
-        <ServerListButton server={server} on:click={(event) => switch_server(event, server)} bind:this={server.button} />
+        <ServerListButton server={server} 
+                          on:click={(event) => 
+                          switch_server(event, server)} 
+                          bind:this={server.button}/>
     {/each}
 </div>
 

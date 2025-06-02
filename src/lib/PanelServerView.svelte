@@ -1,26 +1,38 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import type { Server } from "./server";
-    import {
-        Channel,
-        ChannelNotFound,
-        ServerError,
-        Forbidden,
-        MessageInfo,
-    } from "./network";
-    import { tick } from "svelte";
     import { Icon } from "svelte-icons-pack";
     import { FiHelpCircle } from "svelte-icons-pack/fi";
-
     import { t } from "svelte-i18n";
 
+    onMount(() => {
+        window.addEventListener('keydown', handleKeydown);
+        return () => {
+            window.removeEventListener('keydown', handleKeydown);
+        };
+    });
+
+    // # ASTER COMPONENTS ------------------------------------------------------
     import DialogServerProfile from "./DialogServerProfile.svelte";
     import DialogKeybinds from "./DialogKeybinds.svelte";
     import ServerMessage from "./ServerMessage.svelte";
     import PanelChannelList from "./PanelChannelList.svelte";
+
+    let show_profile_dialog = false;
+    let show_channels = true;
+    let show_messages = false;
+    let show_keybinds = false;
+    export let show_messages_call;
+    export let show_sidebar;
+
+    function handleKeydown(event) {
+        if (event.shiftKey && event.key === 'F2') {
+            show_channels = !show_channels;
+        }
+    }
+
+    // # CONTEXT MENUS ---------------------------------------------------------
     import { showContextMenu }  from './contextMenuStore';
 
-    // CONTEXT MENUS
     const conMenu_channels = [
         {
             name: 'hide',
@@ -74,17 +86,37 @@
 
         navigator.clipboard.writeText(selectedText)
     }
-    // CONTEXT MENUS ^^
 
-    // need to figure out how to make this code apply throughout the app so it can just be referenced instead of duplicated
+
+    // # WIDTH DETECTION -------------------------------------------------------
+    // need to figure out how to make this code apply throughout
+    //  the app so it can just be referenced instead of duplicated
     let innerWidth = 0
     let innerHeight = 0
+
+    // using this for now to align with the media query css styles
+    $: is_mobile_width = innerWidth <= 1024 
+
+
+    // # NETWORKING ------------------------------------------------------------
+    import { tick } from "svelte";
+    import type { Server } from "./server";
+    import {
+        Channel,
+        ChannelNotFound,
+        ServerError,
+        Forbidden,
+        MessageInfo,
+    } from "./network";
     
-    $: is_mobile_width = innerWidth <= 1024 // using this for now to align with the media query css styles
+    let message_input: string = "";
+    let no_scroll = false;
+    let message_area: HTMLDivElement;
 
     export let server: Server;
     let channels: Channel[];
-    // TODO: this gets called twice when switching channels (should be called 0 times???) for some reason
+    // TODO: this gets called twice when switching channels 
+    // (should be called 0 times???) for some reason
     // not critical but performance issue
     $: {
         server.conn.message_callback = on_message;
@@ -92,17 +124,7 @@
         channels = server.conn.list_channels();
         // console.log("called");
     }
-    let message_input: string = "";
-
-    let show_profile_dialog = false;
-    let show_channels = true;
-    let show_messages = false;
-    export let show_messages_call;
-    export let show_sidebar;
-    let show_keybinds = false;
-    let no_scroll = false;
-    let message_area: HTMLDivElement;
-
+    
     function switch_channel(channel: CustomEvent<Channel>) {
         const uuid = channel.detail.uuid;
         server.messages = [];
@@ -231,43 +253,39 @@
 
     let selected_channel: Channel | undefined;
     $: selected_channel = get_selected_channel(server);
-    // $: {
-    //     console.log(server.messages);
-    // }
 
-    function handleKeydown(event) {
-        if (event.shiftKey && event.key === 'F2') {
-            show_channels = !show_channels;
-        }
-    }
 
+    // # MESSAGE TEXTAREA ------------------------------------------------------
     let message_textarea = document.getElementById("message-input")
     let message_textarea_default_height = 32 // in pixels
     function autoResizeInput() {
         if (!message_textarea) return;
 
         message_textarea.style.height = "auto";
-        message_textarea.style.height = Math.max(message_textarea.scrollHeight, message_textarea_default_height) + "px";
+        message_textarea.style.height = Math.max(
+            message_textarea.scrollHeight, 
+            message_textarea_default_height
+        ) + "px";
     }
-
-
-    onMount(() => {
-        window.addEventListener('keydown', handleKeydown);
-        return () => {
-            window.removeEventListener('keydown', handleKeydown);
-        };
-    });
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight/>
 
 <div id="server-area">
     {#if show_channels}
-        <div id="server-channels" class="container" on:contextmenu={(e) => showContextMenu(e, conMenu_channels)} role="region">
+        <div id="server-channels" 
+             class="container" 
+             on:contextmenu={(e) => showContextMenu(e, conMenu_channels)} 
+             role="region">
             <div id="server-info">
                 <p id="server-ip">{server.conn.ip}:{server.conn.port}</p>
-                <p class="server-info-text">{$t('PanelServerView.server_info.members')}: {server.conn.known_peers.size}</p>
-                <button id="server-profile-button" on:click={() => (show_profile_dialog = true)}>{$t('DialogServerProfile.title')}</button>
+                <p class="server-info-text">
+                    {$t('PanelServerView.server_info.members')}: {server.conn.known_peers.size}
+                </p>
+                <button id="server-profile-button" 
+                        on:click={() => (show_profile_dialog = true)}>
+                    {$t('DialogServerProfile.title')}
+                </button>
                 <div class="separator" style="margin-top: 10px"/>
             </div>
             <PanelChannelList
@@ -285,7 +303,9 @@
 
     {#if show_messages_call || show_messages}
         <div id="server-messages" class="container">
-            <div id="message-area" on:scroll={message_scroll} bind:this={message_area}>
+            <div id="message-area" 
+                 on:scroll={message_scroll} 
+                 bind:this={message_area}>
                 <!-- {#each server.messages as message (message.uuid)}
                     <div>
                         <ServerMessage {message} />
@@ -310,7 +330,6 @@
                     </button>
                 </div>
                 {/if}
-                <!-- auto resize solution #1: oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"' -->
                 <textarea
                     autofocus={true}
                     id="message-input"
@@ -409,7 +428,7 @@
         max-height: 128px;
     }
 
-    #help-button {
+    /* #help-button {
         background-color: var(--panel-1);
         border-radius: var(--radius-1);
         border-style: none;
@@ -428,7 +447,7 @@
     #help-button:hover {
         background-color: var(--panel-3);
         color: var(--white-1);
-    }
+    } */
 
     #server-area {
         width: 100%;
