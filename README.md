@@ -6,6 +6,8 @@ Developed by **Jachdich** and **elecarno**
  - Minituarised image links.
  - Added context menus.
  - Added localisation.
+    - English localisation
+    - Dutch (Nederlands) localisation
  - Added more splash texts.
 
 **2024.11.03: α-2.2.9**
