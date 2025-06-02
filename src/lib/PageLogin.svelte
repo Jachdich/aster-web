@@ -29,12 +29,7 @@
         "KingJellyfish will write a new markdown parser for Aster in approximately 7 years.",
     ];
 
-    if (new Date().getDate() !== 1) {
-        splash_strings.push("It's the firts of the month!");
-    }
-    
-    let previous_string = ""
-
+    // # LOGIN
     function validate_port() {
         let a = document.getElementById("login-sync-port-input") as HTMLInputElement;
         a.value = a.value.replace(/[^0-9]/g, '');
@@ -52,6 +47,13 @@
         authenticate(uname, password, sync_ip, parseInt(sync_port), "Register")
     }
 
+    // # SPLASH TEXT
+    if (new Date().getDate() !== 1) {
+        splash_strings.push("It's the firts of the month!");
+    }
+    
+    let previous_string = ""
+    
     function get_random_string() {
         let new_string;
         do {

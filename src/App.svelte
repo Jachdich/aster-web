@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { Style } from "./lib/style";
     import {
         Connection,
         set_can_notify,
@@ -8,24 +7,21 @@
         Status,
     } from "./lib/network";
     import { Server } from "./lib/server";
-    import { onMount, onDestroy } from 'svelte';
+    import { onMount } from 'svelte';
     
+    // # ASTER COMPONENTS
     import PageLogin from "./lib/PageLogin.svelte";
     import PageLoading from "./lib/PageLoading.svelte";
     import PageMain from "./lib/PageMain.svelte";
     import DialogChangelog from "./lib/DialogChangelog.svelte";
     import ContextMenu from "./lib/ContextMenu.svelte";
 
-    let show: "Login" | "Loading" | "Main" = "Login";
-    let error_msg = "";
-    let sync_server: Connection | undefined = undefined;
-    let servers: Server[] = [];
-    let show_changelog = false;
 
+    // # i18n (localisation)
     import { i18nReady } from './i18n';
     let locale_ready = false;
 
-    i18nReady.then(() => {
+    i18nReady.then(() => { // wait until i18n has loaded before allowing app to render
         locale_ready = true;
     });
     
@@ -37,6 +33,15 @@
         window.removeEventListener('contextmenu', handler);
         };
     });
+
+
+    let show_changelog = false;
+
+    // # SERVER
+    let page_to_show: "Login" | "Loading" | "Main" = "Login";
+    let error_msg = "";
+    let sync_server: Connection | undefined = undefined;
+    let servers: Server[] = [];
 
     function login(
         uname: string,
@@ -68,20 +73,20 @@
                 ) {
                     error_msg = "Username already in use";
                 }
-                show = "Login";
+                page_to_show = "Login";
             } else if (result instanceof ConnectionError) {
                 error_msg =
                     "Error connecting to sync server, is the server down or did you mistype the IP? (details: " +
                     result.detail +
                     ")";
-                show = "Login";
+                page_to_show = "Login";
             } else {
                 sync_server = server;
                 init_servers(server);
-                show = "Main";
+                page_to_show = "Main";
             }
         });
-        show = "Loading";
+        page_to_show = "Loading";
     }
 
     async function init_servers(sync_server: Connection) {
@@ -134,14 +139,16 @@
 </script>
 
 <main>
-    {#if locale_ready}
-        {#if show == "Login"}
+    <!-- Wait for i18n initialisation before showing app -->
+    {#if locale_ready} 
+        <!-- Handle page visibility -->
+        {#if page_to_show == "Login"}
             <PageLogin authenticate={login} />
-        {:else if show == "Loading"}
+        {:else if page_to_show == "Loading"}
             <PageLoading/>
-        {:else if show == "Main" && sync_server !== undefined}
+        {:else if page_to_show == "Main" && sync_server !== undefined}
             <PageMain {sync_server} {servers} {show_error} />
-        {:else if show == "Main" && sync_server === undefined}
+        {:else if page_to_show == "Main" && sync_server === undefined}
             <div>
                 Major catestrophic error !!! the sync server is undefined yet the
                 page has already been switched to Main (this should only happen once
@@ -149,6 +156,7 @@
             </div>
         {/if}
 
+        <!-- Handle error  -->
         {#if error_msg != ""}
             <div id="error" class="popup centre-window">
                 <div style="margin-bottom: 5px;">{error_msg}</div>
@@ -156,16 +164,26 @@
             </div>
         {/if}
 
+        <!-- handle DialogChanglelog.svelte visibility -->
         {#if show_changelog}
             <DialogChangelog on:dismiss={() => (show_changelog = false)}/>
         {/if}
 
-        <a id="version-number" on:click={() => (show_changelog = true)}>
+        <!-- bottom left version number / changelog button -->
+        <!-- needs a keydown event to stop A11y from complaining -->
+        <a  id="version-number" 
+            on:click={() => (show_changelog = true)} 
+            role="button" 
+            tabindex="0"
+            on:keydown={(e) => { }}
+            >
             ver. α-2.3.0
         </a>
 
+        <!-- context menu for the entire app, options defined in components -->
         <ContextMenu/>
     {:else}
+        <!-- loading spinner to display while i18n loads -->
         <PageLoading />
     {/if}
 </main>

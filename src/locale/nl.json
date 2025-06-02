@@ -40,7 +40,7 @@
     "PageLogin.username": "Gebruikersnaam",
     "PageLogin.username_input.placeholder": "Voer gebruikersnaam in",
     "PageLogin.password": "Watchword",
-    "PageLogin.password_inputplaceholder": "Voer wachtwoord in",
+    "PageLogin.password_input.placeholder": "Voer wachtwoord in",
     "PageLogin.register": "Inschrijven",
     "PageLogin.login": "Inloggen",
 

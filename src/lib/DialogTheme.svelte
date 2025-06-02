@@ -101,6 +101,7 @@
                 <select id="lang-select" on:change={handleLanguageChange}>
                     <option value="en">en: English</option>
                     <option value="nl">nl: Nederlands</option>
+                    <option value="da">da: Dansk</option>
                     <!-- <option value="es">Español</option>
                     <option value="de">Deutsch</option> -->
                   </select>                  

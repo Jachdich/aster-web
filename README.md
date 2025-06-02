@@ -5,9 +5,7 @@ Developed by **Jachdich** and **elecarno**
  - Multiline message support.
  - Minituarised image links.
  - Added context menus.
- - Added localisation.
-    - English localisation
-    - Dutch (Nederlands) localisation
+ - Added localisations: English, Dutch (nl: Nederlands), Danish (da: Dansk)
  - Added more splash texts.
 
 **2024.11.03: α-2.2.9**

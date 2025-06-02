@@ -1,0 +1,59 @@
+{
+    "dialog.cancel": "Annuller",
+    "dialog.accept": "Accepter",
+    "dialog.close": "Luk",
+    "dialog.continue": "Fortsæt",
+    "dialog.change": "Ændre",
+
+    "DialogAccount.title": "Bruger",
+
+    "DialogAddServer.title": "Tilføj Server",
+    "DialogAddServer.ip": "IP",
+    "DialogAddServer.port": "Port",
+
+    "DialogKeybinds.title": "Genvejstaster",
+    "DialogKeybinds.toggle_sidebar": "Skift Vindue",
+    "DialogKeybinds.toggle_channels": "Skift Kanal Liste",
+    "DialogKeybinds.message_delete": "Slet Besked",
+    "DialogKeybinds.message_edit": "Rediger Besked",
+    "DialogKeybinds.message_reply": "Svar",
+
+    "DialogServerProfile.title": "Server Profil",
+    "DialogServerProfile.nickname": "Brugernavn",
+    "DialogServerProfile.avatar": "Profil billede",
+
+    "DialogTheme.colour.background": "Baggrund",
+    "DialogTheme.colour.panel1": "Panel 1",
+    "DialogTheme.colour.panel2": "Panel 2",
+    "DialogTheme.colour.panel3": "Panel 3",
+    "DialogTheme.colour.accent_light": " Lys Tema Farve",
+    "DialogTheme.colour.accent_dark": "Mørk Tema Farve",
+    "DialogTheme.colour.text_white": " Hvid Tekst",
+    "DialogTheme.colour.text_gray": "Grå Tekst",
+    "DialogTheme.colour.text_dark": "Mørk tekst",
+    "DialogTheme.language": "Sprog",
+
+    "PageLogin.sync_server_ip": "Synkroniser Server IP",
+    "PageLogin.sync_server_ip_input.placeholder": "Tilføj IP",
+    "PageLogin.sync_server_port": "Synkroniser Server Port",
+    "PageLogin.sync_server_port_input.placeholder": "Tilføj Port",
+    "PageLogin.username": "Brugernavn",
+    "PageLogin.username_input.placeholder": "Tilføj Brugernavn",
+    "PageLogin.password": "Adgangskode",
+    "PageLogin.password_input.placeholder": "Tilføj Adgangskode",
+    "PageLogin.register": "Registrer",
+    "PageLogin.login": "Log Ind",
+
+    "PageMain.conMenu_sidebar.hide_sidebar": "Gem Sidevindue",
+    "PageMain.conMenu_sidebar.add_server": "Tilføj Server",
+
+    "PanelServerView.conMenu_channels.hide_channels": "Skjul Kanal Liste",
+    "PanelServerView.conMenu_msgtextarea.copy": "Kopier",
+    "PanelServerView.conMenu_msgtextarea.help": "Hjælp",
+    "PanelServerView.server_info.members": "Medlemmer",
+    "PanelServerView.msgtextarea.placeholder": "Send Besked",
+
+    "ServerMessage.conMenu_message.copy": "Kopier",
+    "ServerMessage.conMenu_message.reply": "Svar",
+    "ServerMessage.image_link": "Billede Link"
+}
