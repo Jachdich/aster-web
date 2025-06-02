@@ -55,7 +55,7 @@
     }
 
     #keybinds-dialog {
-        min-width: 280px;
+        min-width: 450px;
         min-height: 150px;
         border-bottom: 3px solid var(--panel-3);
     }

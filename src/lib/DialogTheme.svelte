@@ -99,10 +99,10 @@
             <p>{$t('DialogTheme.language')}</p>
             <div class="picker-dark">
                 <select id="lang-select" on:change={handleLanguageChange}>
-                    <option value="en">English</option>
-                    <option value="nl">Nederlands</option>
-                    <option value="es">Español</option>
-                    <option value="de">Deutsch</option>
+                    <option value="en">en: English</option>
+                    <option value="nl">nl: Nederlands</option>
+                    <!-- <option value="es">Español</option>
+                    <option value="de">Deutsch</option> -->
                   </select>                  
             </div>
         </div>

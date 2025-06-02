@@ -129,7 +129,7 @@
                 <!-- this solution is buggy and doesn't really work -->
                 {#if image_urls.length != 0}
                     <!-- I removed the <br> but it still renders somehow..? tf? Not complaining cause it *works* but like what?-->
-                    <a href="{part.text}">image link</a>
+                    <a href="{part.text}">{$t('ServerMessage.image_link')}</a>
                 {:else}
                     <a href="{part.text}">{part.text}</a>
                 {/if}

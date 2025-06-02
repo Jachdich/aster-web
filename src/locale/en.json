@@ -54,5 +54,6 @@
     "PanelServerView.msgtextarea.placeholder": "Send a message",
 
     "ServerMessage.conMenu_message.copy": "Copy",
-    "ServerMessage.conMenu_message.reply": "Reply"
+    "ServerMessage.conMenu_message.reply": "Reply",
+    "ServerMessage.image_link": "Image"
 }
