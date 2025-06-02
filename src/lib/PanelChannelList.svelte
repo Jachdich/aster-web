@@ -3,7 +3,8 @@
     import { createEventDispatcher } from "svelte";
     import ChannelListButton from "./ChannelListButton.svelte";
 
-    // ugly hack: basically so we can store an extra `button` attribute on each channel. One day I'll fix this...
+    // ugly hack: basically so we can store an extra 
+    // `button` attribute on each channel. One day I'll fix this...
     export let channels: Array<any>;
     const dispatch = createEventDispatcher();
     export let selected_channel: Channel | undefined;
@@ -34,6 +35,6 @@
 
 <style>
     #channel-list {
-        padding-left: 4px;
+        padding-left: 8px;
     }
 </style>

@@ -17,7 +17,12 @@
 
 </script>
 
-<button class="channel-button" on:click={clicked} value="{init_selected ? '1' : '0'}" bind:this={button}>{channel.name}</button>
+<button class="channel-button" 
+        on:click={clicked} 
+        value="{init_selected ? '1' : '0'}" 
+        bind:this={button}>
+    {channel.name}
+</button>
 
 <style>
     .channel-button {

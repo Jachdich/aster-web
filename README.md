@@ -1,6 +1,9 @@
 Developed by **Jachdich** and **elecarno**
 
-**2025.05.31: α-2.3.0**
+**TBD: α-2.3.1**
+ - ///
+
+**2025.06.02: α-2.3.0**
  - Markdown parsing in messages.
  - Multiline message support.
  - Minituarised image links.

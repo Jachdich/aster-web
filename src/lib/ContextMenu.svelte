@@ -1,5 +1,5 @@
 <script>
-    import { contextMenuStore } from './contextMenuStore'; // adjust path as needed
+    import { contextMenuStore } from './contextMenuStore';
 
     let menuRef;
     let state = {
@@ -43,8 +43,37 @@
 <svelte:head>
     <!-- You can change icon sets according to your taste. Change `class` value in `menuItems` above to represent your icons. -->
     <!-- <link rel="stylesheet" href="/icon/css/mfglabs_iconset.css"> -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" 
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" 
+        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" 
+        crossorigin="anonymous" 
+        referrerpolicy="no-referrer"/>
 </svelte:head>
+
+{#if state.show}
+<nav bind:this={menuRef} 
+    style="position:absolute; top:{state.y}px; left:{state.x}px; z-index:1000">
+    <div class="navbar">
+        <ul>
+            {#each state.menuItems as item}
+                {#if item.name === "hr"}
+                    <hr>
+                {:else}
+                    <li>
+                        <button on:click={() => {hideMenu();item.onClick?.();}}>
+                            <i class={item.class}></i>
+                            {item.displayText}
+                            <span class="shortcut">{item.shortcut}</span>
+                        </button>
+                    </li>
+                {/if}
+            {/each}
+        </ul>
+    </div>
+</nav>
+{/if}
+
+<svelte:window on:click={hideMenu} />
 
 <style>
     * {
@@ -112,27 +141,3 @@
         float: right;
     }
 </style>
-
-<!-- <div class="content" bind:this={content}>Right click somewhere!</div> -->
-
-{#if state.show}
-<nav bind:this={menuRef} style="position: absolute; top:{state.y}px; left:{state.x}px; z-index: 1000">
-    <div class="navbar">
-        <ul>
-            {#each state.menuItems as item}
-                {#if item.name === "hr"}
-                    <hr>
-                {:else}
-                    <li>
-                        <button on:click={() => { hideMenu(); item.onClick?.(); }}>
-                            <i class={item.class}></i> {item.displayText} <span class="shortcut">{item.shortcut}</span>
-                        </button>
-                    </li>
-                {/if}
-            {/each}
-        </ul>
-    </div>
-</nav>
-{/if}
-
-<svelte:window on:click={hideMenu} />

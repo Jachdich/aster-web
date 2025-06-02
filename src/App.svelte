@@ -1,27 +1,22 @@
 <script lang="ts">
-    import {
-        Connection,
-        set_can_notify,
-        ServerError,
-        ConnectionError,
-        Status,
-    } from "./lib/network";
-    import { Server } from "./lib/server";
     import { onMount } from 'svelte';
     
-    // # ASTER COMPONENTS
+    // # ASTER COMPONENTS ------------------------------------------------------
     import PageLogin from "./lib/PageLogin.svelte";
     import PageLoading from "./lib/PageLoading.svelte";
     import PageMain from "./lib/PageMain.svelte";
     import DialogChangelog from "./lib/DialogChangelog.svelte";
     import ContextMenu from "./lib/ContextMenu.svelte";
 
+    let show_changelog = false;
 
-    // # i18n (localisation)
+
+    // # i18n (localisation) ---------------------------------------------------
     import { i18nReady } from './i18n';
     let locale_ready = false;
 
-    i18nReady.then(() => { // wait until i18n has loaded before allowing app to render
+    // wait until i18n has loaded before allowing app to render
+    i18nReady.then(() => { 
         locale_ready = true;
     });
     
@@ -34,10 +29,15 @@
         };
     });
 
+    // # NETWORKING ------------------------------------------------------------
+    import { Connection, 
+        set_can_notify, 
+        ServerError,
+        ConnectionError, 
+        Status, 
+    } from "./lib/network";
+    import { Server } from "./lib/server";
 
-    let show_changelog = false;
-
-    // # SERVER
     let page_to_show: "Login" | "Loading" | "Main" = "Login";
     let error_msg = "";
     let sync_server: Connection | undefined = undefined;
@@ -177,7 +177,7 @@
             tabindex="0"
             on:keydown={(e) => { }}
             >
-            ver. α-2.3.0
+            ver. α-2.3.1
         </a>
 
         <!-- context menu for the entire app, options defined in components -->

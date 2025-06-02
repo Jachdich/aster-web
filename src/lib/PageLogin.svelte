@@ -1,13 +1,39 @@
 <script lang="ts">
+    // # CSS & LOCALE ----------------------------------------------------------
     import "../popup.css";
     import { aster_logo_wide } from "./logos";
     import { t } from 'svelte-i18n'
 
+    // # LOGIN -----------------------------------------------------------------
     let sync_ip: string = "cospox.com";
     let sync_port: string = "2345";
     let uname: string = "";
     let password: string = "";
 
+    function validate_port() {
+        let a = document.getElementById("login-sync-port-input") as HTMLInputElement;
+        a.value = a.value.replace(/[^0-9]/g, '');
+        if (a.value != "" && Number.parseInt(a.value) > 65535) {
+            a.value = "65535";
+        }
+    }
+
+    export let authenticate: (
+        uname: string, 
+        passwd: string, 
+        ip: string, 
+        port: number, 
+        action: "Login" | "Register"
+    ) => void;
+
+    function login() {
+        authenticate(uname, password, sync_ip, parseInt(sync_port), "Login")
+    }
+    function register() {
+        authenticate(uname, password, sync_ip, parseInt(sync_port), "Register")
+    }
+
+    // # SPLASH TEXT -----------------------------------------------------------
     let splash_strings = [
         "Aster? Hardly even know 'er!", 
         "Just hope it doesn't get rewritten again.",
@@ -29,25 +55,6 @@
         "KingJellyfish will write a new markdown parser for Aster in approximately 7 years.",
     ];
 
-    // # LOGIN
-    function validate_port() {
-        let a = document.getElementById("login-sync-port-input") as HTMLInputElement;
-        a.value = a.value.replace(/[^0-9]/g, '');
-        if (a.value != "" && Number.parseInt(a.value) > 65535) {
-            a.value = "65535";
-        }
-    }
-
-    export let authenticate: (uname: string, passwd: string, ip: string, port: number, action: "Login" | "Register") => void;
-
-    function login() {
-        authenticate(uname, password, sync_ip, parseInt(sync_port), "Login")
-    }
-    function register() {
-        authenticate(uname, password, sync_ip, parseInt(sync_port), "Register")
-    }
-
-    // # SPLASH TEXT
     if (new Date().getDate() !== 1) {
         splash_strings.push("It's the firts of the month!");
     }
@@ -66,35 +73,63 @@
 </script>
 
 <div id="login-window">
-    <svg id="logo" class="pixel-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 32" fill="currentColor">
+    <svg id="logo" 
+        class="pixel-img" 
+        fill="currentColor"
+        xmlns="http://www.w3.org/2000/svg" 
+        viewBox="0 0 100 32">
         <path stroke="var(--accent-1-light)" d={aster_logo_wide}/>
     </svg>
       
     <div id="login" >
+        <!-- Sync Server Fields -->
         <div class="input-container">
             <p id="login-sync-ip-label">{$t('PageLogin.sync_server_ip')}</p>
-            <input id="login-sync-ip-input" type="text" placeholder="{$t('PageLogin.sync_server_ip_input.placeholder')}" class="login-input" bind:value={sync_ip} required>
+            <input  id="login-sync-ip-input" type="text" 
+                    placeholder="{$t('PageLogin.sync_server_ip_input.placeholder')}" 
+                    class="login-input" required
+                    bind:value={sync_ip}>
         </div>
         <div class="input-container">
             <p id="login-sync-port-label">{$t('PageLogin.sync_server_port')}</p>
-            <input id="login-sync-port-input" type="text" placeholder="{$t('PageLogin.sync_server_port_input.placeholder')}" class="login-input" on:input={validate_port} bind:value={sync_port} required>
+            <input  id="login-sync-port-input" type="text" 
+                    placeholder="{$t('PageLogin.sync_server_port_input.placeholder')}" 
+                    class="login-input" required 
+                    on:input={validate_port} bind:value={sync_port}>
         </div>
+        <!-- Account Fields -->
         <div class="input-container">
             <p id="login-uname-label">{$t('PageLogin.username')}</p>
-            <input id="login-uname-input" type="text" placeholder="{$t('PageLogin.username_input.placeholder')}" class="login-input" bind:value={uname} required>
+            <input  id="login-uname-input" type="text" 
+                    placeholder="{$t('PageLogin.username_input.placeholder')}" 
+                    class="login-input" required
+                    bind:value={uname}>
         </div>
         <div class="input-container">
             <p id="login-pword-label">{$t('PageLogin.password')}</p>
-            <input id="login-pword-input" type="password" placeholder="{$t('PageLogin.password_input.placeholder')}" class="login-input" bind:value={password} required>
+            <input  id="login-pword-input" type="password" 
+                    placeholder="{$t('PageLogin.password_input.placeholder')}" 
+                    class="login-input" required 
+                    bind:value={password}>
         </div>
+        <!-- Buttons -->
         <div class="input-container">
-            <button class="login-button" style="margin-right: 4px;" on:click={register}>{$t('PageLogin.register')}</button>
-            <button class="login-button" style="margin-left: 4px;" on:click={login}>{$t('PageLogin.login')}</button>
+            <button class="login-button" 
+                    style="margin-right: 4px;" 
+                    on:click={register}>
+                {$t('PageLogin.register')}
+            </button>
+            <button class="login-button" 
+                    style="margin-left: 4px;" 
+                    on:click={login}>
+                {$t('PageLogin.login')}
+            </button>
         </div>
     </div>
 
     <div id="splash-text">
-        <p on:click={() => random_splash = get_random_string()} style="cursor: pointer;">
+        <p  on:click={() => random_splash = get_random_string()} 
+            style="cursor: pointer;">
             {random_splash}
         </p>
     </div>

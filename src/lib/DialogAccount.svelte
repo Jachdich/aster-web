@@ -1,37 +1,35 @@
 <script lang="ts">
     import "../popup.css";
-    import { createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
     import { t } from "svelte-i18n";
 
+    import { createEventDispatcher } from "svelte";
+    const dispatch = createEventDispatcher();
+
+    // ACCOUNT -----------------------------------------------------------------
     export let username: string;
     export let password: string;
     export let pfp: string;
-    export let update_settings: (uname: string, password: string, pfp: string) => void;
+    export let update_settings: (
+        uname: string, 
+        password: string, 
+        pfp: string
+    ) => void;
 
     let pfp_files: FileList | undefined = undefined;
     $: {
         if (pfp_files !== undefined) {
             let item = pfp_files.item(0);
             if (item !== null) {
-                resize_file(item, 32).then((blob): Promise<void> => // TODO why is this a promise?
+                // TODO: why is this a promise?
+                resize_file(item, 32).then((blob): Promise<void> => 
                     blobToBase64(blob).then((base64): void => {
                         pfp = base64.substr(base64.indexOf(",") + 1);
                     }),
                 );
             } else {
-                // TODO show error??
+                // TODO: show error??
             }
         }
-    }
-
-    function cancel(_: Event) {
-        dispatch("dismiss");
-    }
-
-    function ok(_: Event) {
-        dispatch("dismiss");
-        update_settings(username, password, pfp);
     }
 
     const blobToBase64 = (blob: Blob): Promise<string> => {
@@ -95,19 +93,25 @@
             );
         });
     };
+
+    // # DIALOG ----------------------------------------------------------------
+    function cancel(_: Event) {
+        dispatch("dismiss");
+    }
+    function ok(_: Event) {
+        dispatch("dismiss");
+        update_settings(username, password, pfp);
+    }
 </script>
 
 <div id="bg-darken">
     <div id="add-server-dialog" class="popup centre-window">
         <div class="input-container">
-            <p
-                style="font-size: 16px; margin-bottom: 10px; margin-left: auto; margin-right: auto; text-align: center"
-            >
-                {$t('DialogAccount.title')}
-            </p>
+            <p id="dialog-title">{$t('DialogAccount.title')}</p>
         </div>
-        <div class="input-container" style="margin: 0 auto; margin-bottom: 16px;">
-            <!-- <p style="margin-right: 16px">Profile&nbspPicture</p>-->
+        <!-- Profile Picture -->
+        <div class="input-container" 
+             style="margin: 0 auto; margin-bottom: 16px;">
             <img
                 id="pfp-image"
                 alt="Profile"
@@ -124,6 +128,7 @@
                 <span id="file-button">{$t('dialog.change')}</span>
             </label>
         </div>
+        <!-- Account Details -->
         <div class="input-container" style="margin-bottom: 8px;">
             <p>{$t('PageLogin.username')}</p>
             <input bind:value={username} />
@@ -132,16 +137,29 @@
             <p>{$t('PageLogin.password')}</p>
             <input type="password" bind:value={password} />
         </div>
+        <!-- Dialog Buttons -->
         <div class="input-container" style="margin-top: auto">
-            <button id="cancel" style="margin-right: 5px" on:click={cancel}
-                >{$t('dialog.cancel')}</button
-            >
-            <button id="ok" style="margin-left: 5px" on:click={ok}>{$t('dialog.accept')}</button>
+            <button id="cancel" style="margin-right: 5px" 
+                    on:click={cancel}>
+                {$t('dialog.cancel')}
+            </button>
+            <button id="ok" style="margin-left: 5px" 
+                    on:click={ok}>
+                {$t('dialog.accept')}
+            </button>
         </div>
     </div>
 </div>
 
 <style>
+    #dialog-title {
+        font-size: 16px; 
+        margin-bottom: 10px; 
+        margin-left: auto; 
+        margin-right: auto; 
+        text-align: center;
+    }
+
     #file-button {
         border: 1px none;
         border-radius: 6px;

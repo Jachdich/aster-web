@@ -1,27 +1,42 @@
 <script lang="ts">
-    import {
-        Connection,
-        ServerError,
-        ConnectionError,
-        Status,
-    } from "./network";
     import { onMount } from "svelte";
-    import { Server } from "./server";
+    onMount(() => {
+        window.addEventListener('keydown', handleKeydown);
+        return () => {
+            window.removeEventListener('keydown', handleKeydown);
+        };
+    });
+
+
+    // # ICONOGRAPHY & LOCALE --------------------------------------------------
     import { Icon } from "svelte-icons-pack";
     import { FiPlus, FiUser } from "svelte-icons-pack/fi";
     import {aster_logo_small} from "./logos";
+    import { t } from "svelte-i18n";
 
+
+    // # ASTER COMPONENTS
     import DialogAster from "./DialogTheme.svelte";
     import DialogAddServer from "./DialogAddServer.svelte";
     import DialogAccount from "./DialogAccount.svelte";
     import PanelServerView from "./PanelServerView.svelte";
     import PanelServerList from "./PanelServerList.svelte";
 
-    import { t } from "svelte-i18n";
+    let show_add_server = false;
+    let show_aster_dialog = false;
+    let show_account_dialog = false;
+    export let show_sidebar = true;
+    export let show_messages = true;
 
+    function handleKeydown(event) {
+        if (event.shiftKey && event.key === "F1") {
+            show_sidebar = !show_sidebar;
+        }
+    }
+
+    // # CONTEXT MENUS ---------------------------------------------------------
     import { showContextMenu }  from './contextMenuStore';
 
-    // CONTEXT MENUS
     const conMenu_sidebar = [
         {
             name: 'hide',
@@ -37,30 +52,37 @@
             class: 'fa-solid fa-plus',
             shortcut: ''
         },
-        // {
-        //     name: 'hr',
-        // },
     ];
-
     function con_hide_sidebar(){
         show_sidebar = !show_sidebar
     }
     function con_add_server(){
         show_add_server = true
     }
-    // CONTEXT MENUS ^^
 
+
+    // # WIDTH DETECTION
     let innerWidth = 0
     let innerHeight = 0
     
-    // $: is_portrait = innerWidth*1.33 <= innerHeight // can be used to detect portrait
-    $: is_mobile_width = innerWidth <= 1024 // using this for now to align with the media query css styles
+    // using is_mobile_width for now to align with the media query css styles
+    // $: is_portrait = innerWidth*1.33 <= innerHeight 
+    $: is_mobile_width = innerWidth <= 1024
 
-    let show_add_server = false;
-    let show_aster_dialog = false;
-    let show_account_dialog = false;
-    export let show_sidebar = true;
-    export let show_messages = true;
+    // export function check_mobile_width() {
+    //     if (is_mobile_width) { return true } else { return false }
+    // }
+
+
+    // # NETWORKING ------------------------------------------------------------
+    import { 
+        Connection, 
+        ServerError, 
+        ConnectionError, 
+        Status 
+    } from "./network";
+    import { Server } from "./server";
+
     export let servers: Server[];
     let selected_server: Server | undefined = undefined;
     export let sync_server: Connection;
@@ -126,23 +148,6 @@
         // sync_server.request({"command": "nick", "nick": uname}); // TODO handle results
         // sync_server.request({"command": "pfp", "data": pfp});
     }
-
-    function handleKeydown(event) {
-        if (event.shiftKey && event.key === "F1") {
-            show_sidebar = !show_sidebar;
-        }
-    }
-
-    onMount(() => {
-        window.addEventListener('keydown', handleKeydown);
-        return () => {
-            window.removeEventListener('keydown', handleKeydown);
-        };
-    });
-
-    // export function check_mobile_width() {
-    //     if (is_mobile_width) { return true } else { return false }
-    // }
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight />
