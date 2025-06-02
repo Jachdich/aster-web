@@ -11,7 +11,7 @@
     // # ICONOGRAPHY & LOCALE --------------------------------------------------
     import { Icon } from "svelte-icons-pack";
     import { FiPlus, FiUser } from "svelte-icons-pack/fi";
-    import {aster_logo_small} from "./logos";
+    import { aster_logo_small } from "./logos";
     import { t } from "svelte-i18n";
 
 
@@ -61,7 +61,7 @@
     }
 
 
-    // # WIDTH DETECTION
+    // # WIDTH DETECTION -------------------------------------------------------
     let innerWidth = 0
     let innerHeight = 0
     
