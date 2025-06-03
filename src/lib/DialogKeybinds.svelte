@@ -48,11 +48,11 @@
 </div>
 
 
-<style>
+<style lang="scss">
     #keybinds-dialog {
         min-width: 450px;
         min-height: 150px;
-        border-bottom: 3px solid var(--panel-3);
+        border-bottom: 3px solid $p-panel-3;
     }
 
     .keybind {

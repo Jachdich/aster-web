@@ -82,7 +82,7 @@
         fill="currentColor"
         xmlns="http://www.w3.org/2000/svg" 
         viewBox="0 0 100 32">
-        <path stroke="var(--accent-1-light)" d={aster_logo_wide}/>
+        <path d={aster_logo_wide}/>
     </svg>
       
     <div id="login" >
@@ -147,7 +147,7 @@
     </div>
 </div>
 
-<style>
+<style lang="scss">
     /* @keyframes rainbow_colours {
         0%    { color: red;       }
         20%   { color: orange;    }
@@ -183,7 +183,7 @@
 
     #login-window {
         padding: 10px;
-        border-radius: var(--radius-3);
+        border-radius: $radius-3;
         -webkit-transform: translate(-50%, -50%);
         transform: translate(-50%, -50%);
         position: absolute;
@@ -198,21 +198,21 @@
     }
 
     #login {
-        color: var(--white-1);
-        background-color: var(--panel-2);
-        border-bottom: 3px solid var(--panel-3);
-        background-color: var(--panel-2);
+        color: $p-text-white;
+        background-color: $p-panel-2;
+        border-bottom: 3px solid $p-panel-3;
+        background-color: $p-panel-2;
         display: flex;
         flex-direction: column;
         align-items: stretch;
         justify-content: center;
         padding: 15px;
-        border-radius: var(--radius-2);
+        border-radius: $radius-2;
     }
 
     .login-input {
         width: 70%;
-        color: var(--white-1);
+        color: $p-text-white;
         margin-left: 8px;
         text-align: center;
         font-size: 15px;
@@ -223,12 +223,12 @@
         width: 80%;
         height: 40px;
         font-size: 15px;
-        color: var(--text-dark);
-        background-color: var(--accent-1-light);
+        color: $p-text-dark;
+        background-color: $p-accent-light;
     }
 
     .login-button:hover {
-        background-color: var(--accent-1-dark);
+        background-color: $p-accent-dark;
     }
 
     .input-container {
@@ -243,5 +243,9 @@
     .input-container p {
         width: 30%;
         font-size: 15px;
+    }
+
+    path {
+        stroke: $p-accent-light
     }
 </style>

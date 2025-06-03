@@ -62,10 +62,10 @@
     </div>
 </div>
 
-<style>
+<style lang="scss">
     #add-server-dialog {
         min-width: 280px;
         min-height: 150px;
-        border-bottom: 3px solid var(--panel-3);
+        border-bottom: 3px solid $p-panel-3;
     }
 </style>

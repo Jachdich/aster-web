@@ -175,7 +175,7 @@
     {/if}
 </div>
 
-<style>
+<style lang="scss">
     .image-container {
         display: flex;
         flex-direction: column;
@@ -189,18 +189,18 @@
     }
 
     .message {
-        color: var(--text-gray);
+        color: $p-text-gray;
         padding-left: 8px;
         display: flex;
         flex-direction: row;
         align-items: stretch;
         justify-content: stretch;
         margin-top: var(--spacing);
-        border-radius: var(--radius-3);
+        border-radius: $radius-3;
     }
 
     .message:hover {
-        background-color: var(--panel-3);
+        background-color: $p-panel-3;
     }
 
     .message-username {
@@ -234,7 +234,7 @@
     }
 
     .message-date-mobile {
-        color: var(--text-gray);
+        color: $p-text-gray;
         margin: 0;
         font-size: 10px;
         margin-top: var(--date-top);
@@ -254,7 +254,7 @@
 
     .message-body {
         margin: 0;
-        color: var(--white-1);
+        color: $p-text-white;
         margin-left: 2px;
         margin-top: var(--body-top);
         white-space: pre-line;

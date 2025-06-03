@@ -153,8 +153,7 @@
                          xmlns="http://www.w3.org/2000/svg" 
                          viewBox="0 0 16 16" 
                          fill="currentColor">
-                        <path stroke="var(--panel-2)" 
-                              style="width: 32px" 
+                        <path style="width: 32px" 
                               d={aster_logo_small}/>
                     </svg>
                 </button>
@@ -211,7 +210,7 @@
 {/if}
 
 
-<style>
+<style lang="scss">
     @media (width >= 1400px) {
         #sidebar {
             height: 100%;
@@ -274,8 +273,8 @@
     #add-server,
     #account,
     #aster-button {
-        background-color: var(--panel-2);
-        border-radius: var(--radius-2);
+        background-color: $p-panel-2;
+        border-radius: $radius-2;
         border-style: none;
         height: 46px;
         width: 46px;
@@ -284,20 +283,24 @@
         flex-direction: row;
         justify-content: center;
         align-items: center;
-        color: var(--white-1);
+        color: $p-text-white;
         transition: background-color 0.4s ease;
     }
 
+    #logo path{
+        stroke: $p-panel-2
+    }
+
     #aster-button {
-        background-color: var(--accent-1-light);
+        background-color: $p-accent-light;
     }
 
     #aster-button:hover {
-        background-color: var(--panel-2);
+        background-color: $p-panel-2;
     }
 
     #aster-button:hover path {
-        stroke: var(--accent-1-light);
+        stroke: $p-accent-light;
     }
 
     #logo path{
@@ -306,7 +309,7 @@
 
     #add-server:hover,
     #account:hover {
-        background-color: var(--panel-1);
+        background-color: $p-panel-1;
     }
 
     #page {

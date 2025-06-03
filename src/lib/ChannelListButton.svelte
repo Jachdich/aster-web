@@ -34,15 +34,15 @@
         width: 96%;
         text-align: left;
         padding-left: 20px;
-        border-radius: var(--radius-3);
+        border-radius: $radius-3;
         min-height: 30px;
         font-size: 15px;
     }
     .channel-button:hover {
-        background-color: var(--panel-1);
+        background-color: $p-panel-1;
     }
 
     button:global(.channel-button[value="1"]) {
-        background-color: var(--panel-3);
+        background-color: $p-panel-3;
     }
 </style>

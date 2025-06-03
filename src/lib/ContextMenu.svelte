@@ -75,23 +75,23 @@
 
 <svelte:window on:click={hideMenu} />
 
-<style>
+<style lang="scss">
     * {
         padding: 0;
         margin: 0;
     }
     .navbar{
         display: inline-flex;
-        border: 1px var(--panel-3) solid;
+        border: 1px $p-panel-3 solid;
         width: 250px;
-        background-color: var(--panel-2);
-        border-radius: var(--radius-2);
+        background-color: $p-panel-2;
+        border-radius: $radius-2;
         overflow: hidden;
         flex-direction: column;
         padding-top: 5px;
         padding-bottom: 5px;
         padding-right: 5px;
-        filter: drop-shadow(0px 5px 7px var(--panel-1));
+        filter: drop-shadow(0px 5px 7px $p-panel-1);
     }
     .navbar ul{
         margin: 6px;
@@ -103,27 +103,27 @@
     }
     ul li button{
         /* font-size: 1rem; */
-        color: var(--white-1);
+        color: $p-text-white;
         width: 100%;
         height: 28px;
         text-align: left;
         border: 0px;
-        background-color: var(--panel-2);
+        background-color: $p-panel-2;
     }
     ul li button:hover{
-        color: var(--text-gray);
+        color: $p-text-gray;
         text-align: left;
-        border-radius: var(--radius-3);
-        background-color: var(--panel-3);
+        border-radius: $radius-3;
+        background-color: $p-panel-3;
     }
     ul li button i{
         padding: 0px 15px 0px 10px;
     }
     ul li button i.fa-square{
-        color: #var(--text-gray);
+        color: $p-text-gray;
     }
     ul li button:hover > i.fa-square{
-        color: var(--text-gray);
+        color: $p-text-gray;
     }
     ul li button:hover > i.warning{
         color: crimson;
@@ -133,11 +133,11 @@
     }
     hr{
         border: none;
-        border-bottom: 1px solid var(--text-gray);
+        border-bottom: 1px solid $p-text-gray;
         margin: 5px 0px;
     }
     .shortcut {
-        color: var(--text-gray);
+        color: $p-text-gray;
         float: right;
     }
 </style>

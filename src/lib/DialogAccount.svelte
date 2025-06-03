@@ -157,12 +157,12 @@
     </div>
 </div>
 
-<style>
+<style lang="scss">
     #file-button {
         border: 1px none;
         border-radius: 6px;
-        color: var(--white-1);
-        background-color: var(--panel-1);
+        color: $p-text-white;
+        background-color: $p-panel-1;
         cursor: pointer;
         padding: 6px;
         padding-left: 16px;
@@ -170,7 +170,7 @@
     }
 
     #file-button:hover {
-        background-color: var(--panel-0);
+        background-color: $p-panel-0;
     }
 
     #pfp-image {
@@ -181,11 +181,11 @@
     }
 
     #add-server-dialog {
-        color: var(--white-1);
-        background-color: var(--panel-2);
+        color: $p-text-white;
+        background-color: $p-panel-2;
         min-width: 280px;
         min-height: 150px;
-        border-bottom: 3px solid var(--panel-3);
+        border-bottom: 3px solid $p-panel-3;
 
         display: flex;
         flex-direction: column;

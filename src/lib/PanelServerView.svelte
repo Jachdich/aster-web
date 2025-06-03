@@ -381,7 +381,7 @@
     {/if}
 </div>
 
-<style>
+<style lang="scss">
     #server-area {
         width: 100%;
         /* max-width: calc(100% - 218px); */
@@ -394,7 +394,7 @@
         display: flex;
         flex-direction: row;
         justify-content: stretch;
-        border-bottom-left-radius: var(--radius-2);
+        border-bottom-left-radius: $radius-2;
     }
 
     #message-area {
@@ -414,13 +414,13 @@
         overflow: hidden;
         display: flex;
         flex-direction: column;
-        border-left: 3px var(--panel-0) solid;
+        border-left: 3px $p-panel-0 solid;
     }
     #server-channels {
         width: 280px;
         display: flex;
         flex-direction: column;
-        color: var(--text-gray);
+        color: $p-text-gray;
     }
     
     #messages-edge-separator {
@@ -476,8 +476,8 @@
         /* min-height: 36px;
         margin: 16px;
         margin-bottom: 20px; */
-        background: var(--panel-1);
-        border-radius: var(--radius-2);
+        background: $p-panel-1;
+        border-radius: $radius-2;
         border-style: none;
         /* text-indent: 12px; */
         color: #d3d3d3;
@@ -514,7 +514,7 @@
     }
 
     .container {
-        background-color: var(--panel-2);
+        background-color: $p-panel-2;
         height: 100%;
     }
 </style>

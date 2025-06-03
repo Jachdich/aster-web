@@ -32,12 +32,12 @@
     </div>
 </div>
 
-<style>
+<style lang="scss">
     #changelog-dialog {
         min-width: 450px;
         min-height: 500px;
         max-height: 700px;
-        border-bottom: 3px solid var(--panel-3);
+        border-bottom: 3px solid $p-panel-3;
     }
 
     #scroll-box {

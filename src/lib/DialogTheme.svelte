@@ -133,13 +133,13 @@
     </div>
 </div>
 
-<style>
+<style lang="scss">
     .picker-dark {
-		--cp-bg-color: var(--panel-2);
-		--cp-border-color: var(--panel-3);
-		--cp-text-color: var(--white-1);
-		--cp-input-color: var(--panel-1);
-		--cp-button-hover-color: var(--panel-3);
+		--cp-bg-color: $p-panel-2;
+		--cp-border-color: $p-panel-3;
+		--cp-text-color: $p-text-white;
+		--cp-input-color: $p-panel-1;
+		--cp-button-hover-color: $p-panel-3;
         margin-left: auto
     }
 
@@ -151,8 +151,8 @@
     }
 
     #theme-editor-dialog {
-        color: var(--white-1);
-        background-color: var(--panel-2);
+        color: $p-text-white;
+        background-color: $p-panel-2;
         width: 30%;
         min-width: 410px;
         max-width: 500px;
@@ -167,9 +167,9 @@
     }
 
     #lang-select {
-        background-color: var(--panel-1);
-        border-radius: var(--radius-3);
-        color: var(--white-1);
+        background-color: $p-panel-1;
+        border-radius: $radius-3;
+        color: $p-text-white;
         border: none;
         padding: 4px;
     }

@@ -52,13 +52,13 @@
     </div>
 </div>
 
-<style>
+<style lang="scss">
     #server-profile-dialog {
-        color: var(--white-1);
-        background-color: var(--panel-2);
+        color: $p-text-white;
+        background-color: $p-panel-2;
         min-width: 280px;
         min-height: 180px;
-        border-bottom: 3px solid var(--panel-3);
+        border-bottom: 3px solid $p-panel-3;
 
         display: flex;
         flex-direction: column;

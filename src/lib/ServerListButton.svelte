@@ -33,7 +33,7 @@
     </button>
 </div>
 
-<style>
+<style lang="scss">
     .outer {
         width: 100%;
         height: fit-content;
@@ -41,8 +41,8 @@
 
     @media (width >= 1400px) {
         .server-button {
-            background-color: var(--panel-2);
-            border-radius: var(--radius-2);
+            background-color: $p-panel-2;
+            border-radius: $radius-2;
             width: calc(100% - 20px);
             margin: 10px;
             padding: 10px;
@@ -50,7 +50,7 @@
             box-sizing: border-box;
         }
         .server-button:hover {
-            background-color: var(--panel-1);
+            background-color: $p-panel-1;
         }
 
         #title-block {
@@ -68,7 +68,7 @@
             box-sizing: content-box;
             width: 48px;
             height: 48px;
-            border-radius: var(--radius-2);
+            border-radius: $radius-2;
         }
 
         /* #server-tagline {
@@ -77,7 +77,7 @@
             margin-top: 5px;
         }
         #server-info {
-            color: var(--text-gray);
+            color: $p-text-gray;
             font-size: 14px;
             margin: 0;
             margin-top: 3px;
@@ -88,15 +88,15 @@
             padding-left: 13px;
         }
         button:global(.server-button[value="1"]) {
-            border-left: 3px solid var(--accent-1-light);
+            border-left: 3px solid $p-accent-light;
             padding-left: 10px;
         }
     }
 
     @media (width < 1400px) {
         .server-button {
-            background-color: var(--panel-2);
-            border-radius: var(--radius-2);
+            background-color: $p-panel-2;
+            border-radius: $radius-2;
             width: 57px;
             height: 57px;
             margin-left: 5px;
@@ -116,7 +116,7 @@
             box-sizing: content-box;
             width: 48px;
             height: 48px;
-            border-radius: calc(var(--radius-2) - 4px);
+            border-radius: calc($radius-2 - 4px);
         }
 
         /* #server-tagline {
