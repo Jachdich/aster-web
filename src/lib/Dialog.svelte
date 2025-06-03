@@ -1,5 +1,6 @@
 <script lang="ts">
     import { t } from "svelte-i18n";
+    import { aster_logo_wide } from "./logos";
 
     import { createEventDispatcher } from "svelte";
     const dispatch = createEventDispatcher();
@@ -11,6 +12,7 @@
     export let has_close:   boolean = true
     export let has_cancel:  boolean = false
     export let has_accept:  boolean = false
+    export let has_logo:    boolean = false
     export let pref_width = 300; //allows to set the preferred width of the dialog
 
     function bg_close(_: Event) {
@@ -29,6 +31,16 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div id="bg-darken" on:click={bg_close}>
+    {#if has_logo}
+    <svg id="logo" 
+         class="pixel-img" 
+         xmlns="http://www.w3.org/2000/svg" 
+         viewBox="0 0 100 100" 
+         fill="currentColor">
+        <path stroke="var(--accent-1-light)" d={aster_logo_wide}/>
+    </svg>
+    {/if}
+
     <!-- note: 20px is subtracted from the pref_width 
                because it has 10px padding -->
     <div id="pan-dialog-{id}" class="pan-dialog"
@@ -77,6 +89,13 @@
         z-index: 2 !important;
         display: grid;
         background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    #logo {
+        position: fixed;
+        width: 360px;
+        left: calc(50% - 165px);
+        top: calc(28%);
     }
 
     .pan-dialog {

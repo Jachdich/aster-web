@@ -1,7 +1,7 @@
 <script lang="ts">
     import "../popup.css";
     import { t } from "svelte-i18n";
-    import { aster_logo_wide } from "./logos";
+    import Dialog from "./Dialog.svelte";
 
 
     // # THEME EDITOR ----------------------------------------------------------
@@ -35,25 +35,16 @@
     // # DIALOG ----------------------------------------------------------------
     import { createEventDispatcher } from "svelte";
     const dispatch = createEventDispatcher();
-    function cancel(_: Event) {
+    function close(_: Event) {
         dispatch("dismiss");
     }
 </script>
 
-<div id="bg-darken">
-    <svg id="logo" 
-         class="pixel-img" 
-         xmlns="http://www.w3.org/2000/svg" 
-         viewBox="0 0 100 100" 
-         fill="currentColor">
-        <path stroke="var(--accent-1-light)" d={aster_logo_wide}/>
-    </svg>
-
-    <div id="theme-editor-dialog" class="popup centre-window">
-        <div class="input-container">
-            <p id="title">Theme Editor</p>
-        </div>
-
+<Dialog id="theme"
+        title="Theme Editor"
+        pref_width={510}
+        has_logo={true}
+        on:dismiss={close}>
         <!-- Theme Settings ------------------------------------------------ -->
         <!-- <div class="input-container">
             <p>{$t('DialogTheme.colour.background')}</p>
@@ -125,13 +116,7 @@
                   </select>                  
             </div>
         </div>
-
-        <!-- DIALOG -------------------------------------------------------- -->
-        <div class="input-container" style="margin-top: auto">
-            <button id="cancel" on:click={cancel}>{$t('dialog.close')}</button>
-        </div>
-    </div>
-</div>
+</Dialog>
 
 <style>
     .picker-dark {
@@ -143,29 +128,6 @@
         margin-left: auto
     }
 
-    #logo {
-        position: fixed;
-        width: 360px;
-        left: calc(50% - 165px);
-        top: calc(50% - 360px);
-    }
-
-    #theme-editor-dialog {
-        color: var(--white-1);
-        background-color: var(--panel-2);
-        width: 30%;
-        min-width: 410px;
-        max-width: 500px;
-        height: 400px;
-
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        justify-content: center;
-
-        padding: 15px;
-    }
-
     #lang-select {
         background-color: var(--panel-1);
         border-radius: var(--radius-3);
@@ -173,5 +135,4 @@
         border: none;
         padding: 4px;
     }
-
 </style>

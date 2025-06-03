@@ -6,6 +6,7 @@ Developed by **Jachdich** and **elecarno**
  - Updated server view layout
  - Updated mobile layout
  - Fixed message input height not returning to default after sending long or multiline message
+ - Updated all dialogs
 
 **2025.06.02: α-2.3.0**
  - Markdown parsing in messages.

@@ -1,12 +1,13 @@
 <script lang="ts">
     import "../popup.css";
     import { t } from "svelte-i18n";
+    import Dialog from "./Dialog.svelte";
 
     // # NETWORKING ------------------------------------------------------------
     import { Server } from "./server";
     export let server: Server;
 
-    function ok(_: Event) {
+    function accept(_: Event) {
         // do the things that need to be thing
     }
 
@@ -18,53 +19,70 @@
     }
 </script>
 
-<div id="bg-darken">
-    <div id="server-profile-dialog" class="popup centre-window">
-        <div class="input-container">
-            <p id="title">{server.conn.name} - {$t('DialogServerProfile.title')}</p>
+<Dialog id="serverprofile"
+        title="{$t('DialogServerProfile.title')}: {server.conn.name}"
+        has_cancel={true} has_close={false} has_accept={true}
+        pref_width={400}
+        on:dismiss={cancel}
+        on:accept={accept}>
+
+        <!-- Profile Picture ----------------------------------------------- -->
+        <div class="con-pfp">
+            <img
+                id="pfp-image"
+                alt="Profile"
+                src="src/assets/aster_logo.png"
+            />
+            <label style="margin-left: auto">
+                <input
+                    type="file"
+                    accept="image/*"
+                    id="pfp-button"
+                    style="display: none"
+                />
+                <span id="file-button">{$t('dialog.change')}</span>
+            </label>
         </div>
 
 
-        <!-- Server Profile ------------------------------------------------ -->
-        <div class="input-container">
-            <p>{$t('DialogServerProfile.nickname')}</p>
+        <!-- Profile Details ----------------------------------------------- -->
+        <div class="con-dialog-row">
+            <span>{$t('DialogServerProfile.nickname')}</span>
             <input/>
         </div>
-        <div class="input-container">
-            <p>{$t('DialogServerProfile.avatar')}</p>
-            <input/>
-        </div>
-
-
-        <!-- Dialog -------------------------------------------------------- -->
-        <div class="input-container" style="margin-top: auto">
-            <button id="cancel" 
-                    style="margin-right: 5px" 
-                    on:click={cancel}>
-                {$t('dialog.cancel')}
-            </button>
-            <button id="ok" 
-                    style="margin-left: 5px" 
-                    on:click={ok}>
-                    {$t('dialog.accept')}
-            </button>
-        </div>
-    </div>
-</div>
+</Dialog>
 
 <style>
-    #server-profile-dialog {
-        color: var(--white-1);
-        background-color: var(--panel-2);
-        min-width: 280px;
-        min-height: 180px;
-        border-bottom: 3px solid var(--panel-3);
-
+    .con-pfp {
         display: flex;
-        flex-direction: column;
-        align-items: stretch;
+        flex-direction: row;
         justify-content: center;
+        align-items: center;
+        text-align: center;
+        width: 30%;
+        margin: 0 auto;
+        font-size: var(--font-size-body);
+    }
 
-        padding: 15px;
+    #file-button {
+        border: 1px none;
+        border-radius: 6px;
+        color: var(--white-1);
+        background-color: var(--panel-1);
+        cursor: pointer;
+        padding: 6px;
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    #file-button:hover {
+        background-color: var(--panel-0);
+    }
+
+    #pfp-image {
+        width: 48px;
+        height: 48px;
+        border-radius: 48px;
+        margin-right: 16px;
     }
 </style>

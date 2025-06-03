@@ -9,6 +9,7 @@
     }
 
     import README from '../../README.md?raw'
+    import Dialog from "./Dialog.svelte";
 
     // TODO: Replace with svelte-markdown at some point
     // Although is that really necessary?
@@ -18,28 +19,16 @@
 
 </script>
 
-<div id="bg-darken">
-    <div id="changelog-dialog" class="popup centre-window">
-        <div class="input-container">
-            <p id="title">Changelog</p>
-        </div>
+<Dialog id="changelog"
+        title="Changelog"
+        pref_width={450}
+        on:dismiss={close}>
         <div id="scroll-box">
             {@html md}
         </div>
-        <div class="input-container">
-            <button id="n_cancel" on:click={close}>Close</button>
-        </div>
-    </div>
-</div>
+</Dialog>
 
 <style>
-    #changelog-dialog {
-        min-width: 450px;
-        min-height: 500px;
-        max-height: 700px;
-        border-bottom: 3px solid var(--panel-3);
-    }
-
     #scroll-box {
         overflow-y: scroll;
         min-height: 400px;
