@@ -5,6 +5,7 @@
     import PageMain from "./lib/PageMain.svelte";
     import DialogChangelog from "./lib/DialogChangelog.svelte";
     import ContextMenu from "./lib/ContextMenu.svelte";
+    import Dialog from "./lib/Dialog.svelte";
 
     let show_changelog = false;
 
@@ -170,10 +171,17 @@
 
         <!-- Handle error  -->
         {#if error_msg != ""}
-            <div id="error" class="popup centre-window">
+            <Dialog id="error"
+                    title="Error" 
+                    on:dismiss={dismiss_error} >
+                <div class="con-dialog-row">
+                    <p>{error_msg}</p>
+                </div>
+            </Dialog>
+            <!-- <div id="error" class="popup centre-window">
                 <div style="margin-bottom: 5px;">{error_msg}</div>
                 <button on:click={dismiss_error} id="error-dismiss">Ok</button>
-            </div>
+            </div> -->
         {/if}
 
         <!-- handle DialogChanglelog.svelte visibility -->
@@ -184,7 +192,7 @@
         {#if !is_mobile_width}
             <!-- bottom left version number / changelog button -->
             <!-- needs a keydown event to stop A11y from complaining -->
-            <a  id="version-number" 
+            <a  id="label-version-number" 
                 on:click={() => (show_changelog = true)} 
                 role="button" 
                 tabindex="0"
@@ -209,7 +217,7 @@
         display: block;
     }
 
-    #version-number {
+    #label-version-number {
         position: absolute;
         bottom: 0;
         left: 0;

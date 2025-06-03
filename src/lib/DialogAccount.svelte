@@ -3,6 +3,7 @@
     import { t } from "svelte-i18n";
 
     import { createEventDispatcher } from "svelte";
+    import Dialog from "./Dialog.svelte";
     const dispatch = createEventDispatcher();
 
     // # ACCOUNT ---------------------------------------------------------------
@@ -98,22 +99,21 @@
     function cancel(_: Event) {
         dispatch("dismiss");
     }
-    function ok(_: Event) {
+    function accept(_: Event) {
         dispatch("dismiss");
         update_settings(username, password, pfp);
     }
 </script>
 
-<div id="bg-darken">
-    <div id="add-server-dialog" class="popup centre-window">
-        <div class="input-container">
-            <p id="title">{$t('DialogAccount.title')}</p>
-        </div>
-
+<Dialog id="account"
+        title="{$t('DialogAccount.title')}"
+        has_cancel={true} has_close={false} has_accept={true}
+        pref_width={400}
+        on:dismiss={cancel}
+        on:accept={accept}>
 
         <!-- Profile Picture ----------------------------------------------- -->
-        <div class="input-container" 
-             style="margin: 0 auto; margin-bottom: 16px;">
+        <div class="con-pfp">
             <img
                 id="pfp-image"
                 alt="Profile"
@@ -133,31 +133,29 @@
 
 
         <!-- Account Details ----------------------------------------------- -->
-        <div class="input-container" style="margin-bottom: 8px;">
-            <p>{$t('PageLogin.username')}</p>
+        <div class="con-dialog-row">
+            <span>{$t('PageLogin.username')}</span>
             <input bind:value={username} />
         </div>
-        <div class="input-container" style="margin-bottom: 16px;">
-            <p>{$t('PageLogin.password')}</p>
+        <div class="con-dialog-row">
+            <span>{$t('PageLogin.password')}</span>
             <input type="password" bind:value={password} />
         </div>
 
-
-        <!-- Dialog Buttons ------------------------------------------------ -->
-        <div class="input-container" style="margin-top: auto">
-            <button id="cancel" style="margin-right: 5px" 
-                    on:click={cancel}>
-                {$t('dialog.cancel')}
-            </button>
-            <button id="ok" style="margin-left: 5px" 
-                    on:click={ok}>
-                {$t('dialog.accept')}
-            </button>
-        </div>
-    </div>
-</div>
+</Dialog>
 
 <style>
+    .con-pfp {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        width: 30%;
+        margin: 0 auto;
+        font-size: var(--font-size-body);
+    }
+
     #file-button {
         border: 1px none;
         border-radius: 6px;
@@ -178,20 +176,5 @@
         height: 48px;
         border-radius: 48px;
         margin-right: 16px;
-    }
-
-    #add-server-dialog {
-        color: var(--white-1);
-        background-color: var(--panel-2);
-        min-width: 280px;
-        min-height: 150px;
-        border-bottom: 3px solid var(--panel-3);
-
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        justify-content: center;
-
-        padding: 15px;
     }
 </style>

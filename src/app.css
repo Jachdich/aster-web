@@ -130,3 +130,39 @@ a:link {
 a:visited {
   color: var(--accent-2);
 }
+
+/* dialogs ------------------------------------------------------------------ */
+.con-dialog-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: stretch;
+  align-items: center;
+  text-align: center;
+  font-size: var(--font-size-body);
+}
+
+.con-dialog-row p {
+  width: 100%;
+  margin: 0;
+}
+
+.con-dialog-row span {
+  text-align: left;
+  width: 40%;
+  margin: 0;
+  /* padding to make the text look aligned
+     with the left edge because the buttons
+     below have rounded corners */
+  padding-left: 3px;
+}
+
+.con-dialog-row input {
+  height: 30px;
+  width: 60%;
+  padding-left: 10px;
+}
+
+.con-dialog-row button {
+  width: 100%;
+  height: 30px;
+}
