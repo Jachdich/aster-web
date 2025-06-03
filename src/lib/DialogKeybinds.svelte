@@ -14,6 +14,9 @@
         <div class="input-container">
             <p id="title">{$t('DialogKeybinds.title')}</p>
         </div>
+
+        
+        <!-- Keybinds ------------------------------------------------------ -->
         <div class="keybind">
             <p class="keybind-text" style="">Shift + F1</p>
             <p class="keybind-label" style="">{$t('DialogKeybinds.toggle_sidebar')}</p>
@@ -35,6 +38,9 @@
             <p class="keybind-text">Alt + LMB</p>
             <p class="keybind-label">{$t('DialogKeybinds.message_reply')}</p>
         </div>
+
+
+        <!-- DIALOG -------------------------------------------------------- -->
         <div class="input-container">
             <button id="n_cancel" on:click={close}>{$t('dialog.close')}</button>
         </div>

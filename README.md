@@ -2,6 +2,7 @@ Developed by **Jachdich** and **elecarno**
 
 **TBD: α-2.3.1**
  - Added German (de: Deustch) localisation
+ - Added Spanish (es: Español) localisation
 
 **2025.06.02: α-2.3.0**
  - Markdown parsing in messages.

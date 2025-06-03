@@ -6,10 +6,11 @@ import { register, init, getLocaleFromNavigator, waitLocale, locale } from 'svel
 const STORAGE_KEY = 'app-locale';
 
 // connects all of the localisation files
-register('en', () => import('./locale/en.json'));
-register('nl', () => import('./locale/nl.json'));
 register('da', () => import('./locale/da.json'));
 register('de', () => import('./locale/de.json'));
+register('en', () => import('./locale/en.json'));
+register('es', () => import('./locale/es.json'));
+register('nl', () => import('./locale/nl.json'));
 
 // attempt to get saved locale setting
 function getStartingLocale() {

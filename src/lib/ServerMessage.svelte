@@ -1,40 +1,32 @@
 <script lang="ts">
-    import { parse } from "svelte/compiler";
+    import { t } from "svelte-i18n";
 
+    // no idea why these exports are here or why they are
+    // commented but I'm too afraid to remove them
     // export let content;
     // export let username;
     // export let date;
     // export let img_src;
     
-    // this really shouldn't exist on every single message but help me god its 23:12 and I am running
+    // # WIDTH DETECTION -------------------------------------------------------
+    // this really shouldn't exist on every single message 
+    // but help me god its 23:12 and I am running
     // out of time so deal with it
     let innerWidth = 0
     let innerHeight = 0
     
-    $: is_mobile_width = innerWidth <= 1024 // using this for now to align with the media query css styles
+    // using this for now to align with the media query css styles
+    $: is_mobile_width = innerWidth <= 1024 
 
-    import type { MessageInfo } from "./network";
-    import { style } from "./style";
-    // import snarkdown from "snarkdown";
+
+    // # MARKDOWN --------------------------------------------------------------
     import SvelteMarkdown from "svelte-markdown";
     import mdParagraph from "./markdown/mdParagraph.svelte";
     import mdHTML from "./markdown/mdHTML.svelte";
     import mdHeader from "./markdown/mdHeader.svelte";
     import mdCode from "./markdown/mdCode.svelte";
     import mdCodeSpan from "./markdown/mdCodeSpan.svelte";
-    export let message: MessageInfo;
 
-    type Style = "link" | "none";
-    class StyledText {
-        style: Style;
-        text: string;
-        constructor(style: Style, text: string) {
-            this.style = style;
-            this.text = text;
-        }
-    }
-
-    import { t } from "svelte-i18n";
 
     // # CONTEXT MENUS ---------------------------------------------------------
     import { showContextMenu }  from './contextMenuStore';
@@ -62,8 +54,24 @@
     function con_reply(){
         // james this is for you probably lol
     }
-    // CONTEXT MENUS ^^
-    
+
+
+    // # MESSAGE ---------------------------------------------------------------
+    import type { MessageInfo } from "./network";
+    import { style } from "./style";
+
+    export let message: MessageInfo;
+
+    type Style = "link" | "none";
+    class StyledText {
+        style: Style;
+        text: string;
+        constructor(style: Style, text: string) {
+            this.style = style;
+            this.text = text;
+        }
+    }
+
     let spacing = style.message_spacing;
     let uname_top = (24 - 20) / 2;
     let body_top = uname_top;
@@ -117,7 +125,9 @@
     style="--spacing: {spacing}px; --uname-top: {uname_top}px; --date-top: {date_top}px; --body-top: {body_top}px; --uname-width: {uname_width}px;"
     on:contextmenu={(e) => showContextMenu(e, conMenu_message)} role="region"
 >
-    <img src="data:image/png;base64,{message.author.pfp}" alt="{message.author.display_name}'s profile picture" class="message-pfp" />
+    <img src="data:image/png;base64,{message.author.pfp}" 
+         alt="{message.author.display_name}'s profile picture" 
+         class="message-pfp" />
     {#if !is_mobile_width}
         <div class="message-username">{message.author.display_name}</div>
     {/if}
@@ -129,13 +139,15 @@
             {#if part.style === "link"}
                 <!-- this solution is buggy and doesn't really work -->
                 {#if image_urls.length != 0}
-                    <!-- I removed the <br> but it still renders somehow..? tf? Not complaining cause it *works* but like what?-->
+                    <!-- I removed the <br> but it still renders somehow..? tf? 
+                    Not complaining cause it *works* but like what?-->
                     <a href="{part.text}">{$t('ServerMessage.image_link')}</a>
                 {:else}
                     <a href="{part.text}">{part.text}</a>
                 {/if}
             {:else}
-                <!-- svelte-markdown tries to render HTML as its own thing, so we can fully sanitize by using a custom renderer -->
+                <!-- svelte-markdown tries to render HTML as its own thing, 
+                 so we can fully sanitize by using a custom renderer -->
                 <SvelteMarkdown 
                     source={part.text}
                     renderers={{
@@ -150,15 +162,28 @@
         {/each}
         <div class="image-container">
         {#each image_urls as image_url}
-            <img class="embed-image" src={image_url} style="display: none;" on:load={show_image} on:error={(_) => image_urls = image_urls.filter((url) => url != image_url)}>
+            <img class="embed-image" 
+                 src={image_url} 
+                 alt="embed failed to load"
+                 style="display: none;"
+                 on:load={show_image} 
+                 on:error={
+                    (_) => image_urls = image_urls.filter(
+                        (url) => url != image_url
+                    )
+                }>
         {/each}
         </div>
         {#if is_mobile_width}
-            <div class="message-date-mobile">{message.date.toLocaleString()}</div>
+            <div class="message-date-mobile">
+                {message.date.toLocaleString()}
+            </div>
         {/if}
     </div>
     {#if !is_mobile_width}
-        <div class="message-date">{message.date.toLocaleString()}</div>
+        <div class="message-date">
+            {message.date.toLocaleString()}
+        </div>
     {/if}
 </div>
 

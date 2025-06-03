@@ -86,7 +86,7 @@
     </svg>
       
     <div id="login" >
-        <!-- Sync Server Fields -->
+        <!-- Sync Server Fields -------------------------------------------- -->
         <div class="input-container">
             <p id="login-sync-ip-label">{$t('PageLogin.sync_server_ip')}</p>
             <input  id="login-sync-ip-input" type="text" 
@@ -101,7 +101,9 @@
                     class="login-input" required 
                     on:input={validate_port} bind:value={sync_port}>
         </div>
-        <!-- Account Fields -->
+
+
+        <!-- Account Fields ------------------------------------------------ -->
         <div class="input-container">
             <p id="login-uname-label">{$t('PageLogin.username')}</p>
             <input  id="login-uname-input" type="text" 
@@ -116,7 +118,9 @@
                     class="login-input" required 
                     bind:value={password}>
         </div>
-        <!-- Buttons -->
+
+
+        <!-- Login/Register ------------------------------------------------ -->
         <div class="input-container">
             <button class="login-button" 
                     style="margin-right: 4px;" 
@@ -131,6 +135,7 @@
         </div>
     </div>
 
+    
     <div id="splash-text">
         <p  on:click={() => random_splash = get_random_string()} 
             style="cursor: pointer;">
@@ -209,6 +214,7 @@
         margin-left: 8px;
         text-align: center;
         font-size: 15px;
+        height: 45px;
     }
 
     .login-button {

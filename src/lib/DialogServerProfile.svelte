@@ -23,7 +23,9 @@
         <div class="input-container">
             <p id="title">{server.conn.name} - {$t('DialogServerProfile.title')}</p>
         </div>
-        <!-- Server Profile -->
+
+
+        <!-- Server Profile ------------------------------------------------ -->
         <div class="input-container">
             <p>{$t('DialogServerProfile.nickname')}</p>
             <input/>
@@ -32,7 +34,9 @@
             <p>{$t('DialogServerProfile.avatar')}</p>
             <input/>
         </div>
-        <!-- Dialog -->
+
+
+        <!-- Dialog -------------------------------------------------------- -->
         <div class="input-container" style="margin-top: auto">
             <button id="cancel" 
                     style="margin-right: 5px" 

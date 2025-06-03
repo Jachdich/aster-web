@@ -158,6 +158,7 @@
         <div id="sidebar"
             on:contextmenu={(e) => showContextMenu(e, conMenu_sidebar)} 
             role="region">
+            <!-- Top Buttons Menu ------------------------------------------ -->
             <div id="top-buttons">
                 <button id="aster-button"
                         on:click={() => (show_aster_dialog = true)}>
@@ -187,11 +188,15 @@
                     <Icon src={FiUser} size="25px" />
                 </button>
             </div>
+
+            <!-- Server List ----------------------------------------------- -->
             <PanelServerList {servers} on:switch_server={switch_server}/>
         </div>
     {:else}
         <span id="channel-edge-separator"></span>
     {/if}
+
+    <!-- Server View ------------------------------------------------------- -->
     {#if selected_server !== undefined}
         <PanelServerView server={selected_server} 
                          sidebar_shown={show_sidebar} 
@@ -199,6 +204,8 @@
     {/if}
 </div>
 
+
+<!-- Dialogs --------------------------------------------------------------- -->
 {#if show_add_server}
     <DialogAddServer
         on:dismiss={() => (show_add_server = false)}
@@ -217,6 +224,7 @@
         on:dismiss={() => (show_account_dialog = false)}
     />
 {/if}
+
 
 <style>
     @media (width >= 1024px) {

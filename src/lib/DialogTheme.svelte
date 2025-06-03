@@ -48,10 +48,13 @@
          fill="currentColor">
         <path stroke="var(--accent-1-light)" d={aster_logo_wide}/>
     </svg>
+
     <div id="theme-editor-dialog" class="popup centre-window">
         <div class="input-container">
             <p id="title">Theme Editor</p>
         </div>
+
+        <!-- Theme Settings ------------------------------------------------ -->
         <div class="input-container">
             <p>{$t('DialogTheme.colour.background')}</p>
             <div class="picker-dark">
@@ -106,6 +109,8 @@
                 <ColorPicker bind:text_dark label=""/>
             </div>
         </div>
+
+        <!-- Language Selector --------------------------------------------- -->
         <div class="input-container">
             <p>{$t('DialogTheme.language')}</p>
             <div class="picker-dark">
@@ -115,11 +120,13 @@
                     <option value="da">da: Dansk</option>
                     <option value="de">de: Deutsch</option>
                     <option value="en">en: English</option>
+                    <option value="es">es: Español</option>
                     <option value="nl">nl: Nederlands</option>
-                    <!-- <option value="es">Español</option> -->
                   </select>                  
             </div>
         </div>
+
+        <!-- DIALOG -------------------------------------------------------- -->
         <div class="input-container" style="margin-top: auto">
             <button id="cancel" on:click={cancel}>{$t('dialog.close')}</button>
         </div>

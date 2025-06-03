@@ -1,9 +1,11 @@
 <script lang="ts">
-    import { onMount } from "svelte";
+    // # ICONOGRAPHY & LOCALE --------------------------------------------------
     import { Icon } from "svelte-icons-pack";
     import { FiHelpCircle } from "svelte-icons-pack/fi";
     import { t } from "svelte-i18n";
 
+    // # SVELTE ----------------------------------------------------------------
+    import { onMount } from "svelte";
     onMount(() => {
         window.addEventListener('keydown', handleKeydown);
         return () => {
@@ -45,7 +47,6 @@
         //     name: 'hr',
         // },
     ];
-
     function con_hide_channels(){
         show_channels = !show_channels
     }
@@ -90,7 +91,7 @@
 
     // # WIDTH DETECTION -------------------------------------------------------
     // need to figure out how to make this code apply throughout
-    //  the app so it can just be referenced instead of duplicated
+    // the app so it can just be referenced instead of duplicated
     let innerWidth = 0
     let innerHeight = 0
 
@@ -134,7 +135,8 @@
             } else if (msg instanceof ServerError) {
             } else {
                 if (selected_channel?.uuid !== uuid) {
-                    // I guess the user changed the channel before the request could complete. just ignore it.
+                    // I guess the user changed the channel before 
+                    // the request could complete. just ignore it.
                     return;
                 }
                 for (const m of msg) {
@@ -175,7 +177,11 @@
     function on_message(message: MessageInfo) {
         if (message.channel_uuid == server.selected_channel_uuid) {
             const is_at_bottom =
-                Math.abs(message_area.scrollHeight - message_area.offsetHeight - message_area.scrollTop) < 5;
+                Math.abs(
+                    message_area.scrollHeight 
+                    - message_area.offsetHeight 
+                    - message_area.scrollTop
+                ) < 5;
 
             server.messages.push(message);
             server.messages = server.messages;
@@ -218,7 +224,7 @@
             no_scroll = false;
         }
 
-        let scrolled_to_top = div.scrollTop + div.scrollHeight - div.clientHeight === 0
+        let scrolled_to_top = (div.scrollTop + div.scrollHeight - div.clientHeight === 0)
         if (scrolled_to_top && selected_channel !== undefined && server.messages.length > 0) {
             const before_id = server.messages[0].uuid;
             // console.log(before_id, server.requesting_history_from);
@@ -272,11 +278,13 @@
 <svelte:window bind:innerWidth bind:innerHeight/>
 
 <div id="server-area">
+    <!-- Channel List ------------------------------------------------------ -->
     {#if show_channels}
         <div id="server-channels" 
              class="container" 
              on:contextmenu={(e) => showContextMenu(e, conMenu_channels)} 
              role="region">
+            <!-- Server Info ----------------------------------------------- -->
             <div id="server-info">
                 <p id="server-ip">{server.conn.ip}:{server.conn.port}</p>
                 <p class="server-info-text">
@@ -288,6 +296,7 @@
                 </button>
                 <div class="separator" style="margin-top: 10px"/>
             </div>
+            <!-- Channels -------------------------------------------------- -->
             <PanelChannelList
                 {channels}
                 selected_channel={selected_channel}
@@ -300,9 +309,12 @@
             <span id="messages-edge-separator"></span>
         {/if}
     {/if}
-
+    
+    
+    <!-- Server Area ------------------------------------------------------- -->
     {#if show_messages_call || show_messages}
         <div id="server-messages" class="container">
+            <!-- Messages -->
             <div id="message-area" 
                  on:scroll={message_scroll} 
                  bind:this={message_area}>
@@ -317,6 +329,7 @@
                     </div>
                 {/each}
             </div>
+            <!-- Message Input --------------------------------------------  -->
             <div id="message-input-container">
                 {#if is_mobile_width}
                 <div id="toggle-container">
@@ -343,12 +356,12 @@
                     style="height: {message_textarea_default_height}px;"
                     on:contextmenu={(e) => showContextMenu(e, conMenu_msgtextarea)} 
                 />
-                <!-- <button id="help-button" on:click={() => (show_keybinds = true)}>
-                    <Icon src={FiHelpCircle} size="20px" />
-                </button> -->
             </div>
         </div>
     {/if}
+
+
+    <!-- DIALOGS ----------------------------------------------------------- -->
     {#if show_profile_dialog}
         <DialogServerProfile
             on:dismiss={() => (show_profile_dialog = false)}

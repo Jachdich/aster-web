@@ -1,0 +1,59 @@
+{
+    "dialog.cancel": "Cancelar",
+    "dialog.accept": "Acceptar",
+    "dialog.close": "Cerrar",
+    "dialog.continue": "Continuar",
+    "dialog.change": "Cambiar",
+
+    "DialogAccount.title": "Cuenta",
+
+    "DialogAddServer.title": "Añadir Servidor",
+    "DialogAddServer.ip": "IP",
+    "DialogAddServer.port": "Puerto",
+
+    "DialogKeybinds.title": "Asignaciones de Teclas",
+    "DialogKeybinds.toggle_sidebar": "Alternar Barra Lateral",
+    "DialogKeybinds.toggle_channels": "Alternar Lista de Canales",
+    "DialogKeybinds.message_delete": "Eliminar mensaje",
+    "DialogKeybinds.message_edit": "Editar Mensaje",
+    "DialogKeybinds.message_reply": "Responder al Mensaje",
+
+    "DialogServerProfile.title": "Perfil del Servidor",
+    "DialogServerProfile.nickname": "Apodo",
+    "DialogServerProfile.avatar": "Avatar",
+
+    "DialogTheme.colour.background": "Fondo",
+    "DialogTheme.colour.panel1": "Panel 1",
+    "DialogTheme.colour.panel2": "Panel 2",
+    "DialogTheme.colour.panel3": "Panel 3",
+    "DialogTheme.colour.accent_light": "Acento Claro",
+    "DialogTheme.colour.accent_dark": "Acento Oscuro",
+    "DialogTheme.colour.text_white": "Texto Blanco",
+    "DialogTheme.colour.text_gray": "Texto Gris",
+    "DialogTheme.colour.text_dark": "Texto Oscuro",
+    "DialogTheme.language": "Lenguaje",
+
+    "PageLogin.sync_server_ip": "Sincronizar IP del Servidor",
+    "PageLogin.sync_server_ip_input.placeholder": "Introducir IP",
+    "PageLogin.sync_server_port": "Sincronizar el Puerto del Servidor",
+    "PageLogin.sync_server_port_input.placeholder": "Introducir Port",
+    "PageLogin.username": "Usuario",
+    "PageLogin.username_input.placeholder": "Introducir Usuario",
+    "PageLogin.password": "Contraseña",
+    "PageLogin.password_input.placeholder": "Introducir Contraseña",
+    "PageLogin.register": "Registrar",
+    "PageLogin.login": "Iniciar Sesión",
+
+    "PageMain.conMenu_sidebar.hide_sidebar": "Ocultar Barra Lateral",
+    "PageMain.conMenu_sidebar.add_server": "Añadir Servidor",
+
+    "PanelServerView.conMenu_channels.hide_channels": "Ocultar Lista de Canales",
+    "PanelServerView.conMenu_msgtextarea.copy": "Copiar",
+    "PanelServerView.conMenu_msgtextarea.help": "Ayuda",
+    "PanelServerView.server_info.members": "Miembros",
+    "PanelServerView.msgtextarea.placeholder": "Enviar un Mensaje",
+
+    "ServerMessage.conMenu_message.copy": "Copiar",
+    "ServerMessage.conMenu_message.reply": "Responder",
+    "ServerMessage.image_link": "Imagen"
+}

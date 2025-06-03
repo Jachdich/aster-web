@@ -28,7 +28,9 @@
         <div class="input-container">
             <p id="title">{$t('DialogAddServer.title')}</p>
         </div>
-        <!-- New Server Info -->
+
+        
+        <!-- New Server Info ----------------------------------------------- -->
         <div class="input-container">
             <p id="n_t_ip">{$t('DialogAddServer.ip')}</p>
             <input id="n_ip" bind:value={ip} />
@@ -42,7 +44,9 @@
                 bind:value={port}
             />
         </div>
-        <!-- Dialog -->
+
+
+        <!-- DIALOG -------------------------------------------------------- -->
         <div class="input-container">
             <button id="n_cancel" 
                     style="margin-right: 5px" 

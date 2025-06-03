@@ -2,10 +2,10 @@
     import type { Channel } from "./network";
     export let channel: Channel;
     export let init_selected: boolean;
+    let button: HTMLButtonElement;
     import { createEventDispatcher } from 'svelte';
     const dispatch = createEventDispatcher();
-    let button: HTMLButtonElement;
-    
+
     function clicked() {
         dispatch("click", {"channel": channel});
         button.setAttribute("value", "1");

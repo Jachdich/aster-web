@@ -5,7 +5,7 @@
     import { createEventDispatcher } from "svelte";
     const dispatch = createEventDispatcher();
 
-    // ACCOUNT -----------------------------------------------------------------
+    // # ACCOUNT ---------------------------------------------------------------
     export let username: string;
     export let password: string;
     export let pfp: string;
@@ -107,9 +107,11 @@
 <div id="bg-darken">
     <div id="add-server-dialog" class="popup centre-window">
         <div class="input-container">
-            <p id="dialog-title">{$t('DialogAccount.title')}</p>
+            <p id="title">{$t('DialogAccount.title')}</p>
         </div>
-        <!-- Profile Picture -->
+
+
+        <!-- Profile Picture ----------------------------------------------- -->
         <div class="input-container" 
              style="margin: 0 auto; margin-bottom: 16px;">
             <img
@@ -128,7 +130,9 @@
                 <span id="file-button">{$t('dialog.change')}</span>
             </label>
         </div>
-        <!-- Account Details -->
+
+
+        <!-- Account Details ----------------------------------------------- -->
         <div class="input-container" style="margin-bottom: 8px;">
             <p>{$t('PageLogin.username')}</p>
             <input bind:value={username} />
@@ -137,7 +141,9 @@
             <p>{$t('PageLogin.password')}</p>
             <input type="password" bind:value={password} />
         </div>
-        <!-- Dialog Buttons -->
+
+
+        <!-- Dialog Buttons ------------------------------------------------ -->
         <div class="input-container" style="margin-top: auto">
             <button id="cancel" style="margin-right: 5px" 
                     on:click={cancel}>
@@ -152,14 +158,6 @@
 </div>
 
 <style>
-    #dialog-title {
-        font-size: 16px; 
-        margin-bottom: 10px; 
-        margin-left: auto; 
-        margin-right: auto; 
-        text-align: center;
-    }
-
     #file-button {
         border: 1px none;
         border-radius: 6px;
@@ -182,17 +180,6 @@
         margin-right: 16px;
     }
 
-    #bg-darken {
-        width: 100%;
-        height: 100%;
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 2 !important;
-        display: grid;
-        background-color: rgba(0, 0, 0, 0.5);
-    }
-
     #add-server-dialog {
         color: var(--white-1);
         background-color: var(--panel-2);
@@ -206,28 +193,5 @@
         justify-content: center;
 
         padding: 15px;
-    }
-
-    .input-container {
-        display: flex;
-        flex-direction: row;
-        justify-content: stretch;
-        align-items: center;
-        font-size: 15px;
-    }
-
-    .input-container p {
-        width: 30%;
-        margin: 0;
-    }
-
-    .input-container input {
-        height: 30px;
-        padding-left: 10px;
-    }
-
-    .input-container button {
-        width: 100%;
-        height: 30px;
     }
 </style>
