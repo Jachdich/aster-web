@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { is_mobile_width } from '../stores/window_size'
     import { t } from "svelte-i18n";
 
     // no idea why these exports are here or why they are
@@ -7,17 +8,6 @@
     // export let username;
     // export let date;
     // export let img_src;
-    
-    // # WIDTH DETECTION -------------------------------------------------------
-    // this really shouldn't exist on every single message 
-    // but help me god its 23:12 and I am running
-    // out of time so deal with it
-    let innerWidth = 0
-    let innerHeight = 0
-    
-    // using this for now to align with the media query css styles
-    $: is_mobile_width = innerWidth <= 1024 
-
 
     // # MARKDOWN --------------------------------------------------------------
     import SvelteMarkdown from "svelte-markdown";
@@ -118,8 +108,6 @@
     }
 </script>
 
-<svelte:window bind:innerWidth bind:innerHeight />
-
 <div
     class="message"
     style="--spacing: {spacing}px; --uname-top: {uname_top}px; --date-top: {date_top}px; --body-top: {body_top}px; --uname-width: {uname_width}px;"
@@ -128,11 +116,11 @@
     <img src="data:image/png;base64,{message.author.pfp}" 
          alt="{message.author.display_name}'s profile picture" 
          class="message-pfp" />
-    {#if !is_mobile_width}
+    {#if !$is_mobile_width}
         <div class="message-username">{message.author.display_name}</div>
     {/if}
     <div class="message-body">
-        {#if is_mobile_width}
+        {#if $is_mobile_width}
             <p class="message-username-mobile">{message.author.display_name}</p>
         {/if}
         {#each content_parts as part}
@@ -174,13 +162,13 @@
                 }>
         {/each}
         </div>
-        {#if is_mobile_width}
+        {#if $is_mobile_width}
             <div class="message-date-mobile">
                 {message.date.toLocaleString()}
             </div>
         {/if}
     </div>
-    {#if !is_mobile_width}
+    {#if !$is_mobile_width}
         <div class="message-date">
             {message.date.toLocaleString()}
         </div>

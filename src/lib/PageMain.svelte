@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { is_mobile_width } from '../stores/window_size'
     import { onMount } from "svelte";
     onMount(() => {
         window.addEventListener('keydown', handleKeydown);
@@ -60,20 +61,6 @@
         show_add_server = true
     }
 
-
-    // # WIDTH DETECTION -------------------------------------------------------
-    let innerWidth = 0
-    let innerHeight = 0
-    
-    // using is_mobile_width for now to align with the media query css styles
-    // $: is_portrait = innerWidth*1.33 <= innerHeight 
-    $: is_mobile_width = innerWidth <= 1024
-
-    // export function check_mobile_width() {
-    //     if (is_mobile_width) { return true } else { return false }
-    // }
-
-
     // # NETWORKING ------------------------------------------------------------
     import { 
         Connection, 
@@ -90,7 +77,7 @@
 
     function switch_server(server: CustomEvent<Server>) {
         selected_server = server.detail;
-        if (is_mobile_width) {
+        if ($is_mobile_width) {
             // show_sidebar = false
             show_messages = false
         }
@@ -150,8 +137,6 @@
         // sync_server.request({"command": "pfp", "data": pfp});
     }
 </script>
-
-<svelte:window bind:innerWidth bind:innerHeight />
 
 <div id="page">
     {#if show_sidebar}

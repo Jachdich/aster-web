@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
-    
     // # ASTER COMPONENTS ------------------------------------------------------
     import PageLogin from "./lib/PageLogin.svelte";
     import PageLoading from "./lib/PageLoading.svelte";
@@ -10,8 +8,14 @@
 
     let show_changelog = false;
 
+    // # WIDTH DETECTION & LOCALE ----------------------------------------------
+    import { onMount, onDestroy } from 'svelte';
+    import { initWindowSizeListener, removeWindowSizeListener } from './stores/window_size';
 
-    // # i18n (localisation) ---------------------------------------------------
+    let innerWidth = 0
+    let innerHeight = 0
+    $: is_mobile_width = innerWidth <= 1024
+
     import { i18nReady } from './i18n';
     let locale_ready = false;
 
@@ -19,14 +23,20 @@
     i18nReady.then(() => { 
         locale_ready = true;
     });
-    
+
     onMount(() => {
+        initWindowSizeListener();
+
         const handler = (e) => e.preventDefault();
         window.addEventListener('contextmenu', handler);
 
         return () => {
         window.removeEventListener('contextmenu', handler);
         };
+    });
+
+    onDestroy(() => {
+        removeWindowSizeListener();
     });
 
     // # NETWORKING ------------------------------------------------------------
@@ -138,6 +148,8 @@
     }
 </script>
 
+<svelte:window bind:innerWidth bind:innerHeight />
+
 <main>
     <!-- Wait for i18n initialisation before showing app -->
     {#if locale_ready} 
@@ -169,16 +181,18 @@
             <DialogChangelog on:dismiss={() => (show_changelog = false)}/>
         {/if}
 
-        <!-- bottom left version number / changelog button -->
-        <!-- needs a keydown event to stop A11y from complaining -->
-        <a  id="version-number" 
-            on:click={() => (show_changelog = true)} 
-            role="button" 
-            tabindex="0"
-            on:keydown={(e) => { }}
-            >
-            ver. α-2.3.1
-        </a>
+        {#if !is_mobile_width}
+            <!-- bottom left version number / changelog button -->
+            <!-- needs a keydown event to stop A11y from complaining -->
+            <a  id="version-number" 
+                on:click={() => (show_changelog = true)} 
+                role="button" 
+                tabindex="0"
+                on:keydown={(e) => { }}
+                >
+                ver. α-2.3.1
+            </a>
+        {/if}
 
         <!-- context menu for the entire app, options defined in components -->
         <ContextMenu/>

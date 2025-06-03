@@ -71,7 +71,7 @@
             border-radius: var(--radius-2);
         }
 
-        #server-tagline {
+        /* #server-tagline {
             text-align: left;
             margin: 0;
             margin-top: 5px;
@@ -81,7 +81,7 @@
             font-size: 14px;
             margin: 0;
             margin-top: 3px;
-        }
+        } */
 
         button:global(.server-button[value="0"]) {
             border: none;
@@ -116,10 +116,10 @@
             box-sizing: content-box;
             width: 48px;
             height: 48px;
-            border-radius: var(--radius-2);
+            border-radius: calc(var(--radius-2) - 4px);
         }
 
-        #server-tagline {
+        /* #server-tagline {
             display: none;
         }
         #server-info {
@@ -128,6 +128,6 @@
 
         .separator {
             display: none;
-        }
+        } */
     }
 </style>

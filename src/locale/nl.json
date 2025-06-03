@@ -33,9 +33,9 @@
     "DialogTheme.colour.text_dark": "Tekst Donker",
     "DialogTheme.language": "Taal",
 
-    "PageLogin.sync_server_ip": "Synchronisatieserver-IP",
+    "PageLogin.sync_server_ip": "Synchronisatie server IP",
     "PageLogin.sync_server_ip_input.placeholder": "Voer IP in",
-    "PageLogin.sync_server_port": "Synchronisatieserver-port",
+    "PageLogin.sync_server_port": "Synchronisatie server port",
     "PageLogin.sync_server_port_input.placeholder": "Voer port in",
     "PageLogin.username": "Gebruikersnaam",
     "PageLogin.username_input.placeholder": "Voer gebruikersnaam in",

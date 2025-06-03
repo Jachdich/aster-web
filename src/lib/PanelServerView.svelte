@@ -1,7 +1,9 @@
 <script lang="ts">
+    import { is_mobile_width } from '../stores/window_size'
+
     // # ICONOGRAPHY & LOCALE --------------------------------------------------
     import { Icon } from "svelte-icons-pack";
-    import { FiHelpCircle } from "svelte-icons-pack/fi";
+    import { FiHelpCircle, FiArrowLeft } from "svelte-icons-pack/fi";
     import { t } from "svelte-i18n";
 
     // # SVELTE ----------------------------------------------------------------
@@ -88,16 +90,18 @@
         navigator.clipboard.writeText(selectedText)
     }
 
+    // # MESSAGE TEXTAREA ------------------------------------------------------
+    let message_textarea = document.getElementById("message-input")
+    let message_textarea_default_height = 32 // in pixels
+    function autoResizeInput() {
+        if (!message_textarea) return;
 
-    // # WIDTH DETECTION -------------------------------------------------------
-    // need to figure out how to make this code apply throughout
-    // the app so it can just be referenced instead of duplicated
-    let innerWidth = 0
-    let innerHeight = 0
-
-    // using this for now to align with the media query css styles
-    $: is_mobile_width = innerWidth <= 1024 
-
+        message_textarea.style.height = "auto";
+        message_textarea.style.height = Math.max(
+            message_textarea.scrollHeight, 
+            message_textarea_default_height
+        ) + "px";
+    }
 
     // # NETWORKING ------------------------------------------------------------
     import { tick } from "svelte";
@@ -109,6 +113,7 @@
         Forbidden,
         MessageInfo,
     } from "./network";
+    import PageLoading from "./PageLoading.svelte";
     
     let message_input: string = "";
     let no_scroll = false;
@@ -148,7 +153,7 @@
                 });
 
                 show_messages = true
-                if (is_mobile_width) {
+                if ($is_mobile_width) {
                     show_channels = false
                 }
             }
@@ -171,6 +176,8 @@
                 channel: server.selected_channel_uuid,
             });
             message_input = "";
+            if (!message_textarea) return;
+            message_textarea.style.height = message_textarea_default_height.toString() + "px"
         }
     }
 
@@ -259,23 +266,7 @@
 
     let selected_channel: Channel | undefined;
     $: selected_channel = get_selected_channel(server);
-
-
-    // # MESSAGE TEXTAREA ------------------------------------------------------
-    let message_textarea = document.getElementById("message-input")
-    let message_textarea_default_height = 32 // in pixels
-    function autoResizeInput() {
-        if (!message_textarea) return;
-
-        message_textarea.style.height = "auto";
-        message_textarea.style.height = Math.max(
-            message_textarea.scrollHeight, 
-            message_textarea_default_height
-        ) + "px";
-    }
 </script>
-
-<svelte:window bind:innerWidth bind:innerHeight/>
 
 <div id="server-area">
     <!-- Channel List ------------------------------------------------------ -->
@@ -284,6 +275,7 @@
              class="container" 
              on:contextmenu={(e) => showContextMenu(e, conMenu_channels)} 
              role="region">
+            
             <!-- Server Info ----------------------------------------------- -->
             <div id="server-info">
                 <p id="server-ip">{server.conn.ip}:{server.conn.port}</p>
@@ -296,14 +288,27 @@
                 </button>
                 <div class="separator" style="margin-top: 10px"/>
             </div>
+
+
             <!-- Channels -------------------------------------------------- -->
             <PanelChannelList
                 {channels}
                 selected_channel={selected_channel}
                 on:switch_channel={switch_channel}
             />
+
+            <!-- Sidebar Toggle -------------------------------------------- -->
+            {#if $is_mobile_width}
+            <div id="toggle-container">
+                <button id="sidebar-button" on:click={() => {
+                        show_channels = false
+                    }}>
+                    <Icon src={FiArrowLeft} size="20px" />
+                </button>
+            </div>
+            {/if}
         </div>
-        <span id="channel-messages-separator"></span>
+        <!-- <span id="channel-messages-separator"></span> -->
     {:else}
         {#if show_sidebar && show_channels}
             <span id="messages-edge-separator"></span>
@@ -331,18 +336,6 @@
             </div>
             <!-- Message Input --------------------------------------------  -->
             <div id="message-input-container">
-                {#if is_mobile_width}
-                <div id="toggle-container">
-                    <button id="channel-list-button" on:click={() => {
-                            show_channels = !show_channels; 
-                            if (is_mobile_width) {
-                                show_messages = !show_messages;
-                            }
-                        }}>
-                        <Icon src={FiHelpCircle} size="20px" />
-                    </button>
-                </div>
-                {/if}
                 <textarea
                     autofocus={true}
                     id="message-input"
@@ -357,6 +350,19 @@
                     on:contextmenu={(e) => showContextMenu(e, conMenu_msgtextarea)} 
                 />
             </div>
+
+            <!-- Channel List Toggle --------------------------------------- -->
+            {#if $is_mobile_width}
+            <div id="toggle-container">
+                <button id="channel-list-button" on:click={() => {
+                        show_channels = true; 
+                        show_messages = false;
+                    }}>
+                    <Icon src={FiArrowLeft} size="20px" />
+                </button>
+                <span>{selected_channel.name}</span>
+            </div>
+            {/if}
         </div>
     {/if}
 
@@ -376,6 +382,21 @@
 </div>
 
 <style>
+    #server-area {
+        width: 100%;
+        /* max-width: calc(100% - 218px); */
+        /* 218px = width of server list + right margin*/
+        float: right;
+        overflow: hidden;
+        /* margin-right: 18px; */
+        /* margin-left: 18px; */
+        margin-bottom: 25px;
+        display: flex;
+        flex-direction: row;
+        justify-content: stretch;
+        border-bottom-left-radius: var(--radius-2);
+    }
+
     #message-area {
         display: flex;
         flex-direction: column-reverse;
@@ -383,15 +404,23 @@
         overflow-y: scroll;
         margin-left: 10px;
         margin-right: 10px;
-        /* border-radius: var(--radius-2); */
-        border-top-left-radius: 0px;
-        border-top-right-radius: 0px;
         height: calc(100% - 48px);
     }
 
-    #channel-messages-separator {
-        height: 100%;
-        min-width: 13px;
+    #server-messages {
+        box-sizing: border-box;
+        flex: 1;
+        float: right;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        border-left: 3px var(--panel-0) solid;
+    }
+    #server-channels {
+        width: 280px;
+        display: flex;
+        flex-direction: column;
+        color: var(--text-gray);
     }
     
     #messages-edge-separator {
@@ -403,16 +432,11 @@
         display: flex;
         flex-direction: row;
         margin-left: 8px;
+        margin-bottom: 4px;
     }
-
-    #server-messages {
-        box-sizing: border-box;
-        width: 100%;
-        float: right;
-        overflow: hidden;
-        display: flex;
-        /* margin-left: 13px; */
-        flex-direction: column;
+    #toggle-container span {
+        width: 80%;
+        text-align: center;
     }
 
     #message-input-container {
@@ -422,6 +446,29 @@
         /* min-height: 42px; */
         margin: 16px;
         margin-bottom: 20px;
+    }
+
+    @media (max-width: 1024px) {
+        #server-area {
+            margin-bottom: 0;
+            border-radius: 0;
+        }
+
+        #server-channels {
+            width: 100%;
+        }
+
+        #server-messages {
+            border: none;
+        }
+
+        #message-input-container {
+            margin: 8px;
+        }
+
+        #message-input {
+            margin: 0px;
+        }
     }
 
     #message-input {
@@ -441,40 +488,6 @@
         max-height: 128px;
     }
 
-    /* #help-button {
-        background-color: var(--panel-1);
-        border-radius: var(--radius-1);
-        border-style: none;
-        width: 36px;
-        height: 36px;
-        margin-left: 8px;
-        margin-top: 0;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        color: var(--text-gray);
-        transition: background-color 0.4s ease;
-    }
-
-    #help-button:hover {
-        background-color: var(--panel-3);
-        color: var(--white-1);
-    } */
-
-    #server-area {
-        width: 100%;
-        /* max-width: calc(100% - 218px); */
-        /* 218px = width of server list + right margin*/
-        float: right;
-        overflow: hidden;
-        margin-right: 18px;
-        /* margin-left: 18px; */
-        margin-bottom: 25px;
-        display: flex;
-        flex-direction: row;
-        justify-content: stretch;
-    }
     #server-info {
         display: flex;
         flex-direction: column;
@@ -491,12 +504,6 @@
         margin: 0;
         margin-left: 10%;
     }
-    #server-channels {
-        width: 280px;
-        display: flex;
-        flex-direction: column;
-        color: var(--text-gray);
-    }
 
     #server-profile-button {
         width: 80%;
@@ -509,8 +516,5 @@
     .container {
         background-color: var(--panel-2);
         height: 100%;
-        border-radius: var(--radius-2);
-        border-top-left-radius: 0px;
-        border-top-right-radius: 0px;
     }
 </style>

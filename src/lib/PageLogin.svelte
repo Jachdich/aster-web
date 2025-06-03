@@ -88,14 +88,14 @@
     <div id="login" >
         <!-- Sync Server Fields -------------------------------------------- -->
         <div class="input-container">
-            <p id="login-sync-ip-label">{$t('PageLogin.sync_server_ip')}</p>
+            <p class="login-input-label">{$t('PageLogin.sync_server_ip')}</p>
             <input  id="login-sync-ip-input" type="text" 
                     placeholder="{$t('PageLogin.sync_server_ip_input.placeholder')}" 
                     class="login-input" required
                     bind:value={sync_ip}>
         </div>
         <div class="input-container">
-            <p id="login-sync-port-label">{$t('PageLogin.sync_server_port')}</p>
+            <p >{$t('PageLogin.sync_server_port')}</p>
             <input  id="login-sync-port-input" type="text" 
                     placeholder="{$t('PageLogin.sync_server_port_input.placeholder')}" 
                     class="login-input" required 
@@ -105,14 +105,14 @@
 
         <!-- Account Fields ------------------------------------------------ -->
         <div class="input-container">
-            <p id="login-uname-label">{$t('PageLogin.username')}</p>
+            <p >{$t('PageLogin.username')}</p>
             <input  id="login-uname-input" type="text" 
                     placeholder="{$t('PageLogin.username_input.placeholder')}" 
                     class="login-input" required
                     bind:value={uname}>
         </div>
         <div class="input-container">
-            <p id="login-pword-label">{$t('PageLogin.password')}</p>
+            <p >{$t('PageLogin.password')}</p>
             <input  id="login-pword-input" type="password" 
                     placeholder="{$t('PageLogin.password_input.placeholder')}" 
                     class="login-input" required 
@@ -135,9 +135,12 @@
         </div>
     </div>
 
-    
+
     <div id="splash-text">
-        <p  on:click={() => random_splash = get_random_string()} 
+        <!-- A11y hates me because I made a <p> clickable -->
+        <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <p on:click={() => random_splash = get_random_string()} 
             style="cursor: pointer;">
             {random_splash}
         </p>
@@ -145,25 +148,24 @@
 </div>
 
 <style>
-    /* @keyframes color_shifting {
-        0%   { color: #be8fd0; }
-        25%  { color: #a776bb; }
-        50%  { color: #be8fd0; }
-        75%  { color: #a776bb; }
-        100% { color: #be8fd0; }
+    /* @keyframes rainbow_colours {
+        0%    { color: red;       }
+        20%   { color: orange;    }
+        40%   { color: yellow;    }
+        60%   { color: lime;      }
+        80%   { color: lightblue; }
+        100%  { color: red;       }  
     } */
 
     #splash-text {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+        display: flex; flex-direction: column; 
+        align-items: center; justify-content: center;
         height: 100px;
         font-size: 18px;
         text-align: center;
-        /* font-weight: bold; */
-        /* animation: color_shifting 5s infinite; */
         transition: 0.5s ease;
+        /* font-weight: bold;
+        animation: rainbow_colours 5s infinite; */
         -webkit-user-select: none; /* Safari */
         -ms-user-select: none; /* IE 10 and IE 11 */
         user-select: none; /* Standard syntax */
@@ -185,12 +187,12 @@
         -webkit-transform: translate(-50%, -50%);
         transform: translate(-50%, -50%);
         position: absolute;
-        width: 30%;
-        min-width: 410px;
-        max-width: 500px;
         left: 50%;
         right: 50%;
         top: 50%;
+        width: 30%;
+        min-width: 350px;
+        max-width: 500px;
         display: flex;
         flex-direction: column;
     }
