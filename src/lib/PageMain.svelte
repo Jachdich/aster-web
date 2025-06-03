@@ -212,7 +212,7 @@
 
 
 <style>
-    @media (width >= 1024px) {
+    @media (width >= 1400px) {
         #sidebar {
             height: 100%;
             min-width: 200px;
@@ -220,7 +220,7 @@
         }
     }
 
-    @media (width < 1024px) {
+    @media (width < 1400px) {
         #sidebar {
             height: 100%;
             min-width: 70px;
@@ -228,7 +228,7 @@
         }
     }
 
-    @media (width >= 1024px) {
+    @media (width >= 1400px) {
         #top-buttons {
             display: flex;
             flex-direction: row;
@@ -245,7 +245,7 @@
         }
     }
 
-    @media (width < 1024px) {
+    @media (width < 1400px) {
         #top-buttons {
             display: flex;
             flex-direction: column;

@@ -24,13 +24,13 @@
     {channel.name}
 </button>
 
-<style>
+<style lang="scss">
     .channel-button {
         box-sizing: border-box;
         list-style-type: none;
         border: none;
         background-color: inherit;
-        color: var(--text-gray);
+        color: $p-text-gray;
         width: 96%;
         text-align: left;
         padding-left: 20px;

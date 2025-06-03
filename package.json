@@ -12,6 +12,7 @@
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^3.1.1",
     "@tsconfig/svelte": "^5.0.4",
+    "sass": "^1.89.1",
     "svelte": "^4.2.18",
     "svelte-awesome-color-picker": "^3.1.0",
     "svelte-check": "^3.8.1",
@@ -21,7 +22,6 @@
   },
   "dependencies": {
     "marked": "^15.0.12",
-    "sass": "^1.89.1",
     "snarkdown": "^2.0.0",
     "svelte-i18n": "^4.0.1",
     "svelte-icons-pack": "^3.1.3",

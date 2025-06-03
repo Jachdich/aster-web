@@ -1,0 +1,100 @@
+// # FONTS ---------------------------------------------------------------------
+.atkinson-hyperlegible-regular {
+  font-family: "Atkinson Hyperlegible", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.atkinson-hyperlegible-bold {
+  font-family: "Atkinson Hyperlegible", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.atkinson-hyperlegible-regular-italic {
+  font-family: "Atkinson Hyperlegible", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.atkinson-hyperlegible-bold-italic {
+  font-family: "Atkinson Hyperlegible", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.red-hat-mono-regular {
+  font-family: "Red Hat Mono", monospace;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.red-hat-mono-italic {
+  font-family: "Red Hat Mono", monospace;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: italic;
+}
+
+
+// # STYLES --------------------------------------------------------------------
+* {
+  font-family: $font-body-sans
+}
+
+input, textarea, button {
+  border: 1px none;
+  border-radius: $radius-3;
+  color: $p-text-white;
+  background-color: $p-panel-1;
+}
+
+button, select {
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: $p-panel-0;
+}
+
+body, html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: $font-body-sans;
+}
+
+body {
+  background-color: $p-panel-0;
+  color: $p-text-white;
+}
+
+input:focus {
+  outline: none;
+}
+
+#app, main {
+  width: 100%;
+  height: 100%;
+}
+
+.separator {
+  background-color: $p-panel-3;
+  height: 3px;
+  border-radius: 3px;
+  width: 80%;
+  margin: 0 auto;
+}
+
+.pixel-img {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  image-rendering: -moz-crisp-edges;
+  shape-rendering: crispEdges;
+}
+
+a {
+  &:link { color: #c0a0ff; }
+  &:visited { color: #c0a0ff; }
+}

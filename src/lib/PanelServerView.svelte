@@ -352,7 +352,7 @@
             </div>
 
             <!-- Channel List Toggle --------------------------------------- -->
-            {#if $is_mobile_width}
+            <!-- {#if $is_mobile_width}
             <div id="toggle-container">
                 <button id="channel-list-button" on:click={() => {
                         show_channels = true; 
@@ -362,7 +362,7 @@
                 </button>
                 <span>{selected_channel.name}</span>
             </div>
-            {/if}
+            {/if} -->
         </div>
     {/if}
 

@@ -39,7 +39,7 @@
         height: fit-content;
     }
 
-    @media (width >= 1024px) {
+    @media (width >= 1400px) {
         .server-button {
             background-color: var(--panel-2);
             border-radius: var(--radius-2);
@@ -93,7 +93,7 @@
         }
     }
 
-    @media (width < 1024px) {
+    @media (width < 1400px) {
         .server-button {
             background-color: var(--panel-2);
             border-radius: var(--radius-2);
