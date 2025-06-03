@@ -36,7 +36,7 @@
         padding-left: 20px;
         border-radius: var(--radius-3);
         min-height: 30px;
-        font-size: 15px;
+        font-size: var(--font-size-body);
     }
     .channel-button:hover {
         background-color: var(--panel-1);

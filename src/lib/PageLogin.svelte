@@ -215,14 +215,14 @@
         color: var(--white-1);
         margin-left: 8px;
         text-align: center;
-        font-size: 15px;
+        font-size: var(--font-size-body);
         height: 45px;
     }
 
     .login-button {
         width: 80%;
         height: 40px;
-        font-size: 15px;
+        font-size: var(--font-size-body);
         color: var(--text-dark);
         background-color: var(--accent-1-light);
     }
@@ -242,6 +242,6 @@
 
     .input-container p {
         width: 30%;
-        font-size: 15px;
+        font-size: var(--font-size-body);
     }
 </style>

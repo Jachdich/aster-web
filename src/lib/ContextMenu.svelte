@@ -132,9 +132,8 @@
         color: navy;
     }
     hr{
-        border: none;
-        border-bottom: 1px solid var(--text-gray);
         margin: 5px 0px;
+        width: 100%;
     }
     .shortcut {
         color: var(--text-gray);

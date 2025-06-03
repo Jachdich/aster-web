@@ -35,6 +35,7 @@
 
 <style>
     #channel-list {
+        margin-top: 0px;
         padding-left: 8px;
     }
 </style>

@@ -108,6 +108,7 @@
     }
 </script>
 
+
 <div
     class="message"
     style="--spacing: {spacing}px; --uname-top: {uname_top}px; --date-top: {date_top}px; --body-top: {body_top}px; --uname-width: {uname_width}px;"
@@ -207,7 +208,7 @@
         margin: 0;
         margin-left: 10px;
         margin-right: 6px;
-        font-size: 15px;
+        font-size: var(--font-size-body);
         margin-top: var(--uname-top);
         min-width: var(--uname-width);
     }
@@ -217,7 +218,7 @@
         margin: 0;
         margin-left: 10px;
         /* margin-right: 6px; */
-        font-size: 15px;
+        font-size: var(--font-size-body);
         margin-top: var(--uname-top);
     }
 

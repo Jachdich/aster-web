@@ -14,7 +14,7 @@
         <div class="input-container">
             <p id="title">{$t('DialogKeybinds.title')}</p>
         </div>
-
+        
         
         <!-- Keybinds ------------------------------------------------------ -->
         <div class="keybind">
@@ -60,7 +60,7 @@
         flex-direction: row;
         justify-content: stretch;
         align-items: center;
-        font-size: 15px;
+        font-size: var(--font-size-body);
         width: 90%; 
         margin: 0 auto; 
         margin-bottom: 16px;

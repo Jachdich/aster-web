@@ -286,7 +286,7 @@
                         on:click={() => (show_profile_dialog = true)}>
                     {$t('DialogServerProfile.title')}
                 </button>
-                <div class="separator" style="margin-top: 10px"/>
+                <hr>
             </div>
 
 
@@ -296,19 +296,7 @@
                 selected_channel={selected_channel}
                 on:switch_channel={switch_channel}
             />
-
-            <!-- Sidebar Toggle -------------------------------------------- -->
-            {#if $is_mobile_width}
-            <div id="toggle-container">
-                <button id="sidebar-button" on:click={() => {
-                        show_channels = false
-                    }}>
-                    <Icon src={FiArrowLeft} size="20px" />
-                </button>
-            </div>
-            {/if}
         </div>
-        <!-- <span id="channel-messages-separator"></span> -->
     {:else}
         {#if show_sidebar && show_channels}
             <span id="messages-edge-separator"></span>
@@ -481,7 +469,7 @@
         border-style: none;
         /* text-indent: 12px; */
         color: #d3d3d3;
-        font-size: 15px;
+        font-size: var(--font-size-body);
         padding-left: 24px;
         padding-right: 24px;
         padding-top: 12px;
@@ -509,6 +497,7 @@
         width: 80%;
         margin: 0 auto;
         margin-top: 10px;
+        margin-bottom: 14px;
         font-size: 14px;
         padding: 5px;
     }

@@ -26,9 +26,8 @@
             <p class="name">{server.conn.name}</p>
         </div>
         <!-- Temporarily removing these aspects until they're actually implemented -->
-        <!-- <div class="separator" style="width: 90%; margin-top: 7px; margin-bottom: 7px"></div>
-        <p id="server-tagline">A cool Aster server</p>
-        <p id="server-info">[msgs] / 7 days</p> -->
+        <p id="server-tagline">[server tagline]</p>
+        <p id="server-info">[msgs] / 7 days</p>
         
     </button>
 </div>
@@ -71,8 +70,7 @@
             border-radius: var(--radius-2);
         }
 
-        /* #server-tagline {
-            text-align: left;
+        #server-tagline {
             margin: 0;
             margin-top: 5px;
         }
@@ -81,7 +79,7 @@
             font-size: 14px;
             margin: 0;
             margin-top: 3px;
-        } */
+        }
 
         button:global(.server-button[value="0"]) {
             border: none;
@@ -119,15 +117,11 @@
             border-radius: calc(var(--radius-2) - 4px);
         }
 
-        /* #server-tagline {
+        #server-tagline {
             display: none;
         }
         #server-info {
             display: none;
         }
-
-        .separator {
-            display: none;
-        } */
     }
 </style>

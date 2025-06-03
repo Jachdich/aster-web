@@ -55,7 +55,7 @@
         </div>
 
         <!-- Theme Settings ------------------------------------------------ -->
-        <div class="input-container">
+        <!-- <div class="input-container">
             <p>{$t('DialogTheme.colour.background')}</p>
             <div class="picker-dark">
                 <ColorPicker bind:bg label=""/>
@@ -108,7 +108,7 @@
             <div class="picker-dark">
                 <ColorPicker bind:text_dark label=""/>
             </div>
-        </div>
+        </div> -->
 
         <!-- Language Selector --------------------------------------------- -->
         <div class="input-container">
