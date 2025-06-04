@@ -10,32 +10,32 @@
 
 	let current_theme = "none";
 
-	function apply_theme(css: string) {
-		const existing = document.getElementById("custom-theme");
-		if (existing) existing.remove();
+    function apply_theme(css: string) {
+        const existing = document.getElementById("custom-theme");
+        if (existing) existing.remove();
 
-		const style = document.createElement("style");
-		style.id = "custom-theme";
-		style.textContent = css;
-		document.head.appendChild(style);
-	}
+        const style = document.createElement("style");
+        style.id = "custom-theme";
+        style.textContent = css;
+        document.head.appendChild(style);
+    }
 
-	function theme_upload(event: Event) {
-		const input = event.target as HTMLInputElement;
-		const file = input.files?.[0];
-		if (!file) return;
+    function theme_upload(event: Event) {
+        const input = event.target as HTMLInputElement;
+        const file = input.files?.[0];
+        if (!file) return;
 
-		const reader = new FileReader();
-		reader.onload = (e) => {
-			const css = e.target?.result as string;
-			apply_theme(css);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const css = e.target?.result as string;
+            apply_theme(css);
 
-			localStorage.setItem("custom_theme_css", css);
-			localStorage.setItem("custom_theme_name", file.name);
-			current_theme = file.name;
-		};
-		reader.readAsText(file);
-	}
+            localStorage.setItem("custom_theme_css", css);
+            localStorage.setItem("custom_theme_name", file.name);
+            current_theme = file.name;
+        };
+        reader.readAsText(file);
+    }
 
     function reset_theme() {
         const existing = document.getElementById("custom-theme");
@@ -45,6 +45,16 @@
         localStorage.removeItem("custom_theme_name");
         current_theme = "none";
     }
+
+    onMount(() => {
+        const savedCSS = localStorage.getItem("custom_theme_css");
+        const savedName = localStorage.getItem("custom_theme_name");
+
+        if (savedCSS && savedName) {
+            apply_theme(savedCSS);
+            current_theme = savedName;
+        }
+    });
 
     // # LOCALE SWITCHING ------------------------------------------------------
     import { locale } from 'svelte-i18n';
@@ -73,7 +83,7 @@
         <!-- Custom CSS Theme -->
         <!-- Extra margin due to large button -->
         <div class="con-dialog-row" style="margin-bottom: 8px;">
-            <span>Custom CSS Theme: {current_theme}</span>
+            <span>Custom CSS Theme</span>
             <label style="margin-left: auto;">
                 <input type="file" accept=".css" 
                        id=btn-theme-file

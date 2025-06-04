@@ -1,0 +1,18 @@
+/* variables ---------------------------------------------------------------- */
+:root {
+  /* colours */
+  --panel-0: #000000;
+  --panel-1: #3f3f3f;
+  --panel-2: #3a3a3a;
+  --panel-3: #5f5f5f;
+
+  --accent-1-light: #ffffff;
+  --accent-1-dark: #000000;
+  --accent-2: #ffffff;
+
+  --white-1: #ffffff;
+
+  --text-dark: #000000;
+  --text-gray: #cbcbcb;
+}
+

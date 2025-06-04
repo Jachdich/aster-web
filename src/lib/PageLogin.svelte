@@ -55,6 +55,7 @@
         "Markdown is love Markdown is life.",
         "We have no idea what to do for the mobile app.",
         "KingJellyfish will write a new markdown parser for Aster in approximately 7 years.",
+        "\"jipe\" - KingJellyfish, often"
     ];
 
     if (new Date().getDate() !== 1) {
@@ -190,7 +191,7 @@
         left: 50%;
         right: 50%;
         top: 50%;
-        width: 30%;
+        width: 40%;
         min-width: 350px;
         max-width: 500px;
         display: flex;

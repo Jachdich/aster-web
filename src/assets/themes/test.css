@@ -1,7 +1,19 @@
-body {
+/* variables */
+:root {
+  --accent-1-light: #84AE92;
+  --accent-1-dark: #5A827E;
+  --accent-2: #B9D4AA;
+
+  --radius-1: 4px;
+  --radius-2: 4px;
+  --radius-3: 4px;
+}
+
+/* styles */
+/* body {
     background-color: black;
 }
 
 .con-dialog-row {
     background: black;
-}
+} */
