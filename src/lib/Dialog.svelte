@@ -30,28 +30,28 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div id="bg-darken" on:click={bg_close}>
+<div id="pan-bg-darken" on:click={bg_close}>
     {#if has_logo}
-    <svg id="logo" 
-         class="pixel-img" 
-         xmlns="http://www.w3.org/2000/svg" 
-         viewBox="0 0 100 100" 
-         fill="currentColor">
+    <svg id="gra-logo" 
+        class="pixel-img" 
+        xmlns="http://www.w3.org/2000/svg" 
+        viewBox="0 0 100 100" 
+        fill="currentColor">
         <path stroke="var(--accent-1-light)" d={aster_logo_wide}/>
     </svg>
     {/if}
 
     <!-- note: 20px is subtracted from the pref_width 
-               because it has 10px padding -->
+            because it has 10px padding -->
     <div id="pan-dialog-{id}" class="pan-dialog"
-         style="--prefwidth: {pref_width - 20}px; z-index: 3" 
-         on:click|stopPropagation>
+        style="--prefwidth: {pref_width - 20}px; z-index: 3"
+        on:click|stopPropagation>
         {#if has_title}
             <p id="lab-dialog-title">{title}</p>
             <hr>
         {/if}
 
-        <div id="con-dialog-content">
+        <div class="con-dialog-content">
             <slot/>
         </div>
 
@@ -80,7 +80,7 @@
 </div>
 
 <style>
-    #bg-darken {
+    #pan-bg-darken {
         width: 100%;
         height: 100%;
         position: fixed;
@@ -89,13 +89,15 @@
         z-index: 2 !important;
         display: grid;
         background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
 
-    #logo {
-        position: fixed;
+    #gra-logo {
         width: 360px;
-        left: calc(50% - 165px);
-        top: calc(28%);
+        margin-bottom: 128px;
     }
 
     .pan-dialog {
@@ -108,14 +110,14 @@
         
         width: clamp(250px, var(--prefwidth), 85%);
 
-        left: 50%;
+        /* left: 50%;
         right: 50%;
         top: 50%;
         -webkit-transform: translate(-50%, -50%);
-        transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%); */
     }
 
-    #con-dialog-content {
+    .con-dialog-content {
         display: flex;
         flex-direction: column;
         justify-content: center;

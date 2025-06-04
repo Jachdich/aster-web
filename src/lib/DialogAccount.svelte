@@ -113,9 +113,9 @@
         on:accept={accept}>
 
         <!-- Profile Picture ----------------------------------------------- -->
-        <div class="con-pfp">
+        <div id="con-account-pfp">
             <img
-                id="pfp-image"
+                id="gra-account-pfp"
                 alt="Profile"
                 src="data:image/png;base64,{pfp}"
             />
@@ -123,11 +123,11 @@
                 <input
                     type="file"
                     accept="image/*"
-                    id="pfp-button"
+                    id="btn-account-pfp"
                     style="display: none"
                     bind:files={pfp_files}
                 />
-                <span id="file-button">{$t('dialog.change')}</span>
+                <span id="btn-account-file">{$t('dialog.change')}</span>
             </label>
         </div>
 
@@ -145,7 +145,7 @@
 </Dialog>
 
 <style>
-    .con-pfp {
+    #con-account-pfp {
         display: flex;
         flex-direction: row;
         justify-content: center;
@@ -155,8 +155,14 @@
         margin: 0 auto;
         font-size: var(--font-size-body);
     }
+    #gra-account-pfp {
+        width: 48px;
+        height: 48px;
+        border-radius: 48px;
+        margin-right: 16px;
+    }
 
-    #file-button {
+    #btn-account-file {
         border: 1px none;
         border-radius: 6px;
         color: var(--white-1);
@@ -166,15 +172,7 @@
         padding-left: 16px;
         padding-right: 16px;
     }
-
-    #file-button:hover {
+    #btn-account-file:hover {
         background-color: var(--panel-0);
-    }
-
-    #pfp-image {
-        width: 48px;
-        height: 48px;
-        border-radius: 48px;
-        margin-right: 16px;
     }
 </style>

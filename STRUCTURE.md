@@ -16,14 +16,62 @@ App
  └─ Context Menu
 
 
-CSS OUTLINE
------------
-
 CSS PREFIXES:
     - con - container
     - pan - panel
     - lab - label
     - btn - button
+    - inp - input
+    - gra - graphic (img, svg)
+
+
+CSS NEW
+----------
+
+app.css
+    #app
+    .pixel-img
+    .con-dialog-row (p span input button)
+
+
+Dialog
+    #pan-bg-darken
+    #gra-logo
+    .pan-dialog
+    .con-dialog-content
+    #lab-dialog-title
+    .con-dialog-buttons
+    .btn-dialog-exit
+
+DialogAccount
+    #pan-dialog-account
+    #con-account-pfp
+    #btn-account-file
+    #gra-account-pfp
+
+DialogAddServer
+    #pan-dialog-addserver
+
+DialogChangelog
+    #pan-dialog-changelog
+    #con-changelog-scrollbox
+
+DialogKeybinds
+    #pan-dialog-keybinds
+    .lab-keybind
+
+DialogServerProfile
+    #pan-dialog-serverprofile
+    #con-serverprofile-pfp
+    #btn-serverprofile-file
+    #gra-serverprofile-pfp
+
+DialogTheme
+    #pan-dialog-theme
+    #inp-select-lang
+
+CSS OUTLINE
+-----------
 
 app.css
     #app

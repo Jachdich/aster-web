@@ -28,6 +28,19 @@
     onMount(() => {
         initWindowSizeListener();
 
+        // custom theme loading
+        const savedCSS = localStorage.getItem("custom_theme_css");
+		if (savedCSS) {
+			const existing = document.getElementById("custom-theme");
+			if (existing) existing.remove();
+
+			const style = document.createElement("style");
+			style.id = "custom-theme";
+			style.textContent = savedCSS;
+			document.head.appendChild(style);
+		}
+
+        // uhh stuff
         const handler = (e) => e.preventDefault();
         window.addEventListener('contextmenu', handler);
 

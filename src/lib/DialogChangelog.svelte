@@ -23,13 +23,13 @@
         title="Changelog"
         pref_width={450}
         on:dismiss={close}>
-        <div id="scroll-box">
+        <div id="con-changelog-scrollbox">
             {@html md}
         </div>
 </Dialog>
 
 <style>
-    #scroll-box {
+    #con-changelog-scrollbox {
         overflow-y: scroll;
         min-height: 400px;
         max-height: 600px

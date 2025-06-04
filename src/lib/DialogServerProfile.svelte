@@ -27,9 +27,9 @@
         on:accept={accept}>
 
         <!-- Profile Picture ----------------------------------------------- -->
-        <div class="con-pfp">
+        <div class="con-serverprofile-pfp">
             <img
-                id="pfp-image"
+                id="gra-serverprofile-pfp"
                 alt="Profile"
                 src="src/assets/aster_logo.png"
             />
@@ -37,10 +37,10 @@
                 <input
                     type="file"
                     accept="image/*"
-                    id="pfp-button"
+                    id="btn-serverprofile-pfp"
                     style="display: none"
                 />
-                <span id="file-button">{$t('dialog.change')}</span>
+                <span id="btn-serverprofile-file">{$t('dialog.change')}</span>
             </label>
         </div>
 
@@ -53,7 +53,7 @@
 </Dialog>
 
 <style>
-    .con-pfp {
+    .con-serverprofile-pfp {
         display: flex;
         flex-direction: row;
         justify-content: center;
@@ -63,8 +63,14 @@
         margin: 0 auto;
         font-size: var(--font-size-body);
     }
+    #gra-serverprofile-pfp {
+        width: 48px;
+        height: 48px;
+        border-radius: 48px;
+        margin-right: 16px;
+    }
 
-    #file-button {
+    #btn-serverprofile-file {
         border: 1px none;
         border-radius: 6px;
         color: var(--white-1);
@@ -75,14 +81,7 @@
         padding-right: 16px;
     }
 
-    #file-button:hover {
+    #btn-serverprofile-file:hover {
         background-color: var(--panel-0);
-    }
-
-    #pfp-image {
-        width: 48px;
-        height: 48px;
-        border-radius: 48px;
-        margin-right: 16px;
     }
 </style>

@@ -31,13 +31,12 @@
         on:accept={accept}>
     <!-- New Server Info ----------------------------------------------- -->
     <div class="con-dialog-row">
-        <span id="n_t_ip">{$t('DialogAddServer.ip')}</span>
-        <input id="n_ip" bind:value={ip} />
+        <span>{$t('DialogAddServer.ip')}</span>
+        <input bind:value={ip} />
     </div>
     <div class="con-dialog-row">
-        <span id="n_t_port">{$t('DialogAddServer.port')}</span>
+        <span>{$t('DialogAddServer.port')}</span>
         <input
-            id="n_port"
             on:input={validate_port}
             bind:this={port_input}
             bind:value={port}

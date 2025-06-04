@@ -405,7 +405,7 @@
         border-left: 3px var(--panel-0) solid;
     }
     #server-channels {
-        width: 280px;
+        width: 240px;
         display: flex;
         flex-direction: column;
         color: var(--text-gray);

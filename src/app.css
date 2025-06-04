@@ -141,11 +141,13 @@ a:visited {
   font-size: var(--font-size-body);
 }
 
+/* used for full width text in dialogs */
 .con-dialog-row p {
   width: 100%;
   margin: 0;
 }
 
+/* used for input labels */
 .con-dialog-row span {
   text-align: left;
   width: 40%;
