@@ -12,7 +12,7 @@
 
     function validate_port() {
         let a = document.getElementById(
-            "login-sync-port-input"
+            "inp-login-sync-port"
         ) as HTMLInputElement;
         a.value = a.value.replace(/[^0-9]/g, '');
         if (a.value != "" && Number.parseInt(a.value) > 65535) {
@@ -77,8 +77,8 @@
     let random_splash = get_random_string();
 </script>
 
-<div id="login-window">
-    <svg id="logo" 
+<div id="con-login">
+    <svg id="gra-login-logo" 
         class="pixel-img" 
         fill="currentColor"
         xmlns="http://www.w3.org/2000/svg" 
@@ -86,49 +86,49 @@
         <path stroke="var(--accent-1-light)" d={aster_logo_wide}/>
     </svg>
       
-    <div id="login" >
+    <div id="pan-login" >
         <!-- Sync Server Fields -------------------------------------------- -->
-        <div class="input-container">
-            <p class="login-input-label">{$t('PageLogin.sync_server_ip')}</p>
-            <input  id="login-sync-ip-input" type="text" 
+        <div class="con-login-input">
+            <p>{$t('PageLogin.sync_server_ip')}</p>
+            <input  type="text" 
                     placeholder="{$t('PageLogin.sync_server_ip_input.placeholder')}" 
-                    class="login-input" required
+                    class="inp-login" required
                     bind:value={sync_ip}>
         </div>
-        <div class="input-container">
+        <div class="con-login-input">
             <p >{$t('PageLogin.sync_server_port')}</p>
-            <input  id="login-sync-port-input" type="text" 
+            <input  id="inp-login-sync-port" type="text" 
                     placeholder="{$t('PageLogin.sync_server_port_input.placeholder')}" 
-                    class="login-input" required 
+                    class="inp-login" required 
                     on:input={validate_port} bind:value={sync_port}>
         </div>
 
 
         <!-- Account Fields ------------------------------------------------ -->
-        <div class="input-container">
+        <div class="con-login-input">
             <p >{$t('PageLogin.username')}</p>
-            <input  id="login-uname-input" type="text" 
+            <input  type="text" 
                     placeholder="{$t('PageLogin.username_input.placeholder')}" 
-                    class="login-input" required
+                    class="inp-login" required
                     bind:value={uname}>
         </div>
-        <div class="input-container">
+        <div class="con-login-input">
             <p >{$t('PageLogin.password')}</p>
-            <input  id="login-pword-input" type="password" 
+            <input  type="password" 
                     placeholder="{$t('PageLogin.password_input.placeholder')}" 
-                    class="login-input" required 
+                    class="inp-login" required 
                     bind:value={password}>
         </div>
 
 
         <!-- Login/Register ------------------------------------------------ -->
-        <div class="input-container">
-            <button class="login-button" 
+        <div class="con-login-input">
+            <button class="btn-login" 
                     style="margin-right: 4px;" 
                     on:click={register}>
                 {$t('PageLogin.register')}
             </button>
-            <button class="login-button" 
+            <button class="btn-login" 
                     style="margin-left: 4px;" 
                     on:click={login}>
                 {$t('PageLogin.login')}
@@ -137,7 +137,7 @@
     </div>
 
 
-    <div id="splash-text">
+    <div id="lab-splash-text">
         <!-- A11y hates me because I made a <p> clickable -->
         <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
         <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -158,31 +158,27 @@
         100%  { color: red;       }  
     } */
 
-    #splash-text {
-        display: flex; flex-direction: column; 
-        align-items: center; justify-content: center;
-        height: 100px;
-        font-size: 18px;
-        text-align: center;
-        transition: 0.5s ease;
-        /* font-weight: bold;
-        animation: rainbow_colours 5s infinite; */
-        -webkit-user-select: none; /* Safari */
-        -ms-user-select: none; /* IE 10 and IE 11 */
-        user-select: none; /* Standard syntax */
+    .con-login-input {
+        display: flex;
+        justify-content: center;
+        align-items: stretch;
+        flex-direction: row;
+        margin-bottom: 8px;
+        margin-top: 8px;
+    }
+    .con-login-input p {
+        width: 30%;
+        margin: 0;
+        font-size: var(--font-size-body);
     }
 
-    #splash-text:hover {
-        font-size: 18.5px;
-    }
-
-    #logo {
+    #gra-login-logo {
         width: 360px;
         padding-bottom: 32px;
         margin: 0 auto;
     }
 
-    #login-window {
+    #con-login {
         padding: 10px;
         border-radius: var(--radius-3);
         -webkit-transform: translate(-50%, -50%);
@@ -198,7 +194,7 @@
         flex-direction: column;
     }
 
-    #login {
+    #pan-login {
         color: var(--white-1);
         background-color: var(--panel-2);
         border-bottom: 3px solid var(--panel-3);
@@ -211,7 +207,7 @@
         border-radius: var(--radius-2);
     }
 
-    .login-input {
+    .inp-login {
         width: 70%;
         color: var(--white-1);
         margin-left: 8px;
@@ -220,29 +216,31 @@
         height: 45px;
     }
 
-    .login-button {
+    .btn-login {
         width: 80%;
         height: 40px;
         font-size: var(--font-size-body);
         color: var(--text-dark);
         background-color: var(--accent-1-light);
     }
-
-    .login-button:hover {
+    .btn-login:hover {
         background-color: var(--accent-1-dark);
     }
 
-    .input-container {
-        display: flex;
-        justify-content: center;
-        align-items: stretch;
-        flex-direction: row;
-        margin-bottom: 8px;
-        margin-top: 8px;
+    #lab-splash-text {
+        display: flex; flex-direction: column; 
+        align-items: center; justify-content: center;
+        height: 100px;
+        font-size: 18px;
+        text-align: center;
+        transition: 0.5s ease;
+        /* font-weight: bold;
+        animation: rainbow_colours 5s infinite; */
+        -webkit-user-select: none; /* Safari */
+        -ms-user-select: none; /* IE 10 and IE 11 */
+        user-select: none; /* Standard syntax */
     }
-
-    .input-container p {
-        width: 30%;
-        font-size: var(--font-size-body);
+    #lab-splash-text:hover {
+        font-size: 18.5px;
     }
 </style>

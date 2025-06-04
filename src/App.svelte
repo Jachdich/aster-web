@@ -205,7 +205,7 @@
         {#if !is_mobile_width}
             <!-- bottom left version number / changelog button -->
             <!-- needs a keydown event to stop A11y from complaining -->
-            <a  id="label-version-number" 
+            <a  id="lab-version-number" 
                 on:click={() => (show_changelog = true)} 
                 role="button" 
                 tabindex="0"
@@ -224,13 +224,7 @@
 </main>
 
 <style>
-    #error-dismiss {
-        width: 64px;
-        margin: 0 auto;
-        display: block;
-    }
-
-    #label-version-number {
+    #lab-version-number {
         position: absolute;
         bottom: 0;
         left: 0;

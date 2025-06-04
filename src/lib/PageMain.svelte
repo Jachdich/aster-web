@@ -29,7 +29,7 @@
     export let show_sidebar = true;
     export let show_messages = true;
 
-    function handleKeydown(event) {
+    function handleKeydown(event: { shiftKey: any; key: string; }) {
         if (event.shiftKey && event.key === "F1") {
             show_sidebar = !show_sidebar;
         }
@@ -138,9 +138,10 @@
     }
 </script>
 
-<div id="page">
+
+<div id="con-main">
     {#if show_sidebar}
-        <div id="sidebar"
+        <div id="con-main-sidebar"
             on:contextmenu={(e) => showContextMenu(e, conMenu_sidebar)} 
             role="region">
             <!-- Top Buttons Menu ------------------------------------------ -->
@@ -212,23 +213,20 @@
 
 
 <style>
+    #con-main {
+        display: flex;
+        flex-direction: row;
+        height: 100%;
+        width: 100%;
+    }
+
     @media (width >= 1024px) {
-        #sidebar {
+        #con-main-sidebar {
             height: 100%;
             min-width: 200px;
             width: 200px;
         }
-    }
 
-    @media (width < 1024px) {
-        #sidebar {
-            height: 100%;
-            min-width: 70px;
-            width: 70px;
-        }
-    }
-
-    @media (width >= 1024px) {
         #top-buttons {
             display: flex;
             flex-direction: row;
@@ -246,6 +244,12 @@
     }
 
     @media (width < 1024px) {
+        #con-main-sidebar {
+            height: 100%;
+            min-width: 70px;
+            width: 70px;
+        }
+
         #top-buttons {
             display: flex;
             flex-direction: column;
@@ -307,12 +311,5 @@
     #add-server:hover,
     #account:hover {
         background-color: var(--panel-1);
-    }
-
-    #page {
-        display: flex;
-        flex-direction: row;
-        height: 100%;
-        width: 100%;
     }
 </style>

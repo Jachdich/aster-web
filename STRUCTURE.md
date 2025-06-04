@@ -33,6 +33,20 @@ app.css
     .pixel-img
     .con-dialog-row (p span input button)
 
+App
+    #lab-version-number
+
+PageLogin.svelte
+    .con-login-input
+    .con-login-input
+    #gra-login-logo
+    #con-login
+    #pan-login
+    .inp-login
+    .btn-login
+    #lab-splash-text
+
+PageMain
 
 Dialog
     #pan-bg-darken
