@@ -39,7 +39,6 @@ App
 
 PageLogin.svelte
     .con-login-input
-    .con-login-input
     .gra-login-logo
     .con-login
     .pan-login
@@ -66,9 +65,17 @@ PanelServerView
         .pan-server-messages
             .con-message-area
             .con-message-input
-                #inp-message
+                .inp-message
             .con-channel-toggle
                 .btn-channel-list
+
+ServerListButton
+    .con-btn-server
+        .btn-server
+            .con-sever-name
+                .gra-server-icon
+                .lab-server-name
+            .lab-server-tagline
 
 ServerMessage
     .con-message

@@ -407,7 +407,7 @@
         flex-direction: column;
         color: var(--text-gray);
         background-color: var(--panel-2);
-        height: 100%;
+        /* height: 100%; */
     }
 
     .con-channel-toggle {

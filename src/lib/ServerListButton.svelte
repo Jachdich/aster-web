@@ -15,28 +15,28 @@
     }
 </script>
 
-<div id="con-btn-server">
-    <button id="btn-server" bind:this={button} on:click={clicked}>
-        <div id="con-server-name">
+<div class="con-btn-server">
+    <button class="btn-server" bind:this={button} on:click={clicked}>
+        <div class="con-server-name">
             <img
                 alt={server.conn.name}
                 src="data:image/png;base64,{server.conn.pfp}"
-                id="gra-server-icon"
+                class="gra-server-icon"
             />
-            <p id="lab-server-name">{server.conn.name}</p>
+            <p class="lab-server-name">{server.conn.name}</p>
         </div>
-        <p id="lab-server-tagline">[server tagline]</p>
+        <p class="lab-server-tagline">[server tagline]</p>
     </button>
 </div>
 
 <style>
-    #con-btn-server {
+    .con-btn-server {
         width: 100%;
         height: fit-content;
     }
 
     @media (width >= 1024px) {
-        #btn-server {
+        .btn-server {
             background-color: var(--panel-2);
             border-radius: var(--radius-2);
             width: calc(100% - 20px);
@@ -45,29 +45,29 @@
             padding-left: 13px;
             box-sizing: border-box;
         }
-        #btn-server:hover {
+        .btn-server:hover {
             background-color: var(--panel-1);
         }
 
-        #con-server-name {
+        .con-server-name {
             display: flex;
             flex-direction: row;
             align-items: center;
         }
-        #lab-server-name {
+        .lab-server-name {
             margin: 0;
             margin-left: 10px;
             font-size: 18px;
             text-align: left;
         }
-        #gra-server-icon {
+        .gra-server-icon {
             box-sizing: content-box;
             width: 48px;
             height: 48px;
             border-radius: var(--radius-2);
         }
 
-        #lab-server-tagline {
+        .lab-server-tagline {
             margin: 0;
             margin-top: 5px;
         }
@@ -83,7 +83,7 @@
     }
 
     @media (width < 1024px) {
-        #btn-server {
+        .btn-server {
             background-color: var(--panel-2);
             border-radius: var(--radius-2);
             width: 57px;
@@ -93,22 +93,22 @@
             box-sizing: border-box;
         }
 
-        #con-server-name {
+        .con-server-name {
             display: flex;
             flex-direction: row;
             align-items: center;
         }
-        #lab-server-name {
+        .lab-server-name {
             display: none;
         }
-        #gra-server-icon {
+        .gra-server-icon {
             box-sizing: content-box;
             width: 48px;
             height: 48px;
             border-radius: calc(var(--radius-2) - 4px);
         }
 
-        #lab-server-tagline {
+        .lab-server-tagline {
             display: none;
         }
     }
