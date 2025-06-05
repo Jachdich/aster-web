@@ -1,0 +1,113 @@
+/* variables ---------------------------------------------------------------- */
+:root {
+  /* colours */
+  --panel-0: black;
+  --panel-1: black;
+  --panel-2: black;
+  --panel-3: black;
+
+  --accent-1-light: lime;
+  --accent-1-dark: black;
+  --accent-2: lime;
+
+  --white-1: lime;
+
+  --text-dark: black;
+  --text-gray: lime;
+
+  --font-body-sans: "Red Hat Mono", monospace;
+}
+
+button {
+  border: lime 2px solid !important;
+  transition: 0.3s;
+}
+button:hover {
+  background-color: lime !important;
+  color: black !important;
+}
+select{
+  border: lime 2px solid !important;
+  transition: 0.3s;
+}
+select:hover {
+  background-color: lime !important;
+  color: black !important;
+}
+hr {
+  background-color: lime;
+  height: 2px;
+}
+
+/* PageLogin */
+.pan-login {
+  border: lime 2px solid !important;
+  border-bottom: lime 2px solid !important;
+}
+.btn-login:hover {
+  background-color: black !important;
+  border: lime 2px solid !important;
+  color: lime !important;
+}
+.con-login-input input {
+  border: lime 2px solid !important;
+}
+
+/* PageMain */
+.btn-addserver,
+.btn-account {
+  border: lime 2px solid !important;
+}
+.btn-aster:hover {
+  border: lime 2px solid !important;
+}
+
+/* ServerListButton */
+.btn-server {
+  border: lime 2px solid !important;
+}
+
+/* PanelServerView */
+.con-server-area {
+  border-left: lime 2px solid !important;
+  border-bottom: lime 2px solid !important;
+}
+.pan-server-messages {
+  border-left: lime 2px solid !important;
+}
+.inp-message {
+  border: lime 2px solid !important;
+}
+
+/* ChannelListButton */
+.btn-channel {
+  background-color: black !important;
+  border: black 2px solid !important;
+  border-bottom: lime 2px solid !important;
+  color: lime !important;
+  margin-bottom: 10px !important;
+}
+.btn-channel:hover {
+  background-color: lime !important;
+  color: black !important;
+}
+
+/* ServerMessage */
+.con-message:hover {
+  border-left: lime 2px solid !important;
+  border-right: lime 2px solid !important;
+}
+
+/* Dialog */
+.pan-bg-darken {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+}
+.pan-dialog {
+  border: lime 2px solid !important;
+}
+.pan-dialog input {
+  border: lime 2px solid !important;
+}
+.pan-dialog label span{
+  border: lime 2px solid !important;
+}
