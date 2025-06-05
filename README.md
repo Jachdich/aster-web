@@ -1,12 +1,13 @@
 Developed by **Jachdich** and **elecarno**
 
-**TBD: α-2.3.1**
+**TBD: α-2.4.0**
  - Added German (de: Deustch) localisation
  - Added Spanish (es: Español) localisation
  - Updated server view layout
  - Updated mobile layout
- - Fixed message input height not returning to default after sending long or multiline message
  - Updated all dialogs
+ - Added Custom CSS Themes
+ - Fixed message input height not returning to default after sending long or multiline message
 
 **2025.06.02: α-2.3.0**
  - Markdown parsing in messages.

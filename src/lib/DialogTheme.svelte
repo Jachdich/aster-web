@@ -86,10 +86,9 @@
             <span>Custom CSS Theme</span>
             <label style="margin-left: auto;">
                 <input type="file" accept=".css" 
-                       id=btn-theme-file
                        style="display: none"
                        on:change={theme_upload} />
-                <span id="btn-theme-file">{$t('dialog.change')}</span>
+                <span class="btn-theme-file">{$t('dialog.change')}</span>
             </label>
         </div>
 
@@ -104,7 +103,7 @@
         <!-- Language Selector --------------------------------------------- -->
         <div class="con-dialog-row">
             <span>{$t('DialogTheme.language')}</span>
-            <select id="inp-select-lang"
+            <select class="inp-select-lang"
                     bind:value={$locale} 
                     on:change={handleLanguageChange}>
                 <option value="da">da: Dansk</option>
@@ -117,7 +116,7 @@
 </Dialog>
 
 <style>
-    #inp-select-lang {
+    .inp-select-lang {
         background-color: var(--panel-1);
         border-radius: var(--radius-3);
         color: var(--white-1);
@@ -128,11 +127,11 @@
         height: 35px;
         font-size: var(--font-size-body);
     }
-    #inp-select-lang option {
+    .inp-select-lang option {
         font-size: var(--font-size-body);
     }
 
-    #btn-theme-file {
+    .btn-theme-file {
         border: 1px none;
         border-radius: 6px;
         color: var(--white-1);
@@ -142,7 +141,7 @@
         padding-left: 16px;
         padding-right: 16px;
     }
-    #btn-theme-file:hover {
+    .btn-theme-file:hover {
         background-color: var(--panel-0);
     }
 </style>

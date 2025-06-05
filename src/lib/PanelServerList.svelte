@@ -25,7 +25,7 @@
     }
 </script>
 
-<div id="server-list">
+<div class="con-server-list">
     {#each servers as server (server)}
         <ServerListButton server={server} 
                           on:click={(event) => 
@@ -35,8 +35,8 @@
 </div>
 
 <style>
-#server-list {
-    display: flex;
-    flex-direction: column;
-}
+    .con-server-list {
+        display: flex;
+        flex-direction: column;
+    }
 </style>

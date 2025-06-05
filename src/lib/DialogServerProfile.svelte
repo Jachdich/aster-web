@@ -29,7 +29,7 @@
         <!-- Profile Picture ----------------------------------------------- -->
         <div class="con-serverprofile-pfp">
             <img
-                id="gra-serverprofile-pfp"
+                class="gra-serverprofile-pfp"
                 alt="Profile"
                 src="src/assets/aster_logo.png"
             />
@@ -37,10 +37,9 @@
                 <input
                     type="file"
                     accept="image/*"
-                    id="btn-serverprofile-pfp"
                     style="display: none"
                 />
-                <span id="btn-serverprofile-file">{$t('dialog.change')}</span>
+                <span class="btn-serverprofile-pfp">{$t('dialog.change')}</span>
             </label>
         </div>
 
@@ -63,14 +62,14 @@
         margin: 0 auto;
         font-size: var(--font-size-body);
     }
-    #gra-serverprofile-pfp {
+    .gra-serverprofile-pfp {
         width: 48px;
         height: 48px;
         border-radius: 48px;
         margin-right: 16px;
     }
 
-    #btn-serverprofile-file {
+    .btn-serverprofile-pfp {
         border: 1px none;
         border-radius: 6px;
         color: var(--white-1);
@@ -81,7 +80,7 @@
         padding-right: 16px;
     }
 
-    #btn-serverprofile-file:hover {
+    #btn-serverprofile-pfp:hover {
         background-color: var(--panel-0);
     }
 </style>

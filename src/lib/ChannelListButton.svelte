@@ -17,7 +17,7 @@
 
 </script>
 
-<button class="channel-button" 
+<button class="btn-channel"
         on:click={clicked} 
         value="{init_selected ? '1' : '0'}" 
         bind:this={button}>
@@ -25,7 +25,7 @@
 </button>
 
 <style>
-    .channel-button {
+    .btn-channel {
         box-sizing: border-box;
         list-style-type: none;
         border: none;
@@ -38,11 +38,11 @@
         min-height: 30px;
         font-size: var(--font-size-body);
     }
-    .channel-button:hover {
+    .btn-channel:hover {
         background-color: var(--panel-1);
     }
 
-    button:global(.channel-button[value="1"]) {
+    button:global(.btn-channel[value="1"]) {
         background-color: var(--panel-3);
     }
 </style>

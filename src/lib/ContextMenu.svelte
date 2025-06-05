@@ -53,7 +53,7 @@
 {#if state.show}
 <nav bind:this={menuRef} 
     style="position:absolute; top:{state.y}px; left:{state.x}px; z-index:1000">
-    <div class="navbar">
+    <div class="pan-conmenu">
         <ul>
             {#each state.menuItems as item}
                 {#if item.name === "hr"}
@@ -63,7 +63,7 @@
                         <button on:click={() => {hideMenu();item.onClick?.();}}>
                             <i class={item.class}></i>
                             {item.displayText}
-                            <span class="shortcut">{item.shortcut}</span>
+                            <span class="lab-conmenu-shortcut">{item.shortcut}</span>
                         </button>
                     </li>
                 {/if}
@@ -80,7 +80,7 @@
         padding: 0;
         margin: 0;
     }
-    .navbar{
+    .pan-conmenu {
         display: inline-flex;
         border: 1px var(--panel-3) solid;
         width: 250px;
@@ -93,7 +93,7 @@
         padding-right: 5px;
         filter: drop-shadow(0px 5px 7px var(--panel-1));
     }
-    .navbar ul{
+    .pan-conmenu ul{
         margin: 6px;
     }
     ul li{
@@ -135,7 +135,7 @@
         margin: 5px 0px;
         width: 100%;
     }
-    .shortcut {
+    .lab-conmenu-shortcut {
         color: var(--text-gray);
         float: right;
     }

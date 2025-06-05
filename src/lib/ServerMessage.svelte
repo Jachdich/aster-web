@@ -110,19 +110,19 @@
 
 
 <div
-    class="message"
+    class="con-message"
     style="--spacing: {spacing}px; --uname-top: {uname_top}px; --date-top: {date_top}px; --body-top: {body_top}px; --uname-width: {uname_width}px;"
     on:contextmenu={(e) => showContextMenu(e, conMenu_message)} role="region"
 >
     <img src="data:image/png;base64,{message.author.pfp}" 
          alt="{message.author.display_name}'s profile picture" 
-         class="message-pfp" />
+         class="gra-message-pfp" />
     {#if !$is_mobile_width}
-        <div class="message-username">{message.author.display_name}</div>
+        <div class="lab-message-username">{message.author.display_name}</div>
     {/if}
-    <div class="message-body">
+    <div class="con-message-body">
         {#if $is_mobile_width}
-            <p class="message-username-mobile">{message.author.display_name}</p>
+            <p class="lab-message-username-mobile">{message.author.display_name}</p>
         {/if}
         {#each content_parts as part}
             {#if part.style === "link"}
@@ -149,9 +149,9 @@
                 />
             {/if}
         {/each}
-        <div class="image-container">
+        <div class="con-message-image">
         {#each image_urls as image_url}
-            <img class="embed-image" 
+            <img class="gra-message-image" 
                  src={image_url} 
                  alt="embed failed to load"
                  style="display: none;"
@@ -164,32 +164,32 @@
         {/each}
         </div>
         {#if $is_mobile_width}
-            <div class="message-date-mobile">
+            <div class="lab-message-date-mobile">
                 {message.date.toLocaleString()}
             </div>
         {/if}
     </div>
     {#if !$is_mobile_width}
-        <div class="message-date">
+        <div class="lab-message-date">
             {message.date.toLocaleString()}
         </div>
     {/if}
 </div>
 
 <style>
-    .image-container {
+    .con-message-image {
         display: flex;
         flex-direction: column;
     }
 
-    .embed-image {
+    .gra-message-image {
         max-height: 512px;
         max-width: 60%;
         width: min-content;
         object-fit: contain;
     }
 
-    .message {
+    .con-message {
         color: var(--text-gray);
         padding-left: 8px;
         display: flex;
@@ -199,12 +199,11 @@
         margin-top: var(--spacing);
         border-radius: var(--radius-3);
     }
-
-    .message:hover {
+    .con-message:hover {
         background-color: var(--panel-3);
     }
 
-    .message-username {
+    .lab-message-username {
         margin: 0;
         margin-left: 10px;
         margin-right: 6px;
@@ -213,7 +212,7 @@
         min-width: var(--uname-width);
     }
     
-    .message-username-mobile {
+    .lab-message-username-mobile {
         color: var(--text-gray);
         margin: 0;
         margin-left: 10px;
@@ -222,7 +221,7 @@
         margin-top: var(--uname-top);
     }
 
-    .message-date {
+    .lab-message-date {
         margin: 0;
         margin-left: 5px;
         font-size: 10px;
@@ -234,7 +233,7 @@
         font-family: "Red Hat Mono", monospace;
     }
 
-    .message-date-mobile {
+    .lab-message-date-mobile {
         color: var(--text-gray);
         margin: 0;
         font-size: 10px;
@@ -243,7 +242,7 @@
         font-family: "Red Hat Mono", monospace;
     }
 
-    .message-pfp {
+    .gra-message-pfp {
         margin: 0;
         width: 24px;
         height: 24px;
@@ -253,16 +252,12 @@
         object-fit: cover;
     }
 
-    .message-body {
+    .con-message-body {
         margin: 0;
         color: var(--white-1);
         margin-left: 2px;
         margin-top: var(--body-top);
         white-space: pre-line;
         max-width: 100%;
-    }
-
-    .message-body h1 {
-        margin: 0;
     }
 </style>

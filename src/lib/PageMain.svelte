@@ -139,16 +139,16 @@
 </script>
 
 
-<div id="con-main">
+<div class="con-main">
     {#if show_sidebar}
-        <div id="con-main-sidebar"
+        <div class="con-sidebar"
             on:contextmenu={(e) => showContextMenu(e, conMenu_sidebar)} 
             role="region">
             <!-- Top Buttons Menu ------------------------------------------ -->
-            <div id="top-buttons">
-                <button id="aster-button"
+            <div class="con-top-buttons">
+                <button class="btn-aster"
                         on:click={() => (show_aster_dialog = true)}>
-                    <svg id="logo" 
+                    <svg id="gra-main-logo" 
                          class="pixel-img" 
                          style="width: 32px; height: 32px" 
                          xmlns="http://www.w3.org/2000/svg" 
@@ -159,17 +159,17 @@
                               d={aster_logo_small}/>
                     </svg>
                 </button>
-                <button id="add-server" 
+                <button class="btn-addserver" 
                         on:click={() => (show_add_server = true)}>
                     <Icon src={FiPlus} size="25px"/>
                 </button>
-                <button id="account" 
+                <button class="btn-account" 
                         on:click={() => (show_account_dialog = true)}>
                     <!-- <img
                         src={profile_img}
                         alt="View profile"
                         class="pfp"
-                        id="pfp_button"
+                        class="pfp_button"
                     /> -->
                     <Icon src={FiUser} size="25px" />
                 </button>
@@ -179,7 +179,7 @@
             <PanelServerList {servers} on:switch_server={switch_server}/>
         </div>
     {:else}
-        <span id="channel-edge-separator"></span>
+        <span class="con-channel-edge-separator"></span>
     {/if}
 
     <!-- Server View ------------------------------------------------------- -->
@@ -213,7 +213,7 @@
 
 
 <style>
-    #con-main {
+    .con-main {
         display: flex;
         flex-direction: row;
         height: 100%;
@@ -221,13 +221,13 @@
     }
 
     @media (width >= 1024px) {
-        #con-main-sidebar {
+        .con-sidebar {
             height: 100%;
             min-width: 200px;
             width: 200px;
         }
 
-        #top-buttons {
+        .con-top-buttons {
             display: flex;
             flex-direction: row;
             align-items: center;
@@ -236,21 +236,21 @@
             margin-bottom: 20px;
         }
 
-        #add-server,
-        #aster-button,
-        #account {
+        .btn-addserver,
+        .btn-aster,
+        .btn-account {
             margin-left: 6px;
         }
     }
 
     @media (width < 1024px) {
-        #con-main-sidebar {
+        .con-sidebar {
             height: 100%;
             min-width: 70px;
             width: 70px;
         }
 
-        #top-buttons {
+        .con-top-buttons {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -259,25 +259,25 @@
             margin-bottom: 20px;
         }
 
-        #add-server,
-        #aster-button {
+        .btn-addserver,
+        .btn-aster {
             margin-bottom: 5px;
             margin-left: 0px;
         }
         
-        #account {
+        .btn-account {
             margin-left: 0px;
         }
     }
 
-    #channel-edge-separator {
+    .con-channel-edge-separator {
         height: 100%;
         min-width: 18px
     }
 
-    #add-server,
-    #account,
-    #aster-button {
+    .btn-addserver,
+    .btn-account,
+    .btn-aster {
         background-color: var(--panel-2);
         border-radius: var(--radius-2);
         border-style: none;
@@ -292,24 +292,22 @@
         transition: background-color 0.4s ease;
     }
 
-    #aster-button {
+    .btn-aster {
         background-color: var(--accent-1-light);
     }
-
-    #aster-button:hover {
+    .btn-aster:hover {
         background-color: var(--panel-2);
     }
-
-    #aster-button:hover path {
+    .btn-aster:hover path {
         stroke: var(--accent-1-light);
     }
 
-    #logo path{
+    #gra-main-logo path{
         transition: stroke 0.4s ease;
     }
 
-    #add-server:hover,
-    #account:hover {
+    .btn-addserver:hover,
+    .btn-account:hover {
         background-color: var(--panel-1);
     }
 </style>

@@ -268,21 +268,20 @@
     $: selected_channel = get_selected_channel(server);
 </script>
 
-<div id="server-area">
+<div class="con-server-area">
     <!-- Channel List ------------------------------------------------------ -->
     {#if show_channels}
-        <div id="server-channels" 
-             class="container" 
+        <div class="pan-server-channels"
              on:contextmenu={(e) => showContextMenu(e, conMenu_channels)} 
              role="region">
             
             <!-- Server Info ----------------------------------------------- -->
-            <div id="server-info">
-                <p id="server-ip">{server.conn.ip}:{server.conn.port}</p>
-                <p class="server-info-text">
+            <div class="con-server-info">
+                <p class="lab-server-ip">{server.conn.ip}:{server.conn.port}</p>
+                <p class="lab-server-info">
                     {$t('PanelServerView.server_info.members')}: {server.conn.known_peers.size}
                 </p>
-                <button id="server-profile-button" 
+                <button class="btn-server-profile" 
                         on:click={() => (show_profile_dialog = true)}>
                     {$t('DialogServerProfile.title')}
                 </button>
@@ -297,18 +296,14 @@
                 on:switch_channel={switch_channel}
             />
         </div>
-    {:else}
-        {#if show_sidebar && show_channels}
-            <span id="messages-edge-separator"></span>
-        {/if}
     {/if}
     
     
     <!-- Server Area ------------------------------------------------------- -->
     {#if show_messages_call || show_messages}
-        <div id="server-messages" class="container">
+        <div class="pan-server-messages">
             <!-- Messages -->
-            <div id="message-area" 
+            <div class="con-message-area" 
                  on:scroll={message_scroll} 
                  bind:this={message_area}>
                 <!-- {#each server.messages as message (message.uuid)}
@@ -323,10 +318,10 @@
                 {/each}
             </div>
             <!-- Message Input --------------------------------------------  -->
-            <div id="message-input-container">
+            <div class="con-message-input">
                 <textarea
                     autofocus={true}
-                    id="message-input"
+                    class="inp-message"
                     placeholder={$t('PanelServerView.msgtextarea.placeholder')}
                     maxlength="5000"
                     rows="1"
@@ -341,8 +336,8 @@
 
             <!-- Channel List Toggle --------------------------------------- -->
             {#if $is_mobile_width}
-            <div id="toggle-container">
-                <button id="channel-list-button" on:click={() => {
+            <div class="con-channel-toggle">
+                <button class="btn-channel-list" on:click={() => {
                         show_channels = true; 
                         show_messages = false;
                     }}>
@@ -370,7 +365,7 @@
 </div>
 
 <style>
-    #server-area {
+    .con-server-area {
         width: 100%;
         /* max-width: calc(100% - 218px); */
         /* 218px = width of server list + right margin*/
@@ -385,7 +380,7 @@
         border-bottom-left-radius: var(--radius-2);
     }
 
-    #message-area {
+    .con-message-area {
         display: flex;
         flex-direction: column-reverse;
         overflow: hidden;
@@ -395,7 +390,7 @@
         height: calc(100% - 48px);
     }
 
-    #server-messages {
+    .pan-server-messages {
         box-sizing: border-box;
         flex: 1;
         float: right;
@@ -403,31 +398,30 @@
         display: flex;
         flex-direction: column;
         border-left: 3px var(--panel-0) solid;
+        background-color: var(--panel-2);
+        height: 100%;
     }
-    #server-channels {
+    .pan-server-channels {
         width: 240px;
         display: flex;
         flex-direction: column;
         color: var(--text-gray);
-    }
-    
-    #messages-edge-separator {
+        background-color: var(--panel-2);
         height: 100%;
-        min-width: 18px;
     }
 
-    #toggle-container {
+    .con-channel-toggle {
         display: flex;
         flex-direction: row;
         margin-left: 8px;
         margin-bottom: 4px;
     }
-    #toggle-container span {
+    .con-channel-toggle span {
         width: 80%;
         text-align: center;
     }
 
-    #message-input-container {
+    .con-message-input {
         display: flex;
         flex-direction: row;
         width: calc(100% - 32px);
@@ -437,29 +431,29 @@
     }
 
     @media (max-width: 1024px) {
-        #server-area {
+        .con-server-area {
             margin-bottom: 0;
             border-radius: 0;
         }
 
-        #server-channels {
+        .pan-server-channels {
             width: 100%;
         }
 
-        #server-messages {
+        .pan-server-messages {
             border: none;
         }
 
-        #message-input-container {
+        .con-message-input {
             margin: 8px;
         }
 
-        #message-input {
+        .inp-message {
             margin: 0px;
         }
     }
 
-    #message-input {
+    .inp-message {
         width: 100%;
         /* min-height: 36px;
         margin: 16px;
@@ -476,34 +470,29 @@
         max-height: 128px;
     }
 
-    #server-info {
+    .con-server-info {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: left;
     }
-    #server-ip {
+    .lab-server-ip {
         margin-bottom: 15px;
         margin-left: auto;
         margin-right: auto;
     }
-    .server-info-text {
+    .lab-server-info {
         font-size: 13px;
         margin: 0;
         margin-left: 10%;
     }
 
-    #server-profile-button {
+    .btn-server-profile {
         width: 80%;
         margin: 0 auto;
         margin-top: 10px;
         margin-bottom: 14px;
         font-size: 14px;
         padding: 5px;
-    }
-
-    .container {
-        background-color: var(--panel-2);
-        height: 100%;
     }
 </style>

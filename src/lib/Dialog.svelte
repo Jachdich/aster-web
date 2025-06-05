@@ -30,10 +30,10 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div id="pan-bg-darken" on:click={bg_close}>
+<div class="pan-bg-darken" on:click={bg_close}>
     {#if has_logo}
-    <svg id="gra-logo" 
-        class="pixel-img" 
+    <svg id="gra-dialog-logo" 
+        class="pixel-img"
         xmlns="http://www.w3.org/2000/svg" 
         viewBox="0 0 100 100" 
         fill="currentColor">
@@ -47,7 +47,7 @@
         style="--prefwidth: {pref_width - 20}px; z-index: 3"
         on:click|stopPropagation>
         {#if has_title}
-            <p id="lab-dialog-title">{title}</p>
+            <p class="lab-dialog-title">{title}</p>
             <hr>
         {/if}
 
@@ -58,19 +58,19 @@
         <!-- Dialog Buttons ------------------------------------------------ -->
         <div class="con-dialog-buttons" style="margin-top: auto">
             {#if has_close}
-                <button id="btn-close" class="btn-dialog-exit" 
+                <button class="btn-dialog-exit" 
                         on:click={close}>
                     {$t('dialog.close')}
                 </button>
             {/if}
             {#if has_cancel}
-                <button id="btn-cancel" class="btn-dialog-exit"
+                <button class="btn-dialog-exit"
                 on:click={close}>
                     {$t('dialog.cancel')}
                 </button>
             {/if}
             {#if has_accept}
-                <button id="btn-accept" class="btn-dialog-exit" 
+                <button class="btn-dialog-exit" 
                 on:click={accept}>
                     {$t('dialog.accept')}
                 </button>
@@ -80,7 +80,7 @@
 </div>
 
 <style>
-    #pan-bg-darken {
+    .pan-bg-darken {
         width: 100%;
         height: 100%;
         position: fixed;
@@ -95,7 +95,7 @@
         justify-content: center;
     }
 
-    #gra-logo {
+    #gra-dialog-logo {
         width: 360px;
         margin-bottom: 128px;
     }
@@ -125,7 +125,7 @@
         row-gap: 5px;
     }
 
-    #lab-dialog-title {
+    .lab-dialog-title {
         font-size: 18px;
         margin-bottom: 10px; 
         margin-left: auto; 

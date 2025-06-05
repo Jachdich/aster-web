@@ -205,13 +205,14 @@
         {#if !is_mobile_width}
             <!-- bottom left version number / changelog button -->
             <!-- needs a keydown event to stop A11y from complaining -->
-            <a  id="lab-version-number" 
-                on:click={() => (show_changelog = true)} 
+            <!-- svelte-ignore a11y-missing-attribute -->
+            <a  class="lab-version-number" 
+                on:click={() => (show_changelog = true)}
                 role="button" 
                 tabindex="0"
                 on:keydown={(e) => { }}
                 >
-                ver. α-2.3.1
+                ver. α-2.4.0
             </a>
         {/if}
 
@@ -224,7 +225,7 @@
 </main>
 
 <style>
-    #lab-version-number {
+    .lab-version-number {
         position: absolute;
         bottom: 0;
         left: 0;

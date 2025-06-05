@@ -22,7 +22,7 @@
     }
 </script>
 
-<ul id="channel-list">
+<ul class="con-channel-list">
     {#each channels as channel (channel)}
         <ChannelListButton
             {channel}
@@ -34,7 +34,7 @@
 </ul>
 
 <style>
-    #channel-list {
+    .con-channel-list {
         margin-top: 0px;
         padding-left: 8px;
     }

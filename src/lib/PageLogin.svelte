@@ -77,7 +77,7 @@
     let random_splash = get_random_string();
 </script>
 
-<div id="con-login">
+<div class="con-login">
     <svg id="gra-login-logo" 
         class="pixel-img" 
         fill="currentColor"
@@ -86,7 +86,7 @@
         <path stroke="var(--accent-1-light)" d={aster_logo_wide}/>
     </svg>
       
-    <div id="pan-login" >
+    <div class="pan-login" >
         <!-- Sync Server Fields -------------------------------------------- -->
         <div class="con-login-input">
             <p>{$t('PageLogin.sync_server_ip')}</p>
@@ -137,7 +137,7 @@
     </div>
 
 
-    <div id="lab-splash-text">
+    <div class="lab-splash-text">
         <!-- A11y hates me because I made a <p> clickable -->
         <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
         <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -178,7 +178,7 @@
         margin: 0 auto;
     }
 
-    #con-login {
+    .con-login {
         padding: 10px;
         border-radius: var(--radius-3);
         -webkit-transform: translate(-50%, -50%);
@@ -194,7 +194,7 @@
         flex-direction: column;
     }
 
-    #pan-login {
+    .pan-login {
         color: var(--white-1);
         background-color: var(--panel-2);
         border-bottom: 3px solid var(--panel-3);
@@ -227,7 +227,7 @@
         background-color: var(--accent-1-dark);
     }
 
-    #lab-splash-text {
+    .lab-splash-text {
         display: flex; flex-direction: column; 
         align-items: center; justify-content: center;
         height: 100px;
@@ -240,7 +240,7 @@
         -ms-user-select: none; /* IE 10 and IE 11 */
         user-select: none; /* Standard syntax */
     }
-    #lab-splash-text:hover {
+    .lab-splash-text:hover {
         font-size: 18.5px;
     }
 </style>
