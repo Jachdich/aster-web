@@ -367,52 +367,63 @@
 <style>
     .con-server-area {
         width: 100%;
-        /* max-width: calc(100% - 218px); */
-        /* 218px = width of server list + right margin*/
+
         float: right;
-        overflow: hidden;
-        /* margin-right: 18px; */
-        /* margin-left: 18px; */
-        margin-bottom: 25px;
+
         display: flex;
         flex-direction: row;
         justify-content: stretch;
+
+        margin-bottom: 25px;
+
         border-bottom-left-radius: var(--radius-2);
+
+        overflow: hidden;
     }
 
     .con-message-area {
+        height: calc(100% - 48px);
+
         display: flex;
         flex-direction: column-reverse;
-        overflow: hidden;
-        overflow-y: scroll;
+;
         margin-left: 10px;
         margin-right: 10px;
-        height: calc(100% - 48px);
+
+        overflow: hidden;
+        overflow-y: scroll
     }
 
     .pan-server-messages {
-        box-sizing: border-box;
-        flex: 1;
+        height: 100%;
+        
         float: right;
-        overflow: hidden;
+
         display: flex;
         flex-direction: column;
-        border-left: 3px var(--panel-0) solid;
+        flex: 1;
+
         background-color: var(--panel-2);
-        height: 100%;
+
+        border-left: 3px var(--panel-0) solid;
+
+        box-sizing: border-box;
+        overflow: hidden;
     }
     .pan-server-channels {
         width: 240px;
+
         display: flex;
         flex-direction: column;
+
         color: var(--text-gray);
         background-color: var(--panel-2);
-        /* height: 100%; */
     }
 
     .con-channel-toggle {
         display: flex;
         flex-direction: row;
+
         margin-left: 8px;
         margin-bottom: 4px;
     }
@@ -422,10 +433,11 @@
     }
 
     .con-message-input {
+        width: calc(100% - 32px);
+
         display: flex;
         flex-direction: row;
-        width: calc(100% - 32px);
-        /* min-height: 42px; */
+
         margin: 16px;
         margin-bottom: 20px;
     }
@@ -455,13 +467,9 @@
 
     .inp-message {
         width: 100%;
-        /* min-height: 36px;
-        margin: 16px;
-        margin-bottom: 20px; */
         background: var(--panel-1);
         border-radius: var(--radius-2);
-        border-style: none;
-        /* text-indent: 12px; */
+        border-style: none; 
         color: #d3d3d3;
         font-size: var(--font-size-body);
         padding-left: 24px;

@@ -25,6 +25,19 @@ CSS PREFIXES:
     - gra - graphic (img, svg)
 
 
+CSS CLASS LAYOUT {
+    (height & width)
+    (positioning styles)
+    (flex styles)
+    (margins)
+    (padding)
+    (color)
+    (background color)
+    (border styles)
+    (font-styles)
+    (other)
+}
+
 CSS NEW
 -------
 

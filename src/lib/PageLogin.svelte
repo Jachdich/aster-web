@@ -158,13 +158,52 @@
         100%  { color: red;       }  
     } */
 
+    .con-login {
+        width: 40%;
+        min-width: 350px;
+        max-width: 500px;
+
+        position: absolute;
+        transform: translate(-50%, -50%);
+        left: 50%;
+        top: 50%;
+
+        display: flex;
+        flex-direction: column;
+
+        padding: 10px;
+
+        border-radius: var(--radius-3);
+    }
+    .pan-login {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: center;
+
+        padding: 15px;
+
+        color: var(--white-1);
+        background-color: var(--panel-2);
+
+        border-bottom: 3px solid var(--panel-3);
+        border-radius: var(--radius-2);
+    }
+
+    #gra-login-logo {
+        width: 360px;
+        margin: 0 auto;
+        padding-bottom: 32px;
+    }
+
     .con-login-input {
         display: flex;
         justify-content: center;
         align-items: stretch;
         flex-direction: row;
-        margin-bottom: 8px;
+
         margin-top: 8px;
+        margin-bottom: 8px;
     }
     .con-login-input p {
         width: 30%;
@@ -172,68 +211,43 @@
         font-size: var(--font-size-body);
     }
 
-    #gra-login-logo {
-        width: 360px;
-        padding-bottom: 32px;
-        margin: 0 auto;
-    }
-
-    .con-login {
-        padding: 10px;
-        border-radius: var(--radius-3);
-        -webkit-transform: translate(-50%, -50%);
-        transform: translate(-50%, -50%);
-        position: absolute;
-        left: 50%;
-        right: 50%;
-        top: 50%;
-        width: 40%;
-        min-width: 350px;
-        max-width: 500px;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .pan-login {
-        color: var(--white-1);
-        background-color: var(--panel-2);
-        border-bottom: 3px solid var(--panel-3);
-        background-color: var(--panel-2);
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        justify-content: center;
-        padding: 15px;
-        border-radius: var(--radius-2);
-    }
-
     .inp-login {
+        height: 45px;
         width: 70%;
+
         color: var(--white-1);
         margin-left: 8px;
-        text-align: center;
+
         font-size: var(--font-size-body);
-        height: 45px;
+        text-align: center;
     }
 
     .btn-login {
-        width: 80%;
         height: 40px;
-        font-size: var(--font-size-body);
+        width: 80%;
+
         color: var(--text-dark);
         background-color: var(--accent-1-light);
+
+        font-size: var(--font-size-body);
     }
     .btn-login:hover {
         background-color: var(--accent-1-dark);
     }
 
     .lab-splash-text {
-        display: flex; flex-direction: column; 
-        align-items: center; justify-content: center;
         height: 100px;
+        
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        justify-content: center;
+
         font-size: 18px;
         text-align: center;
+        
         transition: 0.5s ease;
+
         /* font-weight: bold;
         animation: rainbow_colours 5s infinite; */
         -webkit-user-select: none; /* Safari */

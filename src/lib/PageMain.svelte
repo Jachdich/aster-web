@@ -214,17 +214,18 @@
 
 <style>
     .con-main {
+        height: 100%; 
+        width: 100%;
+        
         display: flex;
         flex-direction: row;
-        height: 100%;
-        width: 100%;
     }
 
     @media (width >= 1024px) {
         .con-sidebar {
             height: 100%;
-            min-width: 200px;
             width: 200px;
+            min-width: 200px;
         }
 
         .con-top-buttons {
@@ -232,6 +233,7 @@
             flex-direction: row;
             align-items: center;
             justify-content: center;
+
             margin-top: 20px;
             margin-bottom: 20px;
         }
@@ -246,8 +248,8 @@
     @media (width < 1024px) {
         .con-sidebar {
             height: 100%;
-            min-width: 70px;
             width: 70px;
+            min-width: 70px;
         }
 
         .con-top-buttons {
@@ -255,6 +257,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+
             margin-top: 20px;
             margin-bottom: 20px;
         }
@@ -264,7 +267,6 @@
             margin-bottom: 5px;
             margin-left: 0px;
         }
-        
         .btn-account {
             margin-left: 0px;
         }
@@ -278,17 +280,22 @@
     .btn-addserver,
     .btn-account,
     .btn-aster {
-        background-color: var(--panel-2);
-        border-radius: var(--radius-2);
-        border-style: none;
         height: 46px;
         width: 46px;
-        margin-top: 0;
+
         display: flex;
         flex-direction: row;
         justify-content: center;
         align-items: center;
+
+        margin-top: 0;
+
         color: var(--white-1);
+        background-color: var(--panel-2);
+
+        border-style: none;
+        border-radius: var(--radius-2);
+
         transition: background-color 0.4s ease;
     }
 
