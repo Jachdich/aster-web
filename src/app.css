@@ -76,7 +76,8 @@
 }
 
 /* body */
-body, html {
+body, 
+html {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -85,17 +86,19 @@ body {
   background-color: var(--panel-0);
   color: var(--white-1);
 }
-#app, main {
+#app,
+ main {
+   height: 100%;
   width: 100%;
-  height: 100%;
 }
 
 /* interactables */
 input, textarea, button {
-    border: 1px none;
-    border-radius: var(--radius-3);
     color: var(--white-1);
     background-color: var(--panel-1);
+
+    border: 1px none;
+    border-radius: var(--radius-3);
 }
 button, select {
   cursor: pointer;
@@ -104,16 +107,19 @@ button:hover {
   background-color: var(--panel-0);
 }
 input:focus {
-    outline: none;
+  outline: none;
 }
 
 /* global ------------------------------------------------------------------- */
 hr {
-  margin: 0 auto; 
-  width: 90%; 
   height: 3px; 
-  background-color: var(--panel-3); 
+  width: 90%; 
+  
+  margin: 0 auto; 
   margin-bottom: 16px; 
+  
+  background-color: var(--panel-3); 
+  
   border: none
 }
 
@@ -138,6 +144,7 @@ a:visited {
   justify-content: stretch;
   align-items: center;
   text-align: center;
+  
   font-size: var(--font-size-body);
 }
 
@@ -149,22 +156,26 @@ a:visited {
 
 /* used for input labels */
 .con-dialog-row span {
-  text-align: left;
   width: 40%;
+  
   margin: 0;
+  
   /* padding to make the text look aligned
-     with the left edge because the buttons
-     below have rounded corners */
+  with the left edge because the buttons
+  below have rounded corners */
   padding-left: 3px;
+  
+  text-align: left;
 }
 
 .con-dialog-row input {
   height: 30px;
   width: 60%;
+  
   padding-left: 10px;
 }
 
 .con-dialog-row button {
-  width: 100%;
   height: 30px;
+  width: 100%;
 }

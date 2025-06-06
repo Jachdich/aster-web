@@ -466,16 +466,22 @@
     }
 
     .inp-message {
+        max-height: 128px;
         width: 100%;
-        background: var(--panel-1);
-        border-radius: var(--radius-2);
-        border-style: none; 
-        color: #d3d3d3;
-        font-size: var(--font-size-body);
+        
+        padding-top: 12px;
         padding-left: 24px;
         padding-right: 24px;
-        padding-top: 12px;
-        max-height: 128px;
+        
+        color: #d3d3d3;
+        background: var(--panel-1);
+        
+        border-radius: var(--radius-2);
+
+        font-size: var(--font-size-body);
+    }
+    .inp-message:focus {
+        outline: 0;
     }
 
     .con-server-info {
@@ -490,17 +496,21 @@
         margin-right: auto;
     }
     .lab-server-info {
-        font-size: 13px;
         margin: 0;
         margin-left: 10%;
+        
+        font-size: 13px;
     }
 
     .btn-server-profile {
         width: 80%;
+        
         margin: 0 auto;
         margin-top: 10px;
         margin-bottom: 14px;
-        font-size: 14px;
+        
         padding: 5px;
+        
+        font-size: 14px;
     }
 </style>

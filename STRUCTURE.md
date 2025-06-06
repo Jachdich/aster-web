@@ -28,7 +28,7 @@ CSS PREFIXES:
 CSS CLASS LAYOUT {
     (height & width)
     (positioning styles)
-    (flex styles)
+    (flex/display styles)
     (margins)
     (padding)
     (color)

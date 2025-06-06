@@ -186,17 +186,22 @@
         max-height: 512px;
         max-width: 60%;
         width: min-content;
+        
         object-fit: contain;
     }
 
     .con-message {
-        color: var(--text-gray);
-        padding-left: 8px;
         display: flex;
         flex-direction: row;
         align-items: stretch;
         justify-content: stretch;
+        
         margin-top: var(--spacing);
+        
+        padding-left: 8px;
+        
+        color: var(--text-gray);
+        
         border-radius: var(--radius-3);
     }
     .con-message:hover {
@@ -204,60 +209,71 @@
     }
 
     .lab-message-username {
+        min-width: var(--uname-width);
+        
         margin: 0;
+        margin-top: var(--uname-top);
         margin-left: 10px;
         margin-right: 6px;
+        
         font-size: var(--font-size-body);
-        margin-top: var(--uname-top);
-        min-width: var(--uname-width);
     }
     
     .lab-message-username-mobile {
-        color: var(--text-gray);
         margin: 0;
-        margin-left: 10px;
-        /* margin-right: 6px; */
-        font-size: var(--font-size-body);
         margin-top: var(--uname-top);
+        margin-left: 10px;
+        
+        color: var(--text-gray);
+        
+        font-size: var(--font-size-body);
     }
 
     .lab-message-date {
+        min-width: 130px;
+
         margin: 0;
-        margin-left: 5px;
-        font-size: 10px;
         margin-top: var(--date-top);
         margin-left: auto;
         margin-right: 15px;
-        min-width: 130px;
+        
+        font-family: var(--font-body-mono);
+        font-size: 10px;
         text-align: right;
-        font-family: "Red Hat Mono", monospace;
     }
 
     .lab-message-date-mobile {
-        color: var(--text-gray);
         margin: 0;
-        font-size: 10px;
         margin-top: var(--date-top);
-        /* margin-left: 10px; */
-        font-family: "Red Hat Mono", monospace;
+        
+        color: var(--text-gray);
+        
+        font-family: var(--font-body-mono);
+        font-size: 10px;
     }
 
     .gra-message-pfp {
-        margin: 0;
-        width: 24px;
         height: 24px;
-        border-radius: 50%;
+        width: 24px;
+        
+        margin: 0;
+        
         border-style: none;
+        border-radius: 50%;
+        
         background-position: center;
         object-fit: cover;
     }
 
     .con-message-body {
-        margin: 0;
-        color: var(--white-1);
-        margin-left: 2px;
-        margin-top: var(--body-top);
-        white-space: pre-line;
         max-width: 100%;
+        
+        margin: 0;
+        margin-top: var(--body-top);
+        margin-left: 2px;
+        
+        color: var(--white-1);
+        
+        white-space: pre-line;
     }
 </style>

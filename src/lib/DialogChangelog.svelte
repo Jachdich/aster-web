@@ -30,8 +30,9 @@
 
 <style>
     .con-changelog-scrollbox {
-        overflow-y: scroll;
         min-height: 400px;
-        max-height: 600px
+        max-height: 600px;
+        
+        overflow-y: scroll;
     }
 </style>

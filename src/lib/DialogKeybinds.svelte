@@ -42,7 +42,7 @@
 <style>
     .lab-keybind { 
         width: 60%; 
+        margin: 0;
         text-align: right; 
-        margin: 0
     }
 </style>

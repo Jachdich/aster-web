@@ -53,34 +53,40 @@
 
 <style>
     .con-serverprofile-pfp {
+        width: 30%;
+        
         display: flex;
         flex-direction: row;
         justify-content: center;
         align-items: center;
-        text-align: center;
-        width: 30%;
+        
         margin: 0 auto;
+        
         font-size: var(--font-size-body);
+        text-align: center;
     }
     .gra-serverprofile-pfp {
         width: 48px;
         height: 48px;
-        border-radius: 48px;
+        
         margin-right: 16px;
+        
+        border-radius: 48px;
     }
 
     .btn-serverprofile-pfp {
-        border: 1px none;
-        border-radius: 6px;
-        color: var(--white-1);
-        background-color: var(--panel-1);
-        cursor: pointer;
         padding: 6px;
         padding-left: 16px;
         padding-right: 16px;
+        
+        color: var(--white-1);
+        background-color: var(--panel-1);
+        
+        border: 1px none;
+        border-radius: 6px;
     }
 
-    #btn-serverprofile-pfp:hover {
+    .btn-serverprofile-pfp:hover {
         background-color: var(--panel-0);
     }
 </style>

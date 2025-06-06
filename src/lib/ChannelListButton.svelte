@@ -26,17 +26,22 @@
 
 <style>
     .btn-channel {
+        min-height: 30px;
+        width: 96%;
+        
+        padding-left: 20px;
+        
+        color: var(--text-gray);
+        background-color: inherit;
+        
+        border: none;
+        border-radius: var(--radius-3);
+        
+        font-size: var(--font-size-body);
+        text-align: left;
+        
         box-sizing: border-box;
         list-style-type: none;
-        border: none;
-        background-color: inherit;
-        color: var(--text-gray);
-        width: 96%;
-        text-align: left;
-        padding-left: 20px;
-        border-radius: var(--radius-3);
-        min-height: 30px;
-        font-size: var(--font-size-body);
     }
     .btn-channel:hover {
         background-color: var(--panel-1);
