@@ -12,6 +12,7 @@ App
  │       ├─ DialogKeybinds
  │       ├─ ServerMessage
  │       └─ PanelChannelList
+ │          └─ ChannelListButton
  ├─ DialogChangelog
  └─ Context Menu
 
