@@ -128,18 +128,6 @@
     ul li button i{
         padding: 0px 15px 0px 10px;
     }
-    ul li button i.fa-square{
-        color: #var(--text-gray);
-    }
-    ul li button:hover > i.fa-square{
-        color: var(--text-gray);
-    }
-    ul li button:hover > i.warning{
-        color: crimson;
-    }
-    :global(ul li button.info:hover){
-        color: navy;
-    }
     hr{
         width: 100%;
         margin: 5px 0px;
