@@ -1,7 +1,7 @@
 {
-  "name": "svelte-test-2",
+  "name": "aster-web",
   "private": true,
-  "version": "0.0.0",
+  "version": "2.4.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -21,7 +21,6 @@
   },
   "dependencies": {
     "marked": "^15.0.12",
-    "sass": "^1.89.1",
     "snarkdown": "^2.0.0",
     "svelte-i18n": "^4.0.1",
     "svelte-icons-pack": "^3.1.3",
