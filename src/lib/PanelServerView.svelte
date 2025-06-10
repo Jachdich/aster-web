@@ -280,8 +280,9 @@
 
     // # IMG DIALOG ------------------------------------------------------------
 
-    function open_image_dialog(event: CustomEvent<{ img_url: string }>) {
-        current_img_url = event.detail.img_url
+    function open_image_dialog(event: CustomEvent<{ image_url: string }>) {
+        console.log(event.detail.image_url)
+        current_img_url = event.detail.image_url
         show_dialog_img = true
     }
 </script>

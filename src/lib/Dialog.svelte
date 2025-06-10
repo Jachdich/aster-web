@@ -56,26 +56,28 @@
         </div>
 
         <!-- Dialog Buttons ------------------------------------------------ -->
-        <div class="con-dialog-buttons" style="margin-top: auto">
-            {#if has_close}
-                <button class="btn-dialog-exit" 
-                        on:click={close}>
-                    {$t('dialog.close')}
-                </button>
-            {/if}
-            {#if has_cancel}
-                <button class="btn-dialog-exit"
-                on:click={close}>
-                    {$t('dialog.cancel')}
-                </button>
-            {/if}
-            {#if has_accept}
-                <button class="btn-dialog-exit" 
-                on:click={accept}>
-                    {$t('dialog.accept')}
-                </button>
-            {/if}
-        </div>
+        {#if has_close || has_cancel || has_accept}
+            <div class="con-dialog-buttons" style="margin-top: auto">
+                {#if has_close}
+                    <button class="btn-dialog-exit" 
+                            on:click={close}>
+                        {$t('dialog.close')}
+                    </button>
+                {/if}
+                {#if has_cancel}
+                    <button class="btn-dialog-exit"
+                    on:click={close}>
+                        {$t('dialog.cancel')}
+                    </button>
+                {/if}
+                {#if has_accept}
+                    <button class="btn-dialog-exit" 
+                    on:click={accept}>
+                        {$t('dialog.accept')}
+                    </button>
+                {/if}
+            </div>
+        {/if}
     </div>
 </div>
 
@@ -118,7 +120,9 @@
     }
 
     .con-dialog-content {
+        max-height: 80vh;
         width: 100%;
+        overflow-y: auto;
         
         display: flex;
         flex-direction: column;
