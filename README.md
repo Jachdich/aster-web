@@ -1,12 +1,13 @@
 Developed by **Jachdich** and **elecarno**
 
 **TBD: α-2.4.0**
- - Added German (de: Deustch) localisation
- - Added Spanish (es: Español) localisation
- - Updated server view layout
- - Updated mobile layout
- - Updated all dialogs
- - Added Custom CSS Themes
+ - Added German (de: Deustch) localisation.
+ - Added Spanish (es: Español) localisation.
+ - Updated server view layout.
+ - Updated mobile layout.
+ - Updated all dialogs.
+ - Added Custom CSS Themes.
+ - Added login by pressing 'Enter' key.
  - Fixed message input height not returning to default after sending long or multiline message.
  - Fixed message history not loading after switching channels.
  - Fixed message history causing message area to jump to bottom of scroll.

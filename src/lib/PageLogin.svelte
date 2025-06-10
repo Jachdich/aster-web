@@ -75,6 +75,21 @@
         return new_string;
     }
     let random_splash = get_random_string();
+
+    // # QoL
+    import { onMount } from "svelte";
+    onMount(() => {
+        window.addEventListener('keydown', handleKeydown);
+        return () => {
+            window.removeEventListener('keydown', handleKeydown);
+        };
+    });
+
+    function handleKeydown(event) {
+        if (event.key === "Enter") {
+            login()
+        }
+    }
 </script>
 
 <div class="con-login">
