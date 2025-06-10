@@ -4,7 +4,7 @@
     // # ICONOGRAPHY & LOCALE --------------------------------------------------
     import { Icon } from "svelte-icons-pack";
     import { FiHelpCircle, FiArrowLeft } from "svelte-icons-pack/fi";
-    import { t } from "svelte-i18n";
+    import { init, t } from "svelte-i18n";
 
     // # SVELTE ----------------------------------------------------------------
     import { onMount } from "svelte";
@@ -26,7 +26,6 @@
     let show_messages = false;
     let show_keybinds = false;
     export let show_messages_call;
-    export let show_sidebar;
 
     function handleKeydown(event) {
         if (event.shiftKey && event.key === 'F2') {
@@ -233,12 +232,16 @@
 
         let scrolled_to_top = (div.scrollTop + div.scrollHeight - div.clientHeight === 0)
         if (scrolled_to_top && selected_channel !== undefined && server.messages.length > 0) {
+            console.log("loading history");
+
             const before_id = server.messages[0].uuid;
-            // console.log(before_id, server.requesting_history_from);
+            console.log(before_id, server.requesting_history_from);
 
             // we've already started requesting history from this point. bail!
             // (requesting duplicate history is __very bad__)
             if (server.requesting_history_from.includes(before_id)) {
+                console.log("return, requesting duplicate history");
+                console.log(server.messages)
                 return;
             }
 
@@ -249,18 +252,22 @@
             // console.log(res);
             if (res instanceof ChannelNotFound) {
                 // cannot happen hopefully
+                console.log("channel not found");
             } else if (res instanceof Forbidden) {
                 // what
+                console.log("forbidden");
             } else if (res instanceof ServerError) {
                 // hmm...
+                console.log("server error");
             } else {
-                // selected_channel.cached_messages = [...res, ...selected_channel.cached_messages];
+                selected_channel.cached_messages = [...res, ...selected_channel.cached_messages];
                 server.messages = [...res, ...server.messages];
-                let init_height = message_area.scrollHeight;
                 await tick();
-                message_area.scrollTop = message_area.scrollHeight - init_height;
+
+                // jump the chat up a little bit to show history has loaded
+                message_area.scrollTop -= 15;
             }
-            // server.requesting_history_from = server.requesting_history_from.filter(e => e !== before_id);
+            server.requesting_history_from = server.requesting_history_from.filter(e => e !== before_id);
         }
     }
 
@@ -319,6 +326,7 @@
             </div>
             <!-- Message Input --------------------------------------------  -->
             <div class="con-message-input">
+                <!-- svelte-ignore a11y-autofocus -->
                 <textarea
                     autofocus={true}
                     class="inp-message"

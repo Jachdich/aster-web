@@ -7,7 +7,9 @@ Developed by **Jachdich** and **elecarno**
  - Updated mobile layout
  - Updated all dialogs
  - Added Custom CSS Themes
- - Fixed message input height not returning to default after sending long or multiline message
+ - Fixed message input height not returning to default after sending long or multiline message.
+ - Fixed message history not loading after switching channels.
+ - Fixed message history causing message area to jump to bottom of scroll.
 
 **2025.06.02: α-2.3.0**
  - Markdown parsing in messages.
