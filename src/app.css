@@ -73,6 +73,7 @@
 /* base styles -------------------------------------------------------------- */
 * {
   font-family: var(--font-body-sans);
+  font-size: var(--font-size-body);
 }
 
 /* body */

@@ -8,10 +8,9 @@
 <style>
     pre {
         width: 100%;
-        background-color: black;
         background-color: var(--panel-1);
         padding: 16px;
-        border-radius: 5px;
+        border-radius: var(--radius-3)
     }
 
     code {

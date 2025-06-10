@@ -70,14 +70,20 @@
 
     const url_regex = /https?:\/\/[^\s]+/g;
     let image_urls: string[] = [];
+    let plaintext: string[] = [];
     let content_parts: StyledText[] = [];
 
     $: parse_message_style(message.content);
 
+    // console.log(message.content)
+
+    let parsed_text: string
+
     function parse_message_style(content: string) {
         // TODO I think this function is called too many times
+        plaintext = [];
         image_urls = [];
-        content_parts = [];
+        // content_parts = [];
         let matches = content.matchAll(url_regex);
         let pos = 0;
         for (const match of matches) {
@@ -86,17 +92,35 @@
             } else {
                 if (match.index != pos) {
                     let prev = content.substring(pos, match.index);
-                    content_parts.push(new StyledText("none", prev));
+                    plaintext.push(prev)
+                    // content_parts.push(new StyledText("none", prev));
                 }
                 pos = match.index + match[0].length;
-                content_parts.push(new StyledText("link", match[0]));
+                // content_parts.push(new StyledText("link", match[0]));
                 image_urls.push(match[0]);
             }
         }
         let prev = content.substring(pos);
-        content_parts.push(new StyledText("none", prev));
-        content_parts = content_parts;
+        plaintext.push(prev)
+        // content_parts.push(new StyledText("none", prev));
+        // content_parts = content_parts;
         image_urls = image_urls;
+
+        plaintext = remove_item(plaintext, "")
+        plaintext = remove_item(plaintext, "\n")
+    
+        console.log(plaintext, image_urls)
+        
+        if (plaintext.length === 1){
+            parsed_text = plaintext[0]
+        } else {
+            parsed_text = message.content;
+        }
+    }
+
+    function remove_item(array: any, item: string) {
+        array = array.filter((i: string) => i !== item);
+        return array;
     }
 
     function show_image(e: Event) {
@@ -124,19 +148,22 @@
         {#if $is_mobile_width}
             <p class="lab-message-username-mobile">{message.author.display_name}</p>
         {/if}
-        {#each content_parts as part}
+
+        <SvelteMarkdown 
+            source={parsed_text}
+            renderers={{
+                paragraph: mdParagraph, 
+                html: mdHTML,
+                heading: mdHeader,
+                code: mdCode,
+                codespan: mdCodeSpan
+            }}
+        />
+        
+        <!-- {#each content_parts as part}
             {#if part.style === "link"}
-                <!-- this solution is buggy and doesn't really work -->
-                {#if image_urls.length != 0}
-                    <!-- I removed the <br> but it still renders somehow..? tf? 
-                    Not complaining cause it *works* but like what?-->
-                    <a href="{part.text}">{$t('ServerMessage.image_link')}</a>
-                {:else}
-                    <a href="{part.text}">{part.text}</a>
-                {/if}
+                <a href="{part.text}">{part.text}</a>
             {:else}
-                <!-- svelte-markdown tries to render HTML as its own thing, 
-                 so we can fully sanitize by using a custom renderer -->
                 <SvelteMarkdown 
                     source={part.text}
                     renderers={{
@@ -148,21 +175,23 @@
                     }}
                 />
             {/if}
-        {/each}
+        {/each} -->
+
         <div class="con-message-image">
-        {#each image_urls as image_url}
-            <img class="gra-message-image" 
-                 src={image_url} 
-                 alt="embed failed to load"
-                 style="display: none;"
-                 on:load={show_image} 
-                 on:error={
-                    (_) => image_urls = image_urls.filter(
-                        (url) => url != image_url
-                    )
-                }>
-        {/each}
+            {#each image_urls as image_url}
+                <img class="gra-message-image" 
+                    src={image_url} 
+                    alt="embed failed to load"
+                    style="display: none;"
+                    on:load={show_image} 
+                    on:error={
+                        (_) => image_urls = image_urls.filter(
+                            (url) => url != image_url
+                        )
+                    }>
+            {/each}
         </div>
+
         {#if $is_mobile_width}
             <div class="lab-message-date-mobile">
                 {message.date.toLocaleString()}

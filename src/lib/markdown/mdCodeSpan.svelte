@@ -10,6 +10,6 @@
         font-size: 14px;
         background-color: var(--panel-1);
         padding: 5px;
-        border-radius: 5px;
+        border-radius: var(--radius-3)
     }
 </style>
