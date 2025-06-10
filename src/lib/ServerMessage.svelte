@@ -109,7 +109,7 @@
         plaintext = remove_item(plaintext, "")
         plaintext = remove_item(plaintext, "\n")
     
-        console.log(plaintext, image_urls)
+        // console.log(plaintext, image_urls)
         
         if (plaintext.length === 1){
             parsed_text = plaintext[0]
@@ -130,6 +130,10 @@
             }
         }
     }
+
+    // # DIALOG IMAGE
+    import { createEventDispatcher } from 'svelte';
+    const dispatch = createEventDispatcher();
 </script>
 
 
@@ -179,10 +183,15 @@
 
         <div class="con-message-image">
             {#each image_urls as image_url}
+                <!-- svelte-ignore a11y-no-noninteractive-element-to-interactive-role -->
                 <img class="gra-message-image" 
                     src={image_url} 
                     alt="embed failed to load"
                     style="display: none;"
+                    on:click={() => dispatch('open_image', { image_url })}
+                    role="button" 
+                    tabindex="0"
+                    on:keydown={(e) => { }}
                     on:load={show_image} 
                     on:error={
                         (_) => image_urls = image_urls.filter(
@@ -217,6 +226,8 @@
         width: min-content;
         
         object-fit: contain;
+
+        cursor: pointer;
     }
 
     .con-message {

@@ -210,8 +210,7 @@
                 on:click={() => (show_changelog = true)}
                 role="button" 
                 tabindex="0"
-                on:keydown={(e) => { }}
-                >
+                on:keydown={(e) => { }}>
                 ver. α-2.4.0
             </a>
         {/if}

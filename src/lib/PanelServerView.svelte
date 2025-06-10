@@ -20,12 +20,16 @@
     import DialogKeybinds from "./DialogKeybinds.svelte";
     import ServerMessage from "./ServerMessage.svelte";
     import PanelChannelList from "./PanelChannelList.svelte";
+    import DialogImage from './DialogImage.svelte';
 
     let show_profile_dialog = false;
     let show_channels = true;
     let show_messages = false;
     let show_keybinds = false;
+    let show_dialog_img = false;
     export let show_messages_call;
+
+    let current_img_url: string;
 
     function handleKeydown(event) {
         if (event.shiftKey && event.key === 'F2') {
@@ -235,13 +239,13 @@
             console.log("loading history");
 
             const before_id = server.messages[0].uuid;
-            console.log(before_id, server.requesting_history_from);
+            // console.log(before_id, server.requesting_history_from);
 
             // we've already started requesting history from this point. bail!
             // (requesting duplicate history is __very bad__)
             if (server.requesting_history_from.includes(before_id)) {
                 console.log("return, requesting duplicate history");
-                console.log(server.messages)
+                // console.log(server.messages)
                 return;
             }
 
@@ -273,6 +277,13 @@
 
     let selected_channel: Channel | undefined;
     $: selected_channel = get_selected_channel(server);
+
+    // # IMG DIALOG ------------------------------------------------------------
+
+    function open_image_dialog(event: CustomEvent<{ img_url: string }>) {
+        current_img_url = event.detail.img_url
+        show_dialog_img = true
+    }
 </script>
 
 <div class="con-server-area">
@@ -320,7 +331,8 @@
                 {/each} -->
                 {#each [...server.messages].reverse() as message (message.uuid)}
                     <div>
-                        <ServerMessage {message} />
+                        <ServerMessage {message} 
+                        on:open_image={open_image_dialog}/>
                     </div>
                 {/each}
             </div>
@@ -368,6 +380,12 @@
     {#if show_keybinds}
         <DialogKeybinds
         on:dismiss={() => (show_keybinds = false)}
+        />
+    {/if}
+    {#if show_dialog_img}
+        <DialogImage
+        img_url={current_img_url}
+        on:dismiss={() => (show_dialog_img = false)}
         />
     {/if}
 </div>
