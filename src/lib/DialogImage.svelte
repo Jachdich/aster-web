@@ -5,12 +5,23 @@
     import Dialog from "./Dialog.svelte";
 
     export let img_url: string
-    console.log(img_url)
 
+    let dynamic_width = 800;
+
+    function update_width() {
+        const img = new Image();
+        img.onload = () => {
+            dynamic_width = Math.min(img.width, 1300); // +40 for padding/margin
+        };
+        img.src = img_url;
+    }
+
+    $: img_url && update_width();
+
+    // # BUTTONS ---------------------------------------------------------------
     function img_link_copy() {
         navigator.clipboard.writeText(img_url)
     }
-
     function img_open_tab(){
         window.open(img_url, '_blank', 'noopener,noreferrer');
     }
@@ -26,7 +37,7 @@
         title="{$t('DialogAddServer.title')}"
         has_title={false}
         has_cancel={false} has_close={false} has_accept={false}
-        pref_width={1350}
+        pref_width={dynamic_width}
         on:dismiss={cancel}>
     <!-- New Server Info ----------------------------------------------- -->
     <div class="con-image-img">

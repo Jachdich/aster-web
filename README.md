@@ -7,6 +7,7 @@ Developed by **Jachdich** and **elecarno**
  - Updated mobile layout.
  - Updated all dialogs.
  - Added Custom CSS Themes.
+ - Added Image Viewer.
  - Added login by pressing 'Enter' key.
  - Fixed message input height not returning to default after sending long or multiline message.
  - Fixed message history not loading after switching channels.
