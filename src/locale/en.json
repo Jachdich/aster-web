@@ -7,6 +7,11 @@
 
     "DialogAccount.title": "Account",
 
+    "DialogChangelog.title": "Changelog",
+
+    "DialogImage.open_img_tab": "Open In New Tab",
+    "DialogImage.copy_img_link": "Copy Image Link",
+
     "DialogAddServer.title": "Add Server",
     "DialogAddServer.ip": "IP",
     "DialogAddServer.port": "Port",
@@ -17,6 +22,8 @@
     "DialogKeybinds.message_delete": "Delete Message",
     "DialogKeybinds.message_edit": "Edit Message",
     "DialogKeybinds.message_reply": "Reply to Message",
+
+    "DialogMemberList.copy_uuid": "Copy UUID",
 
     "DialogServerProfile.title": "Server Profile",
     "DialogServerProfile.nickname": "Nickname",

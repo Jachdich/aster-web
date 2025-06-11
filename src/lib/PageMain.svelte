@@ -12,9 +12,8 @@
     // # ICONOGRAPHY & LOCALE --------------------------------------------------
     import { Icon } from "svelte-icons-pack";
     import { FiPlus, FiUser } from "svelte-icons-pack/fi";
-    import { aster_logo_small } from "./logos";
+    import { aster_logo_small, aster_logo_wide } from "./logos";
     import { t } from "svelte-i18n";
-
 
     // # ASTER COMPONENTS
     import DialogAster from "./DialogTheme.svelte";
@@ -75,12 +74,18 @@
     export let sync_server: Connection;
     export let show_error: (_: string) => void;
 
+    let show_server = true;
+
     function switch_server(server: CustomEvent<Server>) {
         selected_server = server.detail;
+        show_server = true;
         if ($is_mobile_width) {
-            // show_sidebar = false
             show_messages = false
         }
+    }
+
+    function toggle_server_visiblity() {
+        show_server = !show_server;
     }
 
     // TODO: get rid of the any in the signature
@@ -151,7 +156,7 @@
                     <svg id="gra-main-logo" 
                          class="pixel-img" 
                          style="width: 32px; height: 32px" 
-                         xmlns="http://www.w3.org/2000/svg" 
+                         xmlns="http://www.w3.org/2000/svg"
                          viewBox="0 0 16 16" 
                          fill="currentColor">
                         <path stroke="var(--panel-2)" 
@@ -176,17 +181,29 @@
             </div>
 
             <!-- Server List ----------------------------------------------- -->
-            <PanelServerList {servers} on:switch_server={switch_server}/>
+            <PanelServerList {servers} 
+                             on:switch_server={switch_server}
+                             on:toggle_current_server={toggle_server_visiblity}/>
         </div>
     {:else}
         <span class="con-channel-edge-separator"></span>
     {/if}
 
     <!-- Server View ------------------------------------------------------- -->
-    {#if selected_server !== undefined}
+    {#if selected_server !== undefined && show_server}
         <PanelServerView server={selected_server} 
                          sidebar_shown={show_sidebar} 
                          show_messages={show_messages}/>
+    {:else}
+        <div class="con-main-bg-logo">
+            <svg id="gra-main-bg-logo" 
+                class="pixel-img" 
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg" 
+                viewBox="0 0 100 32">
+                <path stroke="var(--panel-3)" d={aster_logo_wide}/>
+            </svg>
+        </div>
     {/if}
 </div>
 
@@ -235,7 +252,7 @@
             justify-content: center;
 
             margin-top: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
 
         .btn-addserver,
@@ -259,7 +276,7 @@
             justify-content: center;
 
             margin-top: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .btn-addserver,
@@ -311,6 +328,22 @@
 
     #gra-main-logo path{
         transition: stroke 0.4s ease;
+    }
+
+    .con-main-bg-logo {
+        height: 100%;
+        width: 100%;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+    }
+    #gra-main-bg-logo {
+        height: 40%;
+        width: 40%;
+
+        margin-bottom: 5%;
     }
 
     .btn-addserver:hover,

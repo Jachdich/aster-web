@@ -4,11 +4,15 @@ Developed by **Jachdich** and **elecarno**
  - Added German (de: Deustch) localisation.
  - Added Spanish (es: Español) localisation.
  - Updated server view layout.
+ - Updated sidebar layout.
  - Updated mobile layout.
  - Updated all dialogs.
  - Added Custom CSS Themes.
  - Added Image Viewer.
+ - Added Server Member List.
  - Added login by pressing 'Enter' key.
+ - Added ability to toggle active server visibility.
+ - Added logo to main page when no server is visible.
  - Fixed message input height not returning to default after sending long or multiline message.
  - Fixed message history not loading after switching channels.
  - Fixed message history causing message area to jump to bottom of scroll.

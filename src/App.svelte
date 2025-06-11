@@ -211,7 +211,7 @@
                 role="button" 
                 tabindex="0"
                 on:keydown={(e) => { }}>
-                ver. α-2.4.0
+                α-2.4.0
             </a>
         {/if}
 

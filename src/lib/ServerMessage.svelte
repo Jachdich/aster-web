@@ -23,7 +23,7 @@
     
     const conMenu_message = [
         {
-            name: 'copy',
+            name: 'copy_message',
             onClick: con_copy,
             displayText: $t('ServerMessage.conMenu_message.copy'),
             class: 'fa-solid fa-copy',
@@ -51,17 +51,6 @@
     import { style } from "./style";
 
     export let message: MessageInfo;
-
-    type Style = "link" | "none";
-    class StyledText {
-        style: Style;
-        text: string;
-        constructor(style: Style, text: string) {
-            this.style = style;
-            this.text = text;
-        }
-    }
-
     let spacing = style.message_spacing;
     let uname_top = (24 - 20) / 2;
     let body_top = uname_top;
@@ -71,7 +60,6 @@
     const url_regex = /https?:\/\/[^\s]+/g;
     let image_urls: string[] = [];
     let plaintext: string[] = [];
-    let content_parts: StyledText[] = [];
 
     $: parse_message_style(message.content);
 
@@ -83,7 +71,6 @@
         // TODO I think this function is called too many times
         plaintext = [];
         image_urls = [];
-        // content_parts = [];
         let matches = content.matchAll(url_regex);
         let pos = 0;
         for (const match of matches) {
@@ -93,23 +80,17 @@
                 if (match.index != pos) {
                     let prev = content.substring(pos, match.index);
                     plaintext.push(prev)
-                    // content_parts.push(new StyledText("none", prev));
                 }
                 pos = match.index + match[0].length;
-                // content_parts.push(new StyledText("link", match[0]));
                 image_urls.push(match[0]);
             }
         }
         let prev = content.substring(pos);
         plaintext.push(prev)
-        // content_parts.push(new StyledText("none", prev));
-        // content_parts = content_parts;
         image_urls = image_urls;
 
         plaintext = remove_item(plaintext, "")
         plaintext = remove_item(plaintext, "\n")
-    
-        // console.log(plaintext, image_urls)
         
         if (plaintext.length === 1){
             parsed_text = plaintext[0]
@@ -131,7 +112,7 @@
         }
     }
 
-    // # DIALOG IMAGE
+    // # IMAGE DIALOG ----------------------------------------------------------
     import { createEventDispatcher } from 'svelte';
     const dispatch = createEventDispatcher();
 </script>
@@ -163,23 +144,6 @@
                 codespan: mdCodeSpan
             }}
         />
-        
-        <!-- {#each content_parts as part}
-            {#if part.style === "link"}
-                <a href="{part.text}">{part.text}</a>
-            {:else}
-                <SvelteMarkdown 
-                    source={part.text}
-                    renderers={{
-                        paragraph: mdParagraph, 
-                        html: mdHTML,
-                        heading: mdHeader,
-                        code: mdCode,
-                        codespan: mdCodeSpan
-                    }}
-                />
-            {/if}
-        {/each} -->
 
         <div class="con-message-image">
             {#each image_urls as image_url}

@@ -1,6 +1,7 @@
 <script lang="ts">
     import "../popup.css";
     import { createEventDispatcher } from "svelte";
+    import { t } from "svelte-i18n";
     import snarkdown from "snarkdown";
 
     const dispatch = createEventDispatcher();
@@ -20,7 +21,7 @@
 </script>
 
 <Dialog id="changelog"
-        title="Changelog"
+        title="{$t('DialogChangelog.title')}"
         pref_width={450}
         on:dismiss={close}>
         <div class="con-changelog-scrollbox">

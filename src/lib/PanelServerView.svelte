@@ -21,12 +21,14 @@
     import ServerMessage from "./ServerMessage.svelte";
     import PanelChannelList from "./PanelChannelList.svelte";
     import DialogImage from './DialogImage.svelte';
+    import DialogMemberList from './DialogMemberList.svelte';
 
     let show_profile_dialog = false;
     let show_channels = true;
     let show_messages = false;
     let show_keybinds = false;
     let show_dialog_img = false;
+    let show_memberlist = false;
     export let show_messages_call;
 
     let current_img_url: string;
@@ -47,10 +49,7 @@
             displayText: $t('PanelServerView.conMenu_channels.hide_channels'),
             class: 'fa-solid fa-eye-slash',
             shortcut: 'Shift+F2'
-        },
-        // {
-        //     name: 'hr',
-        // },
+        }
     ];
     function con_hide_channels(){
         show_channels = !show_channels
@@ -82,7 +81,6 @@
             shortcut: ''
         },
     ];
-
     function con_help(){
         show_keybinds = true
     }
@@ -297,16 +295,17 @@
             <!-- Server Info ----------------------------------------------- -->
             <div class="con-server-info">
                 <p class="lab-server-ip">{server.conn.ip}:{server.conn.port}</p>
-                <p class="lab-server-info">
+                <button class="btn-server-info" 
+                        on:click={() => (show_memberlist = true)}>
                     {$t('PanelServerView.server_info.members')}: {server.conn.known_peers.size}
-                </p>
-                <button class="btn-server-profile" 
+                </button>
+                <button class="btn-server-info" 
                         on:click={() => (show_profile_dialog = true)}>
                     {$t('DialogServerProfile.title')}
                 </button>
-                <hr>
+                
             </div>
-
+            <hr>
 
             <!-- Channels -------------------------------------------------- -->
             <PanelChannelList
@@ -381,6 +380,12 @@
     {#if show_keybinds}
         <DialogKeybinds
         on:dismiss={() => (show_keybinds = false)}
+        />
+    {/if}
+    {#if show_memberlist}
+        <DialogMemberList
+        known_peers={server.conn.known_peers}
+        on:dismiss={() => (show_memberlist = false)}
         />
     {/if}
     {#if show_dialog_img}
@@ -515,26 +520,22 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        align-items: left;
+        align-items: center;
+
+        margin-bottom: 14px;
+
+        row-gap: 6px;
     }
     .lab-server-ip {
-        margin-bottom: 15px;
+        margin-bottom: 6px;
         margin-left: auto;
         margin-right: auto;
     }
-    .lab-server-info {
-        margin: 0;
-        margin-left: 10%;
-        
-        font-size: 13px;
-    }
 
-    .btn-server-profile {
+    .btn-server-info {
         width: 80%;
         
         margin: 0 auto;
-        margin-top: 10px;
-        margin-bottom: 14px;
         
         padding: 5px;
         

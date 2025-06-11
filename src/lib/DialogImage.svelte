@@ -47,9 +47,9 @@
     
     <div class="con-dialog-row" style="column-gap: 8px;">
         <button on:click={img_open_tab}>
-            Open In New Tab</button>
+            {$t('DialogImage.open_img_tab')}</button>
         <button on:click={img_link_copy}>
-            Copy Image Link</button>
+            {$t('DialogImage.copy_img_link')}</button>
     </div>
 </Dialog>
 

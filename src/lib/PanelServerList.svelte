@@ -13,7 +13,8 @@
     let selected_server: Server | null = null;
     function switch_server(_: Event, server: Server) {
         if (selected_server === server) {
-            return;
+            dispatch("toggle_current_server");
+            return
         }
         for (const serv of servers) {
             if (serv.button != null && serv.server !== server) {
