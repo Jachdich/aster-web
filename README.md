@@ -1,6 +1,6 @@
 Developed by **Jachdich** and **elecarno**
 
-**TBD: α-2.4.0**
+**2025.06.11: α-2.4.0**
  - Added German (de: Deustch) localisation.
  - Added Spanish (es: Español) localisation.
  - Updated server view layout.
