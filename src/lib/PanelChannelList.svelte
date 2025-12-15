@@ -3,17 +3,17 @@
     import { createEventDispatcher } from "svelte";
     import ChannelListButton from "./ChannelListButton.svelte";
 
-    // ugly hack: basically so we can store an extra 
-    // `button` attribute on each channel. One day I'll fix this...
-    export let channels: Array<any>;
     const dispatch = createEventDispatcher();
+
+    export let channels: Array<Channel & Partial<{ button: ChannelListButton }>>;
     export let selected_channel: Channel | undefined;
+
     function switch_channel(_: Event, channel: Channel) {
         if (selected_channel === channel) {
             return;
         }
         for (const chan of channels) {
-            if (chan.button != null && chan.channel !== channel) {
+            if (chan.button && chan !== channel) {
                 chan.button.reset();
             }
         }

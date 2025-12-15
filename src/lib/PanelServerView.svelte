@@ -1,19 +1,11 @@
 <script lang="ts">
     import { is_mobile_width } from '../stores/window_size'
+    import { onMount, tick } from "svelte";
 
     // # ICONOGRAPHY & LOCALE --------------------------------------------------
     import { Icon } from "svelte-icons-pack";
-    import { FiHelpCircle, FiArrowLeft } from "svelte-icons-pack/fi";
-    import { init, t } from "svelte-i18n";
-
-    // # SVELTE ----------------------------------------------------------------
-    import { onMount } from "svelte";
-    onMount(() => {
-        window.addEventListener('keydown', handleKeydown);
-        return () => {
-            window.removeEventListener('keydown', handleKeydown);
-        };
-    });
+    import { FiArrowLeft } from "svelte-icons-pack/fi";
+    import { t } from "svelte-i18n";
 
     // # ASTER COMPONENTS ------------------------------------------------------
     import DialogServerProfile from "./DialogServerProfile.svelte";
@@ -23,17 +15,34 @@
     import DialogImage from './DialogImage.svelte';
     import DialogMemberList from './DialogMemberList.svelte';
 
+    import type { Server } from "./server";
+    import {
+        Channel,
+        ChannelNotFound,
+        ServerError,
+        Forbidden,
+        MessageInfo,
+    } from "./network";
+
     let show_profile_dialog = false;
     let show_channels = true;
     let show_messages = false;
     let show_keybinds = false;
     let show_dialog_img = false;
     let show_memberlist = false;
-    export let show_messages_call;
 
     let current_img_url: string;
 
-    function handleKeydown(event) {
+    let last_date = new Date("2025-11-01");
+
+    onMount(() => {
+        window.addEventListener('keydown', handleKeydown);
+        return () => {
+            window.removeEventListener('keydown', handleKeydown);
+        };
+    });
+
+    function handleKeydown(event: KeyboardEvent) {
         if (event.shiftKey && event.key === 'F2') {
             show_channels = !show_channels;
         }
@@ -51,7 +60,7 @@
             shortcut: 'Shift+F2'
         }
     ];
-    function con_hide_channels(){
+    function con_hide_channels() {
         show_channels = !show_channels
     }
 
@@ -81,19 +90,21 @@
             shortcut: ''
         },
     ];
-    function con_help(){
+
+    function con_help() {
         show_keybinds = true
     }
+
     function con_copy() {
-        const selectedText = window.getSelection().toString();
+        const selectedText = window.getSelection()?.toString();
         if (!selectedText) return; // nothing to copy
 
-        navigator.clipboard.writeText(selectedText)
+        navigator.clipboard.writeText(selectedText);
     }
 
     // # MESSAGE TEXTAREA ------------------------------------------------------
-    let message_textarea = document.getElementById("message-input")
-    let message_textarea_default_height = 32 // in pixels
+    let message_textarea: HTMLTextAreaElement;
+    let message_textarea_default_height = 32; // in pixels
     function autoResizeInput() {
         if (!message_textarea) return;
 
@@ -104,18 +115,6 @@
         ) + "px";
     }
 
-    // # NETWORKING ------------------------------------------------------------
-    import { tick } from "svelte";
-    import type { Server } from "./server";
-    import {
-        Channel,
-        ChannelNotFound,
-        ServerError,
-        Forbidden,
-        MessageInfo,
-    } from "./network";
-    import PageLoading from "./PageLoading.svelte";
-    
     let message_input: string = "";
     let no_scroll = false;
     let message_area: HTMLDivElement;
@@ -175,7 +174,7 @@
                 command: "send",
                 content: message_input,
                 channel: server.selected_channel_uuid,
-            });
+            }); // TODO check status
             message_input = "";
             if (!message_textarea) return;
             message_textarea.style.height = message_textarea_default_height.toString() + "px"
@@ -234,24 +233,18 @@
 
         let scrolled_to_top = (div.scrollTop + div.scrollHeight - div.clientHeight === 0)
         if (scrolled_to_top && selected_channel !== undefined && server.messages.length > 0) {
-            console.log("loading history");
 
             const before_id = server.messages[0].uuid;
-            // console.log(before_id, server.requesting_history_from);
 
             // we've already started requesting history from this point. bail!
             // (requesting duplicate history is __very bad__)
             if (server.requesting_history_from.includes(before_id)) {
-                console.log("return, requesting duplicate history");
-                // console.log(server.messages)
                 return;
             }
 
             no_scroll = true;
-            // top_scroll = div.children[0];
             server.requesting_history_from.push(before_id);
             const res = await server.conn.get_history(selected_channel.uuid, before_id);
-            // console.log(res);
             if (res instanceof ChannelNotFound) {
                 // cannot happen hopefully
                 console.log("channel not found");
@@ -282,6 +275,16 @@
         console.log(event.detail.image_url)
         current_img_url = event.detail.image_url
         show_dialog_img = true
+    }
+
+    function is_unread(date: Date): boolean {
+        if (selected_channel) {
+            const d = selected_channel.last_read_message_date;
+            if (d) {
+                return date > d;
+            }
+        }
+        return false;
     }
 </script>
 
@@ -318,25 +321,18 @@
     
     
     <!-- Server Area ------------------------------------------------------- -->
-    {#if show_messages_call || show_messages}
+    {#if show_messages}
         <div class="pan-server-messages">
             <!-- Messages -->
             <div class="con-message-area" 
                  on:scroll={message_scroll} 
                  bind:this={message_area}>
-                <!-- {#each server.messages as message (message.uuid)}
-                    <div>
-                        <ServerMessage {message} />
-                    </div>
-                {/each} -->
                 {#each [...server.messages].reverse() as message (message.uuid)}
-                    <div>
-                        <ServerMessage {message} 
+                        <ServerMessage {message} unread={is_unread(message.date)}
                         on:open_image={open_image_dialog}/>
-                    </div>
                 {/each}
             </div>
-            <!-- Message Input --------------------------------------------  -->
+            <!-- Message Input -------------------------------------------- -->
             <div class="con-message-input">
                 <!-- svelte-ignore a11y-autofocus -->
                 <textarea
@@ -363,7 +359,7 @@
                     }}>
                     <Icon src={FiArrowLeft} size="20px" />
                 </button>
-                <span>{selected_channel.name}</span>
+                <span>{selected_channel?.name}</span>
             </div>
             {/if}
         </div>
@@ -418,7 +414,7 @@
 
         display: flex;
         flex-direction: column-reverse;
-;
+
         margin-left: 10px;
         margin-right: 10px;
 

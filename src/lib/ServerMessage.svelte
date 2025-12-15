@@ -51,6 +51,15 @@
     import { style } from "./style";
 
     export let message: MessageInfo;
+    export let unread: boolean;
+
+    // interface Props {
+    //     message: MessageInfo,
+    //     unread: boolean,
+    // }
+
+    // const {message, unread}: Props = $props();
+    
     let spacing = style.message_spacing;
     let uname_top = (24 - 20) / 2;
     let body_top = uname_top;
@@ -117,7 +126,7 @@
     const dispatch = createEventDispatcher();
 </script>
 
-
+<div class="message-outer-{unread ? 'unread' : 'read'}">
 <div
     class="con-message"
     style="--spacing: {spacing}px; --uname-top: {uname_top}px; --date-top: {date_top}px; --body-top: {body_top}px; --uname-width: {uname_width}px;"
@@ -178,12 +187,22 @@
     {/if}
 </div>
 
+</div>
+
 <style>
     .con-message-image {
         display: flex;
         flex-direction: column;
     }
 
+    .message-outer-unread {
+        border-left: 3px solid var(--accent-1-light);
+    }
+    
+    .message-outer-read {
+        border-left: 3px solid var(--panel-2);
+    }
+    
     .gra-message-image {
         max-height: 512px;
         max-width: 60%;

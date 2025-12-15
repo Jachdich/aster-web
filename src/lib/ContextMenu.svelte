@@ -1,7 +1,7 @@
-<script>
+<script lang="ts">
     import { contextMenuStore } from './contextMenuStore';
 
-    let menuRef;
+    let menuRef: HTMLElement;
     let state = {
         show: false,
         x: 0,

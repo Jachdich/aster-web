@@ -1,7 +1,36 @@
 import { Server } from "./server";
 
+export type Uuid = number;
+
 export let can_notify = false;
 export const set_can_notify = (x: boolean) => { can_notify = x };
+
+type NetMessage = {uuid: Uuid, content: string, author_uuid: Uuid, channel_uuid: Uuid, date: number, edited: boolean, reply: Uuid | undefined};
+
+type ResponseBasic =
+      {command: "API_version",      version: [number, number, number]}
+    | {command: "register",         uuid: Uuid }
+    | {command: "login",            uuid: Uuid }
+    | {command: "get_metadata",     data: Array<{uuid: Uuid, name: string, pfp: string, groups: Array<Uuid>}> }
+    | {command: "sync_get_servers", servers: Array<SyncServer> }
+    | {command: "online",           data: Array<Uuid> }
+    | {command: "history",          data: Array<NetMessage> }
+    | {command: "get_user",         data: {uuid: Uuid, name: string, pfp: string, groups: Array<Uuid>} }
+    | {command: "get_icon",         data: string }
+    | {command: "get_name",         data: string }
+    | {command: "list_channels",    data: Array<Channel> }
+    | {command: "get_emoji",        data: {uuid: Uuid, name: string, data: string} }
+    | {command: "list_emoji",       data: Array<[string, Uuid]> }
+    | {command: "send",             message: Uuid }
+    | {command: "message_edited",   message: Uuid, new_content: string }
+    | {command: "message_deleted",  message: Uuid }
+    | {command: "list_groups",      data: Array<{uuid: Uuid, permissions: number[], name: string, colour: number, position: number}> }
+    | {command: "create_channel",   uuid: Uuid }
+    | {command: "get_last_reads",   last_reads: Map<Uuid, Uuid>}
+    | ({command: "content"} & NetMessage)
+    | {command: "sync_get", user_uuid: Uuid, uname: string, pfp: string};
+    
+export type Response = ResponseBasic & { status: Status };
 
 export enum Status {
     Ok = 200,
@@ -71,6 +100,7 @@ export class Channel {
     uuid: number;
     name: string;
     cached_messages: Array<MessageInfo> = new Array();
+    last_read_message_date: Date | undefined = undefined;
 
     constructor(uuid: number, name: string) {
         this.uuid = uuid;
@@ -144,7 +174,7 @@ export class Connection {
     public connect(auth: "Login" | "Register"): Promise<void | ConnectionError | ServerError> {
         return new Promise((resolve, _) => {
             try {
-                this.socket = new WebSocket("wss://" + this.ip + ":" + this.port);
+                this.socket = new WebSocket("ws://" + this.ip + ":" + this.port);
             } catch (e) {
                 resolve(new ConnectionError(e));
                 return;
@@ -156,7 +186,7 @@ export class Connection {
                 this.socket?.send(JSON.stringify({ "command": auth.toLowerCase(), "uname": this.username, "passwd": this.password }));
             });
             this.socket.addEventListener("message", (event) => {
-                let obj = JSON.parse(event.data);
+                let obj = JSON.parse(event.data) as Response;
                 // console.log("Responded", obj);
                 let packet_idx = 0;
                 for (const packet of this.waiting_for) {
@@ -168,37 +198,45 @@ export class Connection {
                     packet_idx += 1;
                 }
 
-                if ((obj["command"] == "login" || obj["command"] == "register") && obj["status"] != Status.Ok) {
-                    resolve(new ServerError(obj["command"], obj["status"]))
-                } else if (obj["status"] != Status.Ok) {
-                    // err_msg = "Command '" + obj["command"] + "' failed with error code " + obj["status"];
+                if ((obj.command == "login" || obj.command == "register") && obj.status != Status.Ok) {
+                    resolve(new ServerError(obj.command, obj.status))
+                } else if (obj.status != Status.Ok) {
+                    // err_msg = "Command '" + obj.command + "' failed with error code " + obj.status;
                 } else {
-                    if (obj["command"] == "login" || obj["command"] == "register") {
-                        this.my_uuid = obj["uuid"];
+                    if (obj.command == "login" || obj.command == "register") {
+                        this.my_uuid = obj.uuid;
                         this.socket?.send(JSON.stringify({ "command": "get_metadata" }));
                         this.socket?.send(JSON.stringify({ "command": "list_channels" }));
                         this.socket?.send(JSON.stringify({ "command": "get_name" }));
                         this.socket?.send(JSON.stringify({ "command": "get_icon" }));
                         this.logged_in = true;
-                    } else if (obj["command"] == "get_metadata") {
-                        for (const peer_json of obj["data"]) {
+                    } else if (obj.command == "get_metadata") {
+                        for (const peer_json of obj.data) {
                             const peer = Peer.from(peer_json);
                             if (peer !== undefined) {
-                                this.known_peers.set(peer_json["uuid"], peer);
+                                this.known_peers.set(peer_json.uuid, peer);
                             } else {
                                 console.log("Peer json invalid from " + this.ip + ":" + this.port);
                             }
                         }
                         this.we_have_the_metadata_lads = true;
-                    } else if (obj["command"] == "list_channels") {
-                        for (const channel_json of obj["data"]) {
+                    } else if (obj.command == "list_channels") {
+                        for (const channel_json of obj.data) {
                             const channel = Channel.from(channel_json);
                             if (channel !== undefined) {
                                 this.cached_channels.set(channel.uuid, channel);
                             }
                         }
                         this.we_have_the_channels_lads = true;
-                    } else if (obj["command"] == "content") {
+                        this.socket?.send(JSON.stringify({ "command": "get_last_reads" }));
+                    } else if (obj.command == "get_last_reads") {
+                        for (const [chan_uuid, date] of Object.entries(obj.last_reads)) {
+                            const channel = this.cached_channels.get(Number.parseInt(chan_uuid));
+                            if (channel !== undefined) {
+                                channel.last_read_message_date = new Date(date * 1000);
+                            }
+                        }
+                    } else if (obj.command == "content") {
                         const info = this.make_message(obj);
                         if (info !== undefined) {
                             if (this.message_callback !== undefined) {
@@ -207,13 +245,14 @@ export class Connection {
                             if (this.handle_notify !== undefined) {
                                 this.handle_notify(info);
                             }
-                            let channel_uuid = obj["channel_uuid"];
+                            let channel_uuid = obj.channel_uuid;
                             let channel = this.get_channel(channel_uuid);
                             channel?.cached_messages.push(info);
+                            // this.socket?.send(JSON.stringify({"command": "mark_unread", "uuid": info.uuid}));
                         }
-                    } else if (obj["command"] == "message_edited") {
-                        const uuid = obj["message"] as number;
-                        const content = obj["new_content"] as string;
+                    } else if (obj.command == "message_edited") {
+                        const uuid = obj.message as number;
+                        const content = obj.new_content as string;
                         for (const channel of this.cached_channels) {
                             let index = channel[1].cached_messages.findIndex((msg) => msg.uuid === uuid);
                             if (index !== -1) {
@@ -225,8 +264,8 @@ export class Connection {
                                 break;
                             }
                         }
-                    } else if (obj["command"] == "message_deleted") {
-                        const uuid = obj["message"] as number;
+                    } else if (obj.command == "message_deleted") {
+                        const uuid = obj.message as number;
                         for (const channel of this.cached_channels) {
                             let index = channel[1].cached_messages.findIndex((msg) => msg.uuid === uuid);
                             if (index !== -1) {
@@ -238,9 +277,9 @@ export class Connection {
                                 break;
                             }
                         }
-                    } else if (obj["command"] == "API_version") {
+                    } else if (obj.command == "API_version") {
                         // TODO make this function actually show an error
-                        const remote_version = obj["version"];
+                        const remote_version = obj.version;
                         if (remote_version[0] < MY_API_VERSION[0]) {
                             console.log("Server is too old!");
                         } else if (remote_version[0] > MY_API_VERSION[0]) {
@@ -248,11 +287,11 @@ export class Connection {
                         } else {
                             // uhh we're ok
                         }
-                    } else if (obj["command"] == "get_name") {
-                        this.name = obj["data"];
+                    } else if (obj.command == "get_name") {
+                        this.name = obj.data;
                         this.got_name = true;
-                    } else if (obj["command"] == "get_icon") {
-                        this.pfp = obj["data"];
+                    } else if (obj.command == "get_icon") {
+                        this.pfp = obj.data;
                         this.got_icon = true;
                     }
                     if (this.logged_in && this.we_have_the_metadata_lads && this.we_have_the_channels_lads && this.got_name && this.got_icon) {
@@ -264,12 +303,12 @@ export class Connection {
         });
     }
 
-    private make_message(message: any): MessageInfo | undefined {
-        const peer = this.known_peers.get(message["author_uuid"]);
+    private make_message(message: NetMessage): MessageInfo | undefined {
+        const peer = this.known_peers.get(message.author_uuid);
         if (peer !== undefined) {
-            return new MessageInfo(message["content"], peer, new Date(message["date"] * 1000), message["uuid"], message["channel_uuid"]);
+            return new MessageInfo(message.content, peer, new Date(message.date * 1000), message.uuid, message.channel_uuid);
         } else {
-            console.log("Nonexistent peer: " + message["author_uuid"]);
+            console.log("Nonexistent peer: " + message.author_uuid);
         }
         return undefined;
     }
@@ -299,16 +338,18 @@ export class Connection {
         // TODO calculate whether we actually already have the message range loaded
         if (channel.cached_messages.length < 100 || before_message !== undefined) {
             const history = await this.request({ "command": "history", "channel": channel_uuid, "num": 100, "before_message": before_message });
-            if (history["status"] == Status.NotFound) {
+            if (history.command !== "history") return new ServerError("idk", 999); // type
+
+            if (history.status == Status.NotFound) {
                 return new ChannelNotFound();
-            } else if (history["status"] == Status.Forbidden) {
+            } else if (history.status == Status.Forbidden) {
                 return new Forbidden();
-            } else if (history["status"] != Status.Ok) {
-                return new ServerError(history["command"], history["status"]);
+            } else if (history.status != Status.Ok) {
+                return new ServerError(history.command, history.status);
             }
             let messages = new Array<MessageInfo>();
             let i = 0;
-            for (const message of history["data"]) {
+            for (const message of history.data) {
                 let info = this.make_message(message);
                 if (info !== undefined) {
                     messages[i] = info;
@@ -323,14 +364,14 @@ export class Connection {
         }
     }
 
-    public request(data: any): Promise<any> {
+    public request(data: any): Promise<Response> {
         // console.log("Requesting", data);
         return new Promise((resolve, reject) => {
             if (this.socket === undefined) {
                 reject("Not connected");
                 return;
             }
-            this.waiting_for.push({ command: data["command"], callback: (data: any) => resolve(data) });
+            this.waiting_for.push({ command: data.command, callback: (data: any) => resolve(data) });
             this.socket.send(JSON.stringify(data));
         });
     }
@@ -346,6 +387,16 @@ export class Connection {
             serialised_servers.push(sync_server);
         }
 
-        return (await this.request({ command: "sync_set_servers", servers: serialised_servers }))["status"];
+        return (await this.request({ command: "sync_set_servers", servers: serialised_servers })).status;
+    }
+
+    public async get_last_reads(): Promise<Map<Uuid, Uuid> | ServerError> {
+        const reply = await this.request({"command": "get_last_reads"});
+        if (reply.command !== "get_last_reads") return new ServerError("idk", 999); // type
+        
+        if (reply.status != Status.Ok) {
+            return new ServerError(reply.command, reply.status);
+        }
+        return reply.last_reads;
     }
 }

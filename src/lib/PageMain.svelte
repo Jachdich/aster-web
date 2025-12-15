@@ -1,13 +1,6 @@
 <script lang="ts">
     import { is_mobile_width } from '../stores/window_size'
     import { onMount } from "svelte";
-    onMount(() => {
-        window.addEventListener('keydown', handleKeydown);
-        return () => {
-            window.removeEventListener('keydown', handleKeydown);
-        };
-    });
-
 
     // # ICONOGRAPHY & LOCALE --------------------------------------------------
     import { Icon } from "svelte-icons-pack";
@@ -22,20 +15,36 @@
     import PanelServerView from "./PanelServerView.svelte";
     import PanelServerList from "./PanelServerList.svelte";
 
+    // # CONTEXT MENUS ---------------------------------------------------------
+    import { showContextMenu }  from './contextMenuStore';
+
+    // # NETWORKING ------------------------------------------------------------
+    import { 
+        Connection, 
+        ServerError, 
+        ConnectionError, 
+        Status 
+    } from "./network";
+    import { Server } from "./server";
+
     let show_add_server = false;
     let show_aster_dialog = false;
     let show_account_dialog = false;
     export let show_sidebar = true;
     export let show_messages = true;
 
+    onMount(() => {
+        window.addEventListener('keydown', handleKeydown);
+        return () => {
+            window.removeEventListener('keydown', handleKeydown);
+        };
+    });
+
     function handleKeydown(event: { shiftKey: any; key: string; }) {
         if (event.shiftKey && event.key === "F1") {
             show_sidebar = !show_sidebar;
         }
     }
-
-    // # CONTEXT MENUS ---------------------------------------------------------
-    import { showContextMenu }  from './contextMenuStore';
 
     const conMenu_sidebar = [
         {
@@ -60,15 +69,6 @@
         show_add_server = true
     }
 
-    // # NETWORKING ------------------------------------------------------------
-    import { 
-        Connection, 
-        ServerError, 
-        ConnectionError, 
-        Status 
-    } from "./network";
-    import { Server } from "./server";
-
     export let servers: Server[];
     let selected_server: Server | undefined = undefined;
     export let sync_server: Connection;
@@ -88,8 +88,7 @@
         show_server = !show_server;
     }
 
-    // TODO: get rid of the any in the signature
-    async function add_server(info: CustomEvent<any>) {
+    async function add_server(info: CustomEvent<{ip: string, port: number}>) {
         if (sync_server === undefined) {
             // TODO: this shouldn't really be needed, 
             // and maybe we should throw an error instead?
@@ -168,22 +167,17 @@
                         on:click={() => (show_add_server = true)}>
                     <Icon src={FiPlus} size="25px"/>
                 </button>
-                <button class="btn-account" 
-                        on:click={() => (show_account_dialog = true)}>
-                    <!-- <img
-                        src={profile_img}
-                        alt="View profile"
-                        class="pfp"
-                        class="pfp_button"
-                    /> -->
+                <button class="btn-account" on:click={() => (show_account_dialog = true)}>
                     <Icon src={FiUser} size="25px" />
                 </button>
             </div>
 
             <!-- Server List ----------------------------------------------- -->
-            <PanelServerList {servers} 
-                             on:switch_server={switch_server}
-                             on:toggle_current_server={toggle_server_visiblity}/>
+            <PanelServerList
+                {servers} 
+                on:switch_server={switch_server}
+                on:toggle_current_server={toggle_server_visiblity}
+            />
         </div>
     {:else}
         <span class="con-channel-edge-separator"></span>
@@ -191,9 +185,7 @@
 
     <!-- Server View ------------------------------------------------------- -->
     {#if selected_server !== undefined && show_server}
-        <PanelServerView server={selected_server} 
-                         sidebar_shown={show_sidebar} 
-                         show_messages={show_messages}/>
+        <PanelServerView server={selected_server} />
     {:else}
         <div class="con-main-bg-logo">
             <svg id="gra-main-bg-logo" 

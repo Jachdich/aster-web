@@ -6,7 +6,6 @@ export class Server {
     messages: MessageInfo[] = [];
     requesting_history_from: number[] = [];
     constructor(conn: Connection) {
-        // console.log(conn);
         this.conn = conn;
         this.conn.handle_notify = (msg) => this.handle_notify(msg);
     }

@@ -41,11 +41,11 @@
 		}
 
         // uhh stuff
-        const handler = (e) => e.preventDefault();
+        const handler = (e: Event) => e.preventDefault();
         window.addEventListener('contextmenu', handler);
 
         return () => {
-        window.removeEventListener('contextmenu', handler);
+            window.removeEventListener('contextmenu', handler);
         };
     });
 
@@ -78,6 +78,7 @@
         Notification.requestPermission().then((permission) => {
             set_can_notify(permission === "granted");
         });
+
         let server = new Connection(sync_ip, sync_port, uname, password);
         server.connect(action).then((result) => {
             if (result instanceof ServerError) {
@@ -100,9 +101,7 @@
                 page_to_show = "Login";
             } else if (result instanceof ConnectionError) {
                 error_msg =
-                    "Error connecting to sync server, is the server down or did you mistype the IP? (details: " +
-                    result.detail +
-                    ")";
+                    "For some unknown reason, the sync server connection failed. Check the sync server is up and the IP and port are correct.";
                 page_to_show = "Login";
             } else {
                 sync_server = server;
@@ -210,7 +209,7 @@
                 on:click={() => (show_changelog = true)}
                 role="button" 
                 tabindex="0"
-                on:keydown={(e) => { }}>
+                on:keydown={(_) => { }}>
                 α-2.4.0
             </a>
         {/if}
