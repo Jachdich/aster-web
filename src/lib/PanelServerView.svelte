@@ -33,8 +33,6 @@
 
     let current_img_url: string;
 
-    let last_date = new Date("2025-11-01");
-
     onMount(() => {
         window.addEventListener('keydown', handleKeydown);
         return () => {
@@ -183,20 +181,17 @@
 
     function on_message(message: MessageInfo) {
         if (message.channel_uuid == server.selected_channel_uuid) {
-            const is_at_bottom =
-                Math.abs(
-                    message_area.scrollHeight 
-                    - message_area.offsetHeight 
-                    - message_area.scrollTop
-                ) < 5;
+            const is_at_bottom = message_area.scrollTop == 0;
 
             server.messages.push(message);
             server.messages = server.messages;
 
-            if (is_at_bottom && !no_scroll) {
-                tick().then(() => {
-                    message_area.scrollTop = message_area.scrollHeight;
-                });
+            console.log(is_at_bottom, no_scroll);
+            if (is_at_bottom) {
+            //     tick().then(() => {
+            //         message_area.scrollTop = message_area.scrollHeight;
+            //     });
+                server.conn.mark_as_read(message).then((_) => { server.messages = server.messages; }); // TODO handle errors
             }
         }
     }
@@ -231,7 +226,7 @@
             no_scroll = false;
         }
 
-        let scrolled_to_top = (div.scrollTop + div.scrollHeight - div.clientHeight === 0)
+        let scrolled_to_top = (div.scrollTop + div.scrollHeight - div.clientHeight === 0);
         if (scrolled_to_top && selected_channel !== undefined && server.messages.length > 0) {
 
             const before_id = server.messages[0].uuid;

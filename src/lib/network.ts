@@ -399,4 +399,15 @@ export class Connection {
         }
         return reply.last_reads;
     }
+
+    public async mark_as_read(message: MessageInfo): Promise<void | ServerError> {
+        const reply = await this.request({"command": "mark_as_read", "message": message.uuid});
+        const c = this.cached_channels.get(message.channel_uuid);
+        if (c !== undefined) {
+            c.last_read_message_date = message.date;
+        }
+        if (reply.status != Status.Ok) {
+            return new ServerError(reply.command, reply.status);
+        }
+    }
 }
