@@ -5,10 +5,10 @@
     import { t } from 'svelte-i18n'
 
     // # LOGIN -----------------------------------------------------------------
-    let sync_ip: string = "cospox.com";
+    let sync_ip: string = "localhost";
     let sync_port: string = "2345";
-    let uname: string = "";
-    let password: string = "";
+    let uname: string = "KingJellyfish";
+    let password: string = "asdf";
 
     function validate_port() {
         let a = document.getElementById(

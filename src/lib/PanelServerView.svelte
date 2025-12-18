@@ -183,16 +183,22 @@
         if (message.channel_uuid == server.selected_channel_uuid) {
             const is_at_bottom = message_area.scrollTop == 0;
 
-            server.messages.push(message);
-            server.messages = server.messages;
-
-            console.log(is_at_bottom, no_scroll);
-            if (is_at_bottom) {
+            const last_message = server.messages.at(-1);
+            let last_message_read = true;
+            if (last_message !== undefined) {
+                const channel = server.conn.cached_channels.get(last_message.channel_uuid) as Channel; // we know this channel must exist
+                if (channel.last_read_message_date !== undefined) {
+                    last_message_read = last_message.date <= channel.last_read_message_date;
+                }
+            }
+            if (is_at_bottom && (last_message_read || message.author.uuid == server.conn.my_uuid)) {
             //     tick().then(() => {
             //         message_area.scrollTop = message_area.scrollHeight;
             //     });
                 server.conn.mark_as_read(message).then((_) => { server.messages = server.messages; }); // TODO handle errors
             }
+            server.messages.push(message);
+            server.messages = server.messages;
         }
     }
 

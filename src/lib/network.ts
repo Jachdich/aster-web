@@ -236,6 +236,20 @@ export class Connection {
                                 channel.last_read_message_date = new Date(date * 1000);
                             }
                         }
+
+                        // check what channels have no "last unread" and update it to the last message by default
+                        for (const channel of this.cached_channels.values()) {
+                            if (channel.last_read_message_date === undefined) {
+                                this.get_history(channel.uuid, undefined).then((history) => {
+                                    if (history instanceof Array) {
+                                        this.mark_as_read(history[0])
+                                    } else {
+                                        // ?? something went very wrong
+                                        console.log("while marking last message as read, history failed", history)
+                                    }
+                                });
+                            }
+                        }
                     } else if (obj.command == "content") {
                         const info = this.make_message(obj);
                         if (info !== undefined) {
@@ -329,7 +343,7 @@ export class Connection {
         }
     }
 
-    public async get_history(channel_uuid: number, before_message: number | undefined): Promise<Array<MessageInfo> | ChannelNotFound | Forbidden | ServerError> {
+    public async get_history(channel_uuid: number, before_message?: number | undefined): Promise<Array<MessageInfo> | ChannelNotFound | Forbidden | ServerError> {
         const channel = this.get_channel(channel_uuid);
         if (channel === undefined) {
             return new ChannelNotFound();
