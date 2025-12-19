@@ -132,6 +132,9 @@
     function switch_channel(channel: CustomEvent<Channel>) {
         const uuid = channel.detail.uuid;
         server.messages = [];
+        // server.conn.get_num_unread(uuid).then((num_unread) => {
+            
+        // });
         server.conn.get_history(uuid, undefined).then((msg) => {
             if (msg instanceof ChannelNotFound) {
             } else if (msg instanceof Forbidden) {
@@ -186,7 +189,7 @@
             const last_message = server.messages.at(-1);
             let last_message_read = true;
             if (last_message !== undefined) {
-                const channel = server.conn.cached_channels.get(last_message.channel_uuid) as Channel; // we know this channel must exist
+                const channel = server.conn.get_channel(last_message.channel_uuid) as Channel; // we know this channel must exist
                 if (channel.last_read_message_date !== undefined) {
                     last_message_read = last_message.date <= channel.last_read_message_date;
                 }
@@ -199,6 +202,9 @@
             }
             server.messages.push(message);
             server.messages = server.messages;
+        } else {
+            const channel = server.conn.get_channel(message.channel_uuid) as Channel;
+            channel.num_unread += 1;
         }
     }
 

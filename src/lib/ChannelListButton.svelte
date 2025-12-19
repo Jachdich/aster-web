@@ -17,11 +17,19 @@
 
 </script>
 
-<button class="btn-channel"
+<button class="btn-channel {channel.num_unread > 0 ? 'unread' : 'read'}"
         on:click={clicked} 
         value="{init_selected ? '1' : '0'}" 
         bind:this={button}>
+    <div>
     {channel.name}
+    </div>
+    <div style="flex-grow: 1"></div>
+    {#if channel.num_unread > 0}
+    <div class="unread-num">
+    {channel.num_unread}
+    </div>
+    {/if}
 </button>
 
 <style>
@@ -42,12 +50,33 @@
         
         box-sizing: border-box;
         list-style-type: none;
+
+        display: flex;
+        flex-direction: row;
     }
+
     .btn-channel:hover {
         background-color: var(--panel-1);
     }
 
     button:global(.btn-channel[value="1"]) {
         background-color: var(--panel-3);
+    }
+    button:global(.btn-channel[unread="1"]) {
+        background-color: var(--panel-3);
+    }
+
+    .unread {
+    }
+
+    .read {
+    }
+    .unread-num {
+        color: var(--white-1);
+    }
+
+    div {
+        height: fit-content;
+        margin: auto 0;
     }
 </style>

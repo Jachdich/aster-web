@@ -26,7 +26,8 @@ type ResponseBasic =
     | {command: "message_deleted",  message: Uuid }
     | {command: "list_groups",      data: Array<{uuid: Uuid, permissions: number[], name: string, colour: number, position: number}> }
     | {command: "create_channel",   uuid: Uuid }
-    | {command: "get_last_reads",   last_reads: Map<Uuid, Uuid>}
+    | {command: "get_last_reads",   last_reads: Map<Uuid, [number, number]>}
+    | {command: "get_num_unread",   num: number}
     | ({command: "content"} & NetMessage)
     | {command: "sync_get", user_uuid: Uuid, uname: string, pfp: string};
     
@@ -101,6 +102,7 @@ export class Channel {
     name: string;
     cached_messages: Array<MessageInfo> = new Array();
     last_read_message_date: Date | undefined = undefined;
+    num_unread: number = 0;
 
     constructor(uuid: number, name: string) {
         this.uuid = uuid;
@@ -230,10 +232,12 @@ export class Connection {
                         this.we_have_the_channels_lads = true;
                         this.socket?.send(JSON.stringify({ "command": "get_last_reads" }));
                     } else if (obj.command == "get_last_reads") {
-                        for (const [chan_uuid, date] of Object.entries(obj.last_reads)) {
+                        for (const [chan_uuid, [date, num_unread]] of Object.entries(obj.last_reads)) {
                             const channel = this.cached_channels.get(Number.parseInt(chan_uuid));
                             if (channel !== undefined) {
                                 channel.last_read_message_date = new Date(date * 1000);
+                                channel.num_unread = num_unread;
+                                console.log(channel.name, num_unread);
                             }
                         }
 
@@ -242,7 +246,10 @@ export class Connection {
                             if (channel.last_read_message_date === undefined) {
                                 this.get_history(channel.uuid, undefined).then((history) => {
                                     if (history instanceof Array) {
-                                        this.mark_as_read(history[0])
+                                        let last = history.at(-1);
+                                        if (last !== undefined) {
+                                            this.mark_as_read(last);
+                                        }
                                     } else {
                                         // ?? something went very wrong
                                         console.log("while marking last message as read, history failed", history)
@@ -404,7 +411,7 @@ export class Connection {
         return (await this.request({ command: "sync_set_servers", servers: serialised_servers })).status;
     }
 
-    public async get_last_reads(): Promise<Map<Uuid, Uuid> | ServerError> {
+    public async get_last_reads(): Promise<Map<Uuid, [number, boolean]> | ServerError> {
         const reply = await this.request({"command": "get_last_reads"});
         if (reply.command !== "get_last_reads") return new ServerError("idk", 999); // type
         
@@ -423,5 +430,15 @@ export class Connection {
         if (reply.status != Status.Ok) {
             return new ServerError(reply.command, reply.status);
         }
+    }
+
+    public async get_num_unread(channel: Uuid): Promise<Number | ChannelNotFound | ServerError> {
+        const reply = await this.request({"command": "get_num_unread", "channel": channel});
+        if (reply.command !== "get_num_unread") return new ServerError("idk", 999); // type
+        if (reply.status != Status.Ok) {
+            return new ServerError(reply.command, reply.status);
+        }
+
+        return reply.num;
     }
 }
